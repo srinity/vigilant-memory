@@ -4,6 +4,18 @@ export const getBrandColorRGBAValue = (alphaValue = 1) => {
     return `rgba(56, 14, 124, ${alphaValue})`;
 };
 
+export const authBrandColorBorderHexCode = '#ffd7e3';
+
+export const getAuthBrandColorBorderRGBAValue = (alphaValue = 1) => {
+    return `rgba(255, 215, 227, ${alphaValue})`;
+};
+
+export const authBrandColorBackgroundHexCode = '#380E01';
+
+export const getAuthBrandColorBackgroundRGBAValue = (alphaValue = 1) => {
+    return `rgba(241, 109, 116, ${alphaValue})`;
+};
+
 export const whiteColorHexCode = '#ffffff';
 
 export const getWhiteColorRGBAValue = (alphaValue = 1) => {
