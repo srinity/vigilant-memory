@@ -10,8 +10,8 @@ export default StyleSheet.create({
         marginHorizontal: 20, 
         borderRadius: 10, 
         padding: 10,
-        elevation: 3,
-        shadowColor: '#dddddd',
+        elevation: 2,
+        shadowColor: 'rgba(0, 0, 0, 0.2)',
         shadowOpacity: 1,
         shadowOffset: { width: 0, height: 2 },
         overflow: 'hidden'
