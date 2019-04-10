@@ -7,6 +7,7 @@ import DeviceDimensions from './DeviceDimensions/DeviceDimensions';
 import { Icon, IconTypes } from './Icon';
 import Input from './Input/Input';
 import Logo from './Logo/Logo';
+import ShopCard from './ShopCard/ShopCard'
 
 export {
     AuthInput,
@@ -20,4 +21,5 @@ export {
     Input,
     ScreenTypes,
     Logo,
+    ShopCard,
 };
