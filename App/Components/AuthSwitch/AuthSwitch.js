@@ -7,10 +7,11 @@ export const ScreenTypes = {
 };
 
 class AuthSwitch extends Component {
-  // eslint-disable-next-line camelcase
-  UNSAFE_componentWillMount() {
-    const initialScreen = this.rootScreenSelector(this.props);
-    Actions.reset(initialScreen);
+  componentDidMount() {
+    setTimeout(() => {
+      const initialScreen = this.rootScreenSelector(this.props);
+      Actions.reset(initialScreen);
+    }, 0);
   }
 
   componentDidUpdate(prevProps) {
