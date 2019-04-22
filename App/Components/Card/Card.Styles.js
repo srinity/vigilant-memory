@@ -13,7 +13,6 @@ export default StyleSheet.create({
         elevation: 2,
         shadowColor: 'rgba(0, 0, 0, 0.2)',
         shadowOpacity: 1,
-        shadowOffset: { width: 0, height: 2 },
-        overflow: 'hidden'
+        shadowOffset: { width: 0, height: 2 }
     }
 });
