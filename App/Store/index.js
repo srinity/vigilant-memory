@@ -7,7 +7,9 @@ import Reactotron from './../Config/ReactotronConfig';
 
 import {
     DeviceDimensions,
-    Account
+    Account,
+    Shop,
+    Shops
 } from './Reducers';
 
 const persistAuthConfig = {
@@ -20,7 +22,9 @@ const middleWares = [Thunk];
 
 const rootReducer = combineReducers({
     deviceDimensions: DeviceDimensions,
-    auth: persistReducer(persistAuthConfig, Account)
+    auth: persistReducer(persistAuthConfig, Account),
+    shop: Shop,
+    shops: Shops
 });
 
 const initialData = {};

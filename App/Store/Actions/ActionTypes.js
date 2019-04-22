@@ -15,3 +15,14 @@ export const REGISTER_REQUEST_FAILED = 'register_request_failed';
 export const LOGOUT_REQUEST_STARTED = 'logout_request_started';
 export const LOGOUT_REQUEST_SUCCESS = 'logout_request_success';
 export const LOGOUT_REQUEST_FAILED = 'logout_request_failed';
+
+// Shops Action Types
+export const GET_SHOPS_REQUEST_STARTED = 'get_shops_request_started';
+export const GET_SHOPS_REQUEST_SUCCESS = 'get_shops_request_success';
+export const GET_SHOPS_REQUEST_FAILED = 'get_shops_request_failed';
+
+// Shop Action Types
+export const GET_SHOP_PRODUCTS_REQUEST_STARTED = 'get_shop_products_request_started';
+export const GET_SHOP_PRODUCTS_REQUEST_SUCCESS = 'get_shop_products_request_success';
+export const GET_SHOP_PRODUCTS_REQUEST_FAILED = 'get_shop_products_request_failed';
+export const GET_SHOP_CATEGORY_PRODUCTS = 'get_shop_category_products';
