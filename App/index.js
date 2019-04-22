@@ -8,12 +8,16 @@ import { AuthSwitch, DeviceDimensions, ScreenTypes } from './Components';
 import {
   HomeScreen,
   LoginScreen,
-  RegisterScreen
+  ProductsScreen,
+  RegisterScreen,
+  ShopScreen
 } from './Screens';
 
 import {
   DeviceDimensionsActions,
   AccountActions,
+  ShopActions,
+  ShopsActions
 } from './Store/Actions';
 
 import { Colors } from './Theme';
@@ -47,6 +51,19 @@ class AppRouter extends Component {
           getShops: () => dispatch(ShopsActions.getShops())
         })
       )(HomeScreen),
+      Shop: connect(
+        ({ deviceDimensions, auth, shop }) => ({ ...deviceDimensions, user: auth.user, ...shop }),
+        dispatch => ({
+          getProducts: () => dispatch(ShopActions.getProducts())
+        })
+      )(ShopScreen),
+      Products: connect(
+        ({ deviceDimensions, auth, shop }) => ({ ...deviceDimensions, user: auth.user, ...shop }),
+        dispatch => ({
+          getCategoryProducts: (category, products) =>
+            dispatch(ShopActions.getCategoryProducts(category, products))
+        })
+      )(ProductsScreen),
     };
   }
   render() {
@@ -64,7 +81,7 @@ class AppRouter extends Component {
           navBarButtonColor='#fff'
         >
           <Scene key='root' hideNavBar>
-            <Scene key={ScreenTypes.auth}>
+            {/* <Scene key={ScreenTypes.auth}>
               <Scene
                 key='login'
                 initial
@@ -79,7 +96,7 @@ class AppRouter extends Component {
                 title='Register'
                 component={ConnectedComponents.Register}
               />
-            </Scene>
+            </Scene> */}
             <Scene key={ScreenTypes.app}>
               <Scene
                 initial
@@ -87,6 +104,17 @@ class AppRouter extends Component {
                 hideNavBar
                 title='Home'
                 component={ConnectedComponents.Home}
+              />
+              <Scene
+                key='shop'
+                title='Shop'
+                component={ConnectedComponents.Shop}
+              />
+              <Scene
+                key='products'
+                title='Products'
+                // hideNavBar
+                component={ConnectedComponents.Products}
               />
             </Scene>
           </Scene>
