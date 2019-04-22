@@ -9,7 +9,10 @@ export default StyleSheet.create({
   },
   imageContainerStyle: {
     flex: 1,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+    overflow: 'hidden'
   },
   imageStyle: {
     flex: 1,

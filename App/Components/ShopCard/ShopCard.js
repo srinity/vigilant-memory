@@ -2,13 +2,13 @@ import React from 'react';
 import { View, ViewPropTypes, Text, Image, TouchableWithoutFeedback, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import memoize from 'memoize-one';
-import { isString as _isString } from 'lodash'
+import { isString as _isString } from 'lodash';
 
 import { Card } from './../';
 
 import styles from './ShopCard.Styles';
 
-function constructImageSource (image) {
+function constructImageSource(image) {
   if (_isString(image)) {
     return { uri: image };
   }
@@ -16,7 +16,7 @@ function constructImageSource (image) {
   return image;
 }
 
-function constructCardContainerStyle (height, defaultContainerStyle, containerStyle) {
+function constructCardContainerStyle(height, defaultContainerStyle, containerStyle) {
   return StyleSheet.flatten([defaultContainerStyle, containerStyle, { height }]);
 }
 
@@ -38,13 +38,17 @@ const ShopCard = ({
 }) => {
   const source = constructImageSourceMemoized(image);
   const cardStyle = constructCardContainerStyleMemoized(height, styles.containerStyle, containerStyle);
-  console.tron.log(source)
-  console.tron.log(cardStyle)
+
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <Card style={cardStyle}>
         <View style={styles.imageContainerStyle}>
-          <Image source={source} style={[styles.imageStyle, imageStyle]} resizeMode='cover' {...props} />
+          <Image
+            source={source}
+            style={[styles.imageStyle, imageStyle]}
+            resizeMode='cover'
+            {...props}
+          />
         </View>
         <View style={[styles.infoContainerStyle, infoContainerStyle]}>
           <Text style={[styles.nameStyle, nameStyle]}>{name}</Text>
