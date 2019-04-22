@@ -25,7 +25,8 @@ class AppRouter extends Component {
     this.connectedComponents = {
       AuthSwitch: connect(state => ({ ...state.auth }))(AuthSwitch),
       DeviceDimensions: connect(null, dispatch => ({
-        onDimensionsChanged: deviceDimensions => dispatch(DeviceDimensionsActions.deviceDimensionsChanged(deviceDimensions))
+        onDimensionsChanged: deviceDimensions =>
+          dispatch(DeviceDimensionsActions.deviceDimensionsChanged(deviceDimensions))
       }))(DeviceDimensions),
       Login: connect(
         ({ deviceDimensions }) => ({ ...deviceDimensions }),
@@ -36,10 +37,16 @@ class AppRouter extends Component {
       Register: connect(
         ({ deviceDimensions }) => ({ ...deviceDimensions }),
         dispatch => ({
-          register: (firstName, lastName, email, password, phone) => dispatch(AccountActions.register(firstName, lastName, email, password, phone))
+          register: (firstName, lastName, email, password, phone) =>
+            dispatch(AccountActions.register(firstName, lastName, email, password, phone))
         })
       )(RegisterScreen),
-      Home: connect(({ deviceDimensions, auth }) => ({ ...deviceDimensions, ...auth }))(HomeScreen)
+      Home: connect(
+        ({ deviceDimensions, auth, shops }) => ({ ...deviceDimensions, user: auth.user, ...shops }),
+        dispatch => ({
+          getShops: () => dispatch(ShopsActions.getShops())
+        })
+      )(HomeScreen),
     };
   }
   render() {

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { ImageBackground, SafeAreaView, FlatList } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 
 import { ShopCard } from './../../Components';
 
@@ -8,45 +9,13 @@ import { Images } from './../../Theme';
 import styles from './Home.Styles';
 
 class Home extends Component {
-  constructor(props) {
-    super(props);
-
-    this.data = [
-      {
-        shopName: 'Some Shop Name',
-        shopImage: Images.cover,
-        address: 'Some Shop Adress, more address, address!!'
-      },
-      {
-        shopName: 'Another Shop!',
-        shopImage: 'https://picsum.photos/200/300/?random',
-        address: 'This is the other shop Address!ß'
-      },
-      {
-        shopName: 'Some Other Shop Name',
-        shopImage: 'https://picsum.photos/200/300/?random',
-        address: 'Some Shop Adress, more address, address!!'
-      },
-      {
-        shopName: 'Fat7 Allah',
-        shopImage: 'https://picsum.photos/200/300/?random',
-        address: 'Some Shop Adress, more address, address!!'
-      },
-      {
-        shopName: 'Mdenah',
-        shopImage: 'https://picsum.photos/200/300/?random',
-        address: 'Some Shop Adress, more address, address!!'
-      },
-      {
-        shopName: 'Some Shop Name',
-        shopImage: 'https://picsum.photos/600/600/?random',
-        address: 'Some Shop Adress, more address, address!!'
-      }
-    ];
+  componentDidMount() {
+    this.props.getShops();
   }
 
   onShopPress = (shopInfo) => {
     console.tron.warn(shopInfo);
+    Actions.shop({ title: shopInfo.shopName, ...shopInfo });
   }
 
   renderItem = ({ item }) => {
@@ -69,7 +38,7 @@ class Home extends Component {
       <ImageBackground source={Images.cover2} style={styles.containerStyle}>
         <SafeAreaView style={styles.containerStyle}>
           <FlatList
-            data={this.data}
+            data={this.props.shops}
             renderItem={this.renderItem}
             style={{ flex: 1 }}
           />
