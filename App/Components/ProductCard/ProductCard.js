@@ -4,7 +4,11 @@ import PropTypes from 'prop-types';
 import memoize from 'memoize-one';
 import { isString as _isString } from 'lodash';
 
-import styles from './ProductCard.Styles';
+import { Icon, iconTypesValues } from './../Icon';
+
+import { colorPropType } from '../../Utils/PropTypesValidators';
+
+import verticalStyles, { horizontalStyles } from './ProductCard.Styles';
 
 function constructImageSource(image) {
     if (_isString(image)) {
@@ -23,9 +27,15 @@ const ProductCard = ({
     onPress,
     buttonTitle,
     disabled,
+    horizontal,
+    icon,
+    iconType,
+    iconSize,
+    iconColor,
     containerStyle,
     ...props
 }) => {
+    const styles = horizontal ? horizontalStyles : verticalStyles;
     const source = constructImageSourceMemoized(image);
 
     return (
@@ -40,7 +50,13 @@ const ProductCard = ({
                     <Text style={styles.textStyle}>{price} EGP</Text>
 
                     <TouchableOpacity style={styles.buttonStyle} onPress={onPress} disabled={disabled} {...props}>
-                        <Text style={styles.buttonTextStyle}>{buttonTitle}</Text>
+                        {
+                            icon
+                            ?
+                            <Icon name={icon} type={iconType} size={iconSize} color={iconColor} />
+                            :
+                            <Text style={styles.buttonTextStyle}>{buttonTitle}</Text>
+                        }
                     </TouchableOpacity>
                 </View>
             </View>
@@ -50,7 +66,10 @@ const ProductCard = ({
 
 ProductCard.defaultProps = {
     onPress: () => {},
-    containerStyle: {}
+    containerStyle: {},
+    horizontal: false,
+    iconSize: 25,
+    iconColor: '#000',
 };
 
 ProductCard.propTypes = {
@@ -65,6 +84,11 @@ ProductCard.propTypes = {
     onPress: PropTypes.func.isRequired,
     buttonTitle: PropTypes.string.isRequired,
     disabled: PropTypes.bool,
+    horizontal: PropTypes.bool,
+    icon: PropTypes.string,
+    iconType: PropTypes.oneOf(iconTypesValues),
+    iconSize: PropTypes.bool,
+    iconColor: colorPropType,
     containerStyle: ViewPropTypes.style
 };
 

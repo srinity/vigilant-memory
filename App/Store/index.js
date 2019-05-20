@@ -9,7 +9,8 @@ import {
     DeviceDimensions,
     Account,
     Shop,
-    Shops
+    Shops,
+    Cart
 } from './Reducers';
 
 const persistAuthConfig = {
@@ -18,13 +19,20 @@ const persistAuthConfig = {
     whitelist: ['user']
 };
 
+const persistCartConfig = {
+    key: 'Cart',
+    storage,
+    whitelist: ['cart']
+};
+
 const middleWares = [Thunk];
 
 const rootReducer = combineReducers({
     deviceDimensions: DeviceDimensions,
     auth: persistReducer(persistAuthConfig, Account),
     shop: Shop,
-    shops: Shops
+    shops: Shops,
+    cart: persistReducer(persistCartConfig, Cart)
 });
 
 const initialData = {};

@@ -8,12 +8,13 @@ import {
     TouchableOpacity
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import { isArray as _isArray } from 'lodash';
+import { isArray as _isArray, findIndex as _findIndex } from 'lodash';
 import memoize from 'memoize-one';
 
-import { ProductCard, ShopHeader } from './../../Components';
+import { ProductCard, ShopHeader, IconTypes } from './../../Components';
 
 import styles from './Shop.Styles';
+import { Colors } from '../../Theme';
 
 class Shop extends Component {
     componentDidMount() {
@@ -22,10 +23,24 @@ class Shop extends Component {
 
     onAddToCartPress = (productInfo) => {
         console.tron.error(productInfo);
+        const product = { ...productInfo, quantity: 1 };
+        this.props.addToCart(this.props.shopName, product, this.props.cart);
+    }
+
+    onRemoveFromCartPress = (productInfo) => {
+        console.tron.error(productInfo);
+        this.props.removeFromCart(this.props.shopName, productInfo, this.props.cart);
     }
 
     onShowMorePress = (category) => {
-        Actions.products({ title: category });
+        Actions.products({ category, shop: this.props.shopName });
+    }
+
+    checkIfIProductsInCart = (product) => {
+        const { cart, shopName } = this.props;
+
+        return _findIndex(cart[shopName], item =>
+            item.productName === product.productName && item.category === product.category) !== -1;
     }
 
     constructShopHeaderStyle = (width, height) => {
@@ -65,6 +80,7 @@ class Shop extends Component {
                     renderItem={this.renderProduct}
                     showsHorizontalScrollIndicator={false}
                     snapToInterval={this.calculateSnapInterval(this.props.width, this.props.height)}
+                    extraData={this.props.cart}
                 />
             </View>
         );
@@ -87,15 +103,24 @@ class Shop extends Component {
             );
         }
 
+        const isInCart = this.checkIfIProductsInCart(item);
+        const buttonTitle = isInCart ? 'Remove From Cart' : 'Add To Cart';
+        const iconName = isInCart ? 'trash-can' : 'cart-plus';
+        const iconColor = isInCart ? Colors.dangerColorHexCode : Colors.brandColorHexCode;
+        const onPress = isInCart ? () => this.onRemoveFromCartPress(item) : () => this.onAddToCartPress(item);
+
         return (
             <ProductCard
                 key={item.productName}
                 image={item.imgUrl}
                 name={item.productName}
                 price={item.price}
-                buttonTitle='Add To Cart'
+                buttonTitle={buttonTitle}
                 containerStyle={this.constructProductCardStyleMemoized(this.props.width, this.props.height)}
-                onPress={() => this.onAddToCartPress(item)}
+                onPress={onPress}
+                icon={iconName}
+                iconType={IconTypes.materialCommunity}
+                iconColor={iconColor}
             />
         );
     }
@@ -119,6 +144,7 @@ class Shop extends Component {
                         data={this.props.products}
                         renderItem={this.renderProductsCategory}
                         showsVerticalScrollIndicator={false}
+                        extraData={this.props.cart}
                     />
                 </ScrollView>
             </SafeAreaView>

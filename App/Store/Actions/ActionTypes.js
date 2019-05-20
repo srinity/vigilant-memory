@@ -26,3 +26,10 @@ export const GET_SHOP_PRODUCTS_REQUEST_STARTED = 'get_shop_products_request_star
 export const GET_SHOP_PRODUCTS_REQUEST_SUCCESS = 'get_shop_products_request_success';
 export const GET_SHOP_PRODUCTS_REQUEST_FAILED = 'get_shop_products_request_failed';
 export const GET_SHOP_CATEGORY_PRODUCTS = 'get_shop_category_products';
+
+// Cart Action Types
+export const ADD_ITEM_TO_CART = 'add_item_to_cart';
+export const REMOVE_ITEM_FROM_CART = 'remove_item_from_cart';
+export const BUY_SHOP_CART_PRODUCTS_STARTED = 'but_shop_cart_products_started';
+export const BUY_SHOP_CART_PRODUCTS_FAILED = 'but_shop_cart_products_failed';
+export const BUY_SHOP_CART_PRODUCTS_SUCCESS = 'but_shop_cart_products_success';
