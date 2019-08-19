@@ -8,6 +8,8 @@ export const APIURLs = {
   getShops: '/api/client/shop/getShopsAtSpecificArea'
 };
 
+export const ImageHostUrl = 'https://s3-us-west-2.amazonaws.com/elcartona/';
+
 export const APIHeaders = {
   'Accept': 'application/json',
   'Content-Type': 'application/json',

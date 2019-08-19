@@ -5,6 +5,8 @@ import { Dropdown } from 'react-native-material-dropdown';
 
 import { ShopCard, Icon, IconTypes, Logo, Button } from './../../Components';
 
+import { ImageHostUrl } from '../../Config/APIConfig';
+
 import { Images, Colors } from './../../Theme';
 
 import styles from './Home.Styles';
@@ -80,7 +82,7 @@ class Home extends Component {
         key={item._id}
         name={item.shopName}
         address={`${item.address.district}, ${item.address.area}, ${item.address.city}`}
-        image={`https://s3-us-west-2.amazonaws.com/elcartona/${item.shopImage}`}
+        image={`${ImageHostUrl}${item.shopImage}`}
         height={this.props.height / 2.5}
         onPress={() => this.onShopPress(item)}
       />

@@ -13,8 +13,11 @@ import memoize from 'memoize-one';
 
 import { ProductCard, ShopHeader, IconTypes } from './../../Components';
 
-import styles from './Shop.Styles';
+import { ImageHostUrl } from '../../Config/APIConfig';
+
 import { Colors } from '../../Theme';
+
+import styles from './Shop.Styles';
 
 class Shop extends Component {
     componentDidMount() {
@@ -132,9 +135,9 @@ class Shop extends Component {
             <SafeAreaView style={styles.containerStyle}>
                 <ScrollView style={styles.containerStyle}>
                     <ShopHeader
-                        image={this.props.shopImage}
+                        image={`${ImageHostUrl}${this.props.shopImage}`}
                         name={this.props.shopName}
-                        address={this.props.address}
+                        address={this.props.address ? `${this.props.address.district}, ${this.props.address.area}, ${this.props.address.city}` : ''}
                         icon='location-pin'
                         containerStyle={this.constructShopHeaderStyleMemoized(this.props.width, this.props.height)}
                     />
