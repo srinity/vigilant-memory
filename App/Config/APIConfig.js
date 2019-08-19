@@ -1,9 +1,11 @@
 import Axios from 'axios';
 
 export const APIURLs = {
-  baseURL: 'http://bd69e752.ngrok.io',
+  baseURL: 'https://a6dfc912.ngrok.io',
   login: '/api/login',
-  register: '/api/users/signin'
+  register: '/api/users/signin',
+  searchAreas: '/api/admin/addresses/city',
+  getShops: '/api/client/shop/getShopsAtSpecificArea'
 };
 
 export const APIHeaders = {
