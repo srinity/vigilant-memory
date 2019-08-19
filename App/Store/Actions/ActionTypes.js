@@ -17,6 +17,8 @@ export const LOGOUT_REQUEST_SUCCESS = 'logout_request_success';
 export const LOGOUT_REQUEST_FAILED = 'logout_request_failed';
 
 // Shops Action Types
+export const GET_SEARCH_AREAS_SUCCESS = 'get_search_areas_success';
+export const GET_SEARCH_AREAS_FAILED = 'get_search_areas_failed';
 export const GET_SHOPS_REQUEST_STARTED = 'get_shops_request_started';
 export const GET_SHOPS_REQUEST_SUCCESS = 'get_shops_request_success';
 export const GET_SHOPS_REQUEST_FAILED = 'get_shops_request_failed';
