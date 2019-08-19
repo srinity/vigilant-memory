@@ -81,7 +81,8 @@ class AppRouter extends Component {
       Home: connect(
         ({ deviceDimensions, auth, shops }) => ({ ...deviceDimensions, user: auth.user, ...shops }),
         dispatch => ({
-          getShops: () => dispatch(ShopsActions.getShops())
+          getShops: (city, area, district) => dispatch(ShopsActions.getShops(city, area, district)),
+          getSearchAreas: () => dispatch(ShopsActions.getSearchAreas())
         })
       )(HomeScreen),
       Shop: connect(
