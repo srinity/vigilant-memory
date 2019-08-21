@@ -25,6 +25,9 @@ export default StyleSheet.create({
       }
     })
   },
+  logoStyle: {
+    marginTop: 10
+  },
   searchBoxContainerStyle: {
     flexDirection: 'row',
     alignItems: 'center',

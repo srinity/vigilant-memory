@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ImageBackground, SafeAreaView, FlatList, View, Text, TouchableWithoutFeedback } from 'react-native';
+import { SafeAreaView, FlatList, View, Text, TouchableWithoutFeedback } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { Dropdown } from 'react-native-material-dropdown';
 
@@ -7,7 +7,7 @@ import { ShopCard, Icon, IconTypes, Logo, Button } from './../../Components';
 
 import { ImageHostUrl } from '../../Config/APIConfig';
 
-import { Images, Colors } from './../../Theme';
+import { Colors } from './../../Theme';
 
 import styles from './Home.Styles';
 
@@ -111,7 +111,7 @@ class Home extends Component {
             :
             null
           }
-          <Logo name='logo' />
+          <Logo name='logo' style={styles.logoStyle} />
 
           <View style={styles.searchSelectionContainerStyle}>
             <Dropdown
@@ -161,7 +161,7 @@ class Home extends Component {
       )
       :
       (
-        <ImageBackground source={Images.cover2} style={styles.containerStyle}>
+        <View style={styles.containerStyle}>
           <View style={styles.headerContainerStyle}>
             <TouchableWithoutFeedback onPress={this.onSearchToolBarPress}>
               <View style={styles.searchBoxContainerStyle}>
@@ -178,7 +178,7 @@ class Home extends Component {
               style={{ flex: 1 }}
             />
           </SafeAreaView>
-        </ImageBackground>
+        </View>
       )
     );
   }
