@@ -259,7 +259,7 @@ class NumericUpDown extends Component {
                         type={IconTypes.fontAwesome}
                         name='plus' 
                         color={increaseIconColor || iconsColor} 
-                        size={iconSize} 
+                        size={iconSize}
                     />
                 </TouchableOpacity>
             </View>
