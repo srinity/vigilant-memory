@@ -93,11 +93,13 @@ class AppRouter extends Component {
             ...cart
         }),
         dispatch => ({
-          getProducts: () => dispatch(ShopActions.getProducts()),
-          addToCart: (shop, product, cart) =>
-            dispatch(CartActions.addToCart(shop, product, cart)),
-          removeFromCart: (shop, product, cart) =>
-            dispatch(CartActions.removeFromCart(shop, product, cart))
+          getProducts: (shopId) => dispatch(ShopActions.getProducts(shopId)),
+          addToCart: (shopId, shopName, product, cart) =>
+            dispatch(CartActions.addToCart(shopId, shopName, product, cart)),
+          removeFromCart: (shopId, shopName, product, cart) =>
+            dispatch(CartActions.removeFromCart(shopId, shopName, product, cart)),
+          changeCartProductQuantity: (shopId, shopName, product, cart) =>
+            dispatch(CartActions.changeCartProductQuantity(shopId, shopName, product, cart)),
         })
       )(ShopScreen),
       Products: connect(
@@ -110,10 +112,12 @@ class AppRouter extends Component {
         dispatch => ({
           getCategoryProducts: (category, products) =>
             dispatch(ShopActions.getCategoryProducts(category, products)),
-          addToCart: (shop, product, cart) =>
-            dispatch(CartActions.addToCart(shop, product, cart)),
-          removeFromCart: (shop, product, cart) =>
-            dispatch(CartActions.removeFromCart(shop, product, cart))
+          addToCart: (shopId, shopName, product, cart) =>
+            dispatch(CartActions.addToCart(shopId, shopName, product, cart)),
+          removeFromCart: (shopId, shopName, product, cart) =>
+            dispatch(CartActions.removeFromCart(shopId, shopName, product, cart)),
+          changeCartProductQuantity: (shopId, shopName, product, cart) =>
+            dispatch(CartActions.changeCartProductQuantity(shopId, shopName, product, cart)),
         })
       )(ProductsScreen),
       Cart: connect(
@@ -123,8 +127,8 @@ class AppRouter extends Component {
           ...cart
         }),
         dispatch => ({
-          removeFromCart: (shop, product, cart) =>
-            dispatch(CartActions.removeFromCart(shop, product, cart)),
+          removeFromCart: (shopId, shopName, product, cart) =>
+            dispatch(CartActions.removeFromCart(shopId, shopName, product, cart)),
           buyShopProducts: (user, products, cart) => 
             dispatch(CartActions.buyShopProducts(user, products, cart))
         })
