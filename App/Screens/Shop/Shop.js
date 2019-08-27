@@ -5,13 +5,16 @@ import {
     FlatList,
     Text,
     ScrollView,
-    TouchableOpacity
+    TouchableOpacity,
+    TouchableNativeFeedback,
+    TouchableWithoutFeedback,
+    Platform
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import { isArray as _isArray, findIndex as _findIndex } from 'lodash';
+import { isArray as _isArray, findIndex as _findIndex, get as _get } from 'lodash';
 import memoize from 'memoize-one';
 
-import { ProductCard, ShopHeader, IconTypes } from './../../Components';
+import { ProductCard, ShopHeader, IconTypes, CustomFlatList } from './../../Components';
 
 import { ImageHostUrl } from '../../Config/APIConfig';
 
@@ -21,18 +24,41 @@ import styles from './Shop.Styles';
 
 class Shop extends Component {
     componentDidMount() {
-        this.props.getProducts();
+        this.props.getProducts(this.props._id);
     }
 
-    onAddToCartPress = (productInfo) => {
+    onAddToCartPress = (productInfo, quantity) => {
+        const { _id: shopId, shopName, addToCart, cart } = this.props;
         console.tron.error(productInfo);
-        const product = { ...productInfo, quantity: 1 };
-        this.props.addToCart(this.props.shopName, product, this.props.cart);
+        const product = { ...productInfo, quantity };
+        addToCart(shopId, shopName, product, cart);
     }
 
     onRemoveFromCartPress = (productInfo) => {
+        const { _id: shopId, shopName, removeFromCart, cart } = this.props;
         console.tron.error(productInfo);
-        this.props.removeFromCart(this.props.shopName, productInfo, this.props.cart);
+        removeFromCart(shopId, shopName, productInfo, cart);
+    }
+
+    onCartProductQuantityChange = (productInfo, quantity) => {
+        const { _id: shopId, shopName, changeCartProductQuantity, cart } = this.props;
+        console.tron.error(productInfo);
+        const product = { ...productInfo, quantity };
+        changeCartProductQuantity(shopId, shopName, product, cart);
+    }
+
+    onProductQuantityChange = (productInfo, quantity) => {
+        const isInCart = this.checkIfIProductsInCart(productInfo);
+
+        if (!isInCart) {
+            alert('here')
+            this.onAddToCartPress(productInfo, quantity);
+        } else if (isInCart && quantity === 0) {
+            this.onRemoveFromCartPress(productInfo);
+        } else if (isInCart) {
+            // quantity added to cart changed changed
+            this.onCartProductQuantityChange(productInfo, quantity);
+        }
     }
 
     onShowMorePress = (category) => {
@@ -40,10 +66,11 @@ class Shop extends Component {
     }
 
     checkIfIProductsInCart = (product) => {
-        const { cart, shopName } = this.props;
+        const { cart, _id } = this.props;
+        const shopCartProducts = _get(cart[_id], 'products', []);
 
-        return _findIndex(cart[shopName], item =>
-            item.productName === product.productName && item.category === product.category) !== -1;
+        return _findIndex(shopCartProducts, item =>
+            item._id === product._id && item.category === product.category) !== -1;
     }
 
     constructShopHeaderStyle = (width, height) => {
@@ -56,7 +83,7 @@ class Shop extends Component {
 
     constructProductCardStyle = (width, height) => {
         if (height > width) {
-            return { height: height / 4, width: (width / 2) - 20 };
+            return { height: height / 3.5, width: (width / 2) - 20 };
         }
 
         return { height: width / 4, width: (height / 2) - 20 };
@@ -70,16 +97,25 @@ class Shop extends Component {
     }
 
     renderProductsCategory = ({ item }) => {
-        if (!_isArray(item.products) || item.products.length === 0) {
+        if (!_isArray(item.shopProducts) || item.shopProducts.length === 0) {
             return null;
         }
 
+        const TouchableComponent = Platform.OS === 'ios' ? TouchableWithoutFeedback : TouchableNativeFeedback;
+
         return (
             <View style={styles.categoryContainerStyle}>
-                <Text style={styles.categoryTextStyle}>{item.category}</Text>
+                <View style={styles.categoryHeaderContainerStyle}>
+                    <Text style={styles.categoryTextStyle}>{item.category}</Text>
+
+                    <TouchableComponent onPress={() => this.onShowMorePress(item.category)}>
+                        <Text style={styles.showMoreTextStyle}>Show more</Text>
+                    </TouchableComponent>
+                </View>
+
                 <FlatList
                     horizontal
-                    data={item.products}
+                    data={item.shopProducts}
                     renderItem={this.renderProduct}
                     showsHorizontalScrollIndicator={false}
                     snapToInterval={this.calculateSnapInterval(this.props.width, this.props.height)}
@@ -89,65 +125,60 @@ class Shop extends Component {
         );
     }
 
-    renderProduct = ({ item, index }) => {
-        if (index > 10) {
-            return null;
-        } else if (index === 10) {
-            return (
-                <TouchableOpacity
-                    style={[
-                        this.constructProductCardStyleMemoized(this.props.width, this.props.height),
-                        styles.showMoreContainerStyle
-                    ]}
-                    onPress={() => this.onShowMorePress(item.category)}
-                >
-                    <Text style={styles.showMoreTextStyle}>Show more</Text>
-                </TouchableOpacity>
-            );
-        }
-
-        const isInCart = this.checkIfIProductsInCart(item);
-        const buttonTitle = isInCart ? 'Remove From Cart' : 'Add To Cart';
-        const iconName = isInCart ? 'trash-can' : 'cart-plus';
-        const iconColor = isInCart ? Colors.dangerColorHexCode : Colors.brandColorHexCode;
-        const onPress = isInCart ? () => this.onRemoveFromCartPress(item) : () => this.onAddToCartPress(item);
-
+    renderProduct = ({ item }) => {
         return (
             <ProductCard
-                key={item.productName}
-                image={item.imgUrl}
+                key={item._id}
+                image={`${ImageHostUrl}${item.imgUrl}`}
                 name={item.productName}
                 price={item.price}
-                buttonTitle={buttonTitle}
                 containerStyle={this.constructProductCardStyleMemoized(this.props.width, this.props.height)}
-                onPress={onPress}
-                icon={iconName}
-                iconType={IconTypes.materialCommunity}
-                iconColor={iconColor}
+                onQuantityChange={(quantity) => this.onProductQuantityChange(item, quantity)}
             />
         );
     }
 
     render() {
         console.tron.log(this.props);
+        const {
+            shopImage,
+            shopName,
+            address,
+            products,
+            cart,
+            isLoading,
+            width,
+            height
+        } = this.props;
 
         return (
             <SafeAreaView style={styles.containerStyle}>
                 <ScrollView style={styles.containerStyle}>
                     <ShopHeader
-                        image={`${ImageHostUrl}${this.props.shopImage}`}
-                        name={this.props.shopName}
-                        address={this.props.address ? `${this.props.address.district}, ${this.props.address.area}, ${this.props.address.city}` : ''}
+                        image={`${ImageHostUrl}${shopImage}`}
+                        name={shopName}
+                        address={address ? `${address.district}, ${address.area}, ${address.city}` : ''}
                         icon='location-pin'
-                        containerStyle={this.constructShopHeaderStyleMemoized(this.props.width, this.props.height)}
+                        containerStyle={this.constructShopHeaderStyleMemoized(width, height)}
                     />
 
-                    <FlatList
+                    {/* <FlatList
                         style={styles.categoriesContainerStyle}
                         data={this.props.products}
                         renderItem={this.renderProductsCategory}
                         showsVerticalScrollIndicator={false}
                         extraData={this.props.cart}
+                    /> */}
+                    <CustomFlatList
+                        indicatorSize='large'
+                        indicatorColor={Colors.brandColorHexCode}
+                        isLoading={isLoading}
+                        emptyText='No Products Available'
+                        style={styles.categoriesContainerStyle}
+                        data={products}
+                        renderItem={this.renderProductsCategory}
+                        showsVerticalScrollIndicator={false}
+                        extraData={cart}
                     />
                 </ScrollView>
             </SafeAreaView>
