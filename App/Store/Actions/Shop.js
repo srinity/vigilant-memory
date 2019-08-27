@@ -326,12 +326,24 @@ const productsData = [
     }
 ];
 
-export const getProducts = () => {
+export const getProducts = (shopId) => {
     return async (dispatch) => {
         dispatch(getProductsStarted());
-        setTimeout(() => {
-            dispatch(getProductsSuccess(productsData));
-        }, 500);
+
+        try {
+            const response = await AppAxios.get(APIURLs.getProductsOfShopGroupedByCategory, {
+                params: {
+                    shop: shopId
+                }
+            });
+
+            dispatch(getProductsSuccess(response.data.shopProducts));
+        } catch (error) {
+            dispatch(getProductsFailed(error));
+        }
+        // setTimeout(() => {
+        //     dispatch(getProductsSuccess(productsData));
+        // }, 500);
     };
 };
 

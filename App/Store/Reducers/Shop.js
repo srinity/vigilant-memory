@@ -10,7 +10,7 @@ const INITIAL_STATE = {
 export default function (state = INITIAL_STATE, action) {
     switch (action.type) {
         case ActionTypes.GET_SHOP_PRODUCTS_REQUEST_STARTED:
-            return { ...state, isLoading: true };
+            return { ...state, isLoading: true, products: null, displayProduct: null, error: null };
 
         case ActionTypes.GET_SHOP_PRODUCTS_REQUEST_SUCCESS:
             return { ...state, isLoading: false, products: action.products };

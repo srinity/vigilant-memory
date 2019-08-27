@@ -31,6 +31,7 @@ export const GET_SHOP_CATEGORY_PRODUCTS = 'get_shop_category_products';
 
 // Cart Action Types
 export const ADD_ITEM_TO_CART = 'add_item_to_cart';
+export const CHANGE_CART_ITEM_QUANTITY = 'change_cart_item_quantity';
 export const REMOVE_ITEM_FROM_CART = 'remove_item_from_cart';
 export const BUY_SHOP_CART_PRODUCTS_STARTED = 'but_shop_cart_products_started';
 export const BUY_SHOP_CART_PRODUCTS_FAILED = 'but_shop_cart_products_failed';
