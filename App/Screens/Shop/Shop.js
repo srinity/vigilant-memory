@@ -11,7 +11,7 @@ import {
     Platform
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import { isArray as _isArray, findIndex as _findIndex, get as _get } from 'lodash';
+import { isArray as _isArray, findIndex as _findIndex, get as _get, find as _find } from 'lodash';
 import memoize from 'memoize-one';
 
 import { ProductCard, ShopHeader, IconTypes, CustomFlatList } from './../../Components';
@@ -51,7 +51,6 @@ class Shop extends Component {
         const isInCart = this.checkIfIProductsInCart(productInfo);
 
         if (!isInCart) {
-            alert('here')
             this.onAddToCartPress(productInfo, quantity);
         } else if (isInCart && quantity === 0) {
             this.onRemoveFromCartPress(productInfo);
@@ -63,6 +62,16 @@ class Shop extends Component {
 
     onShowMorePress = (category) => {
         Actions.products({ category, shop: this.props.shopName });
+    }
+
+    getProductQuantityInCart = (product) => {
+        const { cart, _id } = this.props;
+        const shopCartProducts = _get(cart[_id], 'products', []);
+
+        const cartProduct = _find(shopCartProducts, item =>
+            item._id === product._id && item.category === product.category);
+
+        return cartProduct ? cartProduct.quantity : 0;
     }
 
     checkIfIProductsInCart = (product) => {
@@ -119,13 +128,15 @@ class Shop extends Component {
                     renderItem={this.renderProduct}
                     showsHorizontalScrollIndicator={false}
                     snapToInterval={this.calculateSnapInterval(this.props.width, this.props.height)}
-                    extraData={this.props.cart}
+                    // extraData={this.props.cart}
                 />
             </View>
         );
     }
 
     renderProduct = ({ item }) => {
+        const initialQuantity = this.getProductQuantityInCart(item);
+
         return (
             <ProductCard
                 key={item._id}
@@ -134,6 +145,7 @@ class Shop extends Component {
                 price={item.price}
                 containerStyle={this.constructProductCardStyleMemoized(this.props.width, this.props.height)}
                 onQuantityChange={(quantity) => this.onProductQuantityChange(item, quantity)}
+                initialQuantity={initialQuantity}
             />
         );
     }
