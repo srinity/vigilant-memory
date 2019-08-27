@@ -6,6 +6,7 @@ import Card from './Card/Card';
 import CardSection from './CardSection/CardSection';
 import CartProduct from './CartProduct/CartProduct';
 import CollapseExpandView from './CollapseExpandView/CollapseExpandView';
+import CustomFlatList from './CustomFlatList/CustomFlatList';
 import DeviceDimensions from './DeviceDimensions/DeviceDimensions';
 import { Icon, IconTypes } from './Icon';
 import Input from './Input/Input';
@@ -25,6 +26,7 @@ export {
     CardSection,
     CartProduct,
     CollapseExpandView,
+    CustomFlatList,
     DeviceDimensions,
     Icon,
     IconTypes,
