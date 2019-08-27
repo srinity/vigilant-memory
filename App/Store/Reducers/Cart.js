@@ -11,6 +11,9 @@ export default function (state = INITIAL_STATE, action) {
         case ActionTypes.ADD_ITEM_TO_CART:
             return { ...state, cart: action.cart };
 
+        case ActionTypes.CHANGE_CART_ITEM_QUANTITY:
+                return { ...state, cart: action.cart };
+
         case ActionTypes.REMOVE_ITEM_FROM_CART:
             return { ...state, cart: action.cart };
 

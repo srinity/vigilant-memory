@@ -2,46 +2,76 @@ import {
     cloneDeep as _cloneDeep,
     has as _has,
     remove as _remove,
-    unset as _unset
+    unset as _unset,
+    findIndex as _findIndex
 } from 'lodash';
 
 import { APIURLs, AppAxios } from './../../Config/APIConfig';
 
 import {
     ADD_ITEM_TO_CART,
+    CHANGE_CART_ITEM_QUANTITY,
     REMOVE_ITEM_FROM_CART,
     BUY_SHOP_CART_PRODUCTS_STARTED,
     BUY_SHOP_CART_PRODUCTS_FAILED,
     BUY_SHOP_CART_PRODUCTS_SUCCESS
 } from './ActionTypes';
 
-export function addToCart(shop, product, cart) {
-    let shopCartItems = [];
+export function addToCart(shopId, shopName, product, cart) {
+    let shopCartItems = { shopId, shopName, products: [] };
 
-    if (_has(cart, shop)) {
-        shopCartItems = cart[shop];
+    if (_has(cart, shopId)) {
+        shopCartItems = cart[shopId];
     }
 
-    shopCartItems.push(product);
+    shopCartItems.products.push(product);
 
     const newCart = _cloneDeep(cart);
-    newCart[shop] = shopCartItems;
+    newCart[shopId] = shopCartItems;
 
     console.tron.error(newCart);
 
     return { type: ADD_ITEM_TO_CART, cart: newCart };
 }
 
-export function removeFromCart(shop, product, cart) {
-    let shopCartItems = [];
+export function changeCartProductQuantity(shopId, shopName, product, cart) {
+    let shopCartItems = { shopId, shopName, products: [] };
 
-    if (_has(cart, shop)) {
-        shopCartItems = cart[shop];
-        _remove(shopCartItems, item => item.productName === product.productName);
+    if (_has(cart, shopId)) {
+        shopCartItems = cart[shopId];
+    }
+
+    const productIndex = _findIndex(shopCartItems.products, item => item._id === product._id);
+
+    if (productIndex !== -1) {
+        shopCartItems.products[productIndex] = product;
+    } else {
+        shopCartItems.products.push(product);
     }
 
     const newCart = _cloneDeep(cart);
-    newCart[shop] = shopCartItems;
+    newCart[shopId] = shopCartItems;
+
+    console.tron.error(newCart);
+
+    return { type: CHANGE_CART_ITEM_QUANTITY, cart: newCart };
+}
+
+export function removeFromCart(shopId, shopName, product, cart) {
+    let shopCartItems = { shopId, shopName, products: [] };
+
+    if (_has(cart, shopId)) {
+        shopCartItems = cart[shopId];
+        _remove(shopCartItems.products, item => item._id === product._id);
+    }
+
+    const newCart = _cloneDeep(cart);
+
+    if (shopCartItems.products.length === 0) {
+        _unset(newCart, shopId);
+    } else {
+        newCart[shopId] = shopCartItems;
+    }
     
     return { type: REMOVE_ITEM_FROM_CART, cart: newCart };
 }
