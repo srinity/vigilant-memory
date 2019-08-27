@@ -18,11 +18,15 @@ export default StyleSheet.create({
         flex: 1,
         margin: 5,
         backgroundColor: Colors.whiteColorHexCode,
+        borderRadius: 6,
         ...shadowing        
     },
     imageContainerStyle: {
         flex: 2,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        borderTopLeftRadius: 6,
+        borderTopRightRadius: 6,
+        overflow: 'hidden'
     },
     imageStyle: {
         flex: 1,
@@ -32,12 +36,14 @@ export default StyleSheet.create({
     infoContainerStyle: {
         flex: 1,
         justifyContent: 'space-between',
-        paddingVertical: 5,
+        alignItems: 'center',
+        paddingVertical: 7,
         paddingHorizontal: 7
     },
     textStyle: {
         color: Colors.blackColorHexCode,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        marginBottom: 3
     },
     priceContainerStyle: {
         flexDirection: 'row',
@@ -50,6 +56,30 @@ export default StyleSheet.create({
     },
     buttonTextStyle: {
         color: Colors.brandColorHexCode
+    },
+    numericUpDownStyle: {
+        width: 75,
+        height: undefined,
+        margin: 0,
+        marginBottom: 5
+    },
+    numericUpDownNumbersStyle: {
+        fontSize: 16,
+        color: Colors.blackColorHexCode,
+        fontWeight: 'normal'
+    },
+    numericUpDownNumbersContainerStyle: {
+        flex: 0,
+        width: 27
+    },
+    numericUpDownButtonStyle: {
+        flex: 0,
+        height: 20,
+        width: 20,
+        padding: 0,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });
 

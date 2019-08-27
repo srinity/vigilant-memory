@@ -1,12 +1,14 @@
 import React from 'react';
-import { View, ViewPropTypes, Text, Image, TouchableOpacity } from 'react-native';
+import { View, ViewPropTypes, Text, Image } from 'react-native';
 import PropTypes from 'prop-types';
 import memoize from 'memoize-one';
 import { isString as _isString } from 'lodash';
 
-import { Icon, iconTypesValues } from './../Icon';
+import NumericUpDown from './../NumericUpDown/NumericUpDown';
 
 import { colorPropType } from '../../Utils/PropTypesValidators';
+
+import { Colors } from '../../Theme';
 
 import verticalStyles, { horizontalStyles } from './ProductCard.Styles';
 
@@ -24,14 +26,12 @@ const ProductCard = ({
     image,
     name,
     price,
-    onPress,
-    buttonTitle,
-    disabled,
     horizontal,
-    icon,
-    iconType,
+    cart,
     iconSize,
     iconColor,
+    initialQuantity,
+    onQuantityChange,
     containerStyle,
     ...props
 }) => {
@@ -45,31 +45,37 @@ const ProductCard = ({
             </View>
 
             <View style={styles.infoContainerStyle}>
-                <Text style={styles.textStyle}>{name}</Text>
-                <View style={styles.priceContainerStyle}>
-                    <Text style={styles.textStyle}>{price} EGP</Text>
+                <Text style={styles.textStyle} numberOfLines={1}>{name}</Text>
+                <Text style={styles.textStyle} numberOfLines={1}>{price} EGP</Text>
 
-                    <TouchableOpacity style={styles.buttonStyle} onPress={onPress} disabled={disabled} {...props}>
-                        {
-                            icon
-                            ?
-                            <Icon name={icon} type={iconType} size={iconSize} color={iconColor} />
-                            :
-                            <Text style={styles.buttonTextStyle}>{buttonTitle}</Text>
-                        }
-                    </TouchableOpacity>
-                </View>
+                <NumericUpDown
+                    style={styles.numericUpDownStyle}
+                    buttonsStyle={styles.numericUpDownButtonStyle}
+                    numberContainerStyle={styles.numericUpDownNumbersContainerStyle}
+                    numbersStyle={styles.numericUpDownNumbersStyle}
+                    onChange={onQuantityChange}
+                    buttonsColor={Colors.brandColorHexCode}
+                    disabledButtonsColor={Colors.getBrandColorRGBAValue(0.5)}
+                    minValue={0}
+                    maxValue={100}
+                    initialValue={initialQuantity}
+                    iconSize={iconSize}
+                    iconsColor={iconColor}
+                    {...props}
+                />
             </View>
         </View>
     );
 };
 
 ProductCard.defaultProps = {
-    onPress: () => {},
+    onQuantityChange: () => {},
     containerStyle: {},
     horizontal: false,
-    iconSize: 25,
-    iconColor: '#000',
+    iconSize: 10,
+    iconColor: '#FFFFFF',
+    initialQuantity: 0,
+    cart: {}
 };
 
 ProductCard.propTypes = {
@@ -81,14 +87,12 @@ ProductCard.propTypes = {
       ]).isRequired,
     name: PropTypes.string.isRequired,
     price: PropTypes.string.isRequired,
-    onPress: PropTypes.func.isRequired,
-    buttonTitle: PropTypes.string.isRequired,
-    disabled: PropTypes.bool,
     horizontal: PropTypes.bool,
-    icon: PropTypes.string,
-    iconType: PropTypes.oneOf(iconTypesValues),
+    cart: PropTypes.object,
     iconSize: PropTypes.bool,
     iconColor: colorPropType,
+    onQuantityChange: PropTypes.func.isRequired,
+    initialQuantity: PropTypes.number,
     containerStyle: ViewPropTypes.style
 };
 
