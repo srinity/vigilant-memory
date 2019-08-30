@@ -75,7 +75,7 @@ class Shop extends Component {
             value: categoryProducts.category
         }));
 
-        categories.push({ label: 'All Products', value: null });
+        categories.splice(0, 0, { label: 'All Products', value: null });
 
         console.tron.error(categories);
 
