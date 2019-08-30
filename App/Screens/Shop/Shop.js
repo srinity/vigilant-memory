@@ -5,17 +5,18 @@ import {
     FlatList,
     Text,
     ScrollView,
-    TouchableOpacity,
     TouchableNativeFeedback,
     TouchableWithoutFeedback,
     Platform,
     ActivityIndicator
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import { isArray as _isArray, findIndex as _findIndex, get as _get, find as _find } from 'lodash';
+import { isArray as _isArray, map as _map } from 'lodash';
 import memoize from 'memoize-one';
 
-import { ProductCard, ShopHeader, IconTypes, CustomFlatList } from './../../Components';
+import { ProductCard, ShopHeader, CustomFlatList } from './../../Components';
+
+import { CartActions } from './../../Store/Actions';
 
 import { ImageHostUrl } from '../../Config/APIConfig';
 
@@ -25,7 +26,7 @@ import styles from './Shop.Styles';
 
 class Shop extends Component {
     componentDidMount() {
-        this.fetchProducts()
+        this.fetchProducts();
     }
 
     componentWillUnmount() {
@@ -53,7 +54,8 @@ class Shop extends Component {
     }
 
     onProductQuantityChange = (productInfo, quantity) => {
-        const isInCart = this.checkIfIProductsInCart(productInfo);
+        const { cart, _id: shopId } = this.props;
+        const isInCart = CartActions.checkIfIProductsInCart(productInfo, shopId, cart);
 
         if (!isInCart) {
             this.onAddToCartPress(productInfo, quantity);
@@ -66,17 +68,18 @@ class Shop extends Component {
     }
 
     onShowMorePress = (category) => {
-        Actions.products({ category, shop: this.props.shopName });
-    }
+        const { _id, shopName, shopImage, products } = this.props;
 
-    getProductQuantityInCart = (product) => {
-        const { cart, _id } = this.props;
-        const shopCartProducts = _get(cart[_id], 'products', []);
+        const categories = _map(products, categoryProducts => ({
+            label: categoryProducts.category,
+            value: categoryProducts.category
+        }));
 
-        const cartProduct = _find(shopCartProducts, item =>
-            item._id === product._id && item.category === product.category);
+        categories.push({ label: 'All Products', value: null });
 
-        return cartProduct ? cartProduct.quantity : 0;
+        console.tron.error(categories);
+
+        Actions.products({ category, categories, _id, shopName, shopImage });
     }
 
     fetchProducts = () => {
@@ -93,14 +96,6 @@ class Shop extends Component {
         if (!noMoreProducts && !areExtraProductsLoading) {
             getProducts(shopId, products, currentLimit, currentOffset, allProductsCount);
         }
-    }
-
-    checkIfIProductsInCart = (product) => {
-        const { cart, _id } = this.props;
-        const shopCartProducts = _get(cart[_id], 'products', []);
-
-        return _findIndex(shopCartProducts, item =>
-            item._id === product._id && item.category === product.category) !== -1;
     }
 
     constructShopHeaderStyle = (width, height) => {
@@ -181,7 +176,8 @@ class Shop extends Component {
     }
 
     renderProduct = ({ item }) => {
-        const initialQuantity = this.getProductQuantityInCart(item);
+        const { cart, _id: shopId } = this.props;
+        const initialQuantity = CartActions.getProductQuantityInCart(item, shopId, cart);
 
         return (
             <ProductCard
@@ -219,13 +215,6 @@ class Shop extends Component {
                         containerStyle={this.constructShopHeaderStyleMemoized(width, height)}
                     />
 
-                    {/* <FlatList
-                        style={styles.categoriesContainerStyle}
-                        data={this.props.products}
-                        renderItem={this.renderProductsCategory}
-                        showsVerticalScrollIndicator={false}
-                        extraData={this.props.cart}
-                    /> */}
                     <CustomFlatList
                         indicatorSize='large'
                         indicatorColor={Colors.brandColorHexCode}
