@@ -79,17 +79,12 @@ ProductCard.defaultProps = {
 };
 
 ProductCard.propTypes = {
-    image: PropTypes.oneOf([
-        PropTypes.shape({
-          uri: PropTypes.string.isRequired
-        }).isRequired,
-        PropTypes.string.isRequired
-      ]).isRequired,
+    image: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    price: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
     horizontal: PropTypes.bool,
     cart: PropTypes.object,
-    iconSize: PropTypes.bool,
+    iconSize: PropTypes.number,
     iconColor: colorPropType,
     onQuantityChange: PropTypes.func.isRequired,
     initialQuantity: PropTypes.number,

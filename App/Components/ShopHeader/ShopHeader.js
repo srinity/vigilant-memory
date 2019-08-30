@@ -68,12 +68,7 @@ ShopHeader.defaultProps = {
 };
 
 ShopHeader.propTypes = {
-    image: PropTypes.oneOf([
-        PropTypes.shape({
-          uri: PropTypes.string.isRequired
-        }).isRequired,
-        PropTypes.string.isRequired
-      ]).isRequired,
+    image: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     address: PropTypes.string.isRequired,
     icon: PropTypes.string.isRequired,
