@@ -1,350 +1,75 @@
 import { APIURLs, AppAxios } from './../../Config/APIConfig';
-import { find as _find } from 'lodash';
+import {
+    find as _find,
+    isNil as _isNil,
+    zipWith as _zipWith,
+    map as _map,
+    get as _get,
+    reduce as _reduce
+} from 'lodash';
 
 import {
     GET_SHOP_PRODUCTS_REQUEST_STARTED,
     GET_SHOP_PRODUCTS_REQUEST_SUCCESS,
     GET_SHOP_PRODUCTS_REQUEST_FAILED,
-    GET_SHOP_CATEGORY_PRODUCTS
+    CLEAN_PRODUCTS_DATA,
+    GET_SHOP_CATEGORY_PRODUCTS,
+    GET_ADDITIONAL_PRODUCTS_REQUEST_STARTED,
+    NO_MORE_PRODUCTS_TO_FETCH
 } from './ActionTypes';
 
-const productsData = [
-    {
-        categoryId: 1,
-        category: 'Category 1',
-        products: [
-            {
-                category: 'Category 1',
-                productName: 'Product 1',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 1',
-                productName: 'Product 2',
-                price: 200,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 1',
-                productName: 'Product 3',
-                price: 300,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 1',
-                productName: 'Product 4',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 1',
-                productName: 'Product 5',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 1',
-                productName: 'Product 6',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 1',
-                productName: 'Product 7',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 1',
-                productName: 'Product 8',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 1',
-                productName: 'Product 9',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 1',
-                productName: 'Product 10',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 1',
-                productName: 'Product 11',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 1',
-                productName: 'Product 12',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 1',
-                productName: 'Product 13',
-                price: 11000,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            }
-        ] 
-    },
-    {
-        categoryId: 2,
-        category: 'Category 2',
-        products: [
-            {
-                category: 'Category 2',
-                productName: 'Product 1',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 2',
-                productName: 'Product 2',
-                price: 200,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 2',
-                productName: 'Product 3',
-                price: 300,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 2',
-                productName: 'Product 4',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 2',
-                productName: 'Product 5',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 2',
-                productName: 'Product 6',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 2',
-                productName: 'Product 7',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 2',
-                productName: 'Product 8',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 2',
-                productName: 'Product 9',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            }
-        ] 
-    },
-    {
-        categoryId: 3,
-        category: 'Category 3',
-        products: [
-            {
-                category: 'Category 3',
-                productName: 'Product 1',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 3',
-                productName: 'Product 2',
-                price: 200,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 3',
-                productName: 'Product 3',
-                price: 300,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 3',
-                productName: 'Product 4',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 3',
-                productName: 'Product 5',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 3',
-                productName: 'Product 6',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 3',
-                productName: 'Product 7',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 3',
-                productName: 'Product 8',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 3',
-                productName: 'Product 9',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            }
-        ] 
-    },
-    {
-        categoryId: 4,
-        category: 'Category 4',
-        products: [
-            {
-                category: 'Category 4',
-                productName: 'Product 1',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 4',
-                productName: 'Product 2',
-                price: 200,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 4',
-                productName: 'Product 3',
-                price: 300,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 4',
-                productName: 'Product 4',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 4',
-                productName: 'Product 5',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 4',
-                productName: 'Product 6',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 4',
-                productName: 'Product 7',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 4',
-                productName: 'Product 8',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                category: 'Category 4',
-                productName: 'Product 9',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            }
-        ] 
-    },
-    {
-        categoryId: 5,
-        category: 'Category 5',
-        products: [
-            {
-                productName: 'Product 1',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                productName: 'Product 2',
-                price: 200,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                productName: 'Product 3',
-                price: 300,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                productName: 'Product 4',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                productName: 'Product 5',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                productName: 'Product 6',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                productName: 'Product 7',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                productName: 'Product 8',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            },
-            {
-                productName: 'Product 9',
-                price: 100,
-                imgUrl: 'https://picsum.photos/300/300/?random'
-            }
-        ] 
-    }
-];
-
-export const getProducts = (shopId) => {
+export const getProducts = (shopId, products, currentLimit, currentOffset, productsCount) => {
     return async (dispatch) => {
-        dispatch(getProductsStarted());
+        dispatch(getProductsStarted(products));
 
         try {
-            const response = await AppAxios.get(APIURLs.getProductsOfShopGroupedByCategory, {
-                params: {
-                    shop: shopId
-                }
-            });
+            const categoryProductsCountArr = _map(products, product =>
+                _get(product, 'shopProducts.length', 0));
+            const currentProductsCount = _reduce(categoryProductsCountArr,
+                (sum, currentCategoryCount) => sum + currentCategoryCount, 0);
 
-            dispatch(getProductsSuccess(response.data.shopProducts));
+            if (productsCount !== -1 && !_isNil(productsCount) && currentProductsCount >= productsCount) {
+                dispatch(noMoreProductsToFetch());
+            } else {
+                const params = {
+                    shop: shopId
+                };
+    
+                if (currentLimit !== -1 && !_isNil(currentLimit)) {
+                    params.limit = currentLimit;
+                }
+    
+                if (currentOffset !== -1 && !_isNil(currentOffset)) {
+                    params.offset = currentOffset + (params.limit || 0);
+                }
+
+                const response = await AppAxios.get(APIURLs.getProductsOfShopGroupedByCategory, {
+                    params
+                });
+    
+                const { shopProducts, count, offset, limit } = response.data;
+    
+                let allProducts = shopProducts;
+    
+                if (!_isNil(products)) {
+                    allProducts = _zipWith(products, shopProducts, (oldProduct, newProduct) => {
+                        return {
+                            ...oldProduct,
+                            shopProducts: [...oldProduct.shopProducts, ...newProduct.shopProducts]
+                        };
+                    });
+                }
+    
+                dispatch(getProductsSuccess(allProducts, count, offset, limit));
+            }
         } catch (error) {
             dispatch(getProductsFailed(error));
         }
-        // setTimeout(() => {
-        //     dispatch(getProductsSuccess(productsData));
-        // }, 500);
     };
+};
+
+export const cleanProductsData = () => {
+    return { type: CLEAN_PRODUCTS_DATA };
 };
 
 export const getCategoryProducts = (category, allShopProducts) => {
@@ -356,12 +81,20 @@ export const getCategoryProducts = (category, allShopProducts) => {
     return { type: GET_SHOP_CATEGORY_PRODUCTS, products: displayProducts.products };
 };
 
-function getProductsStarted() {
+function getProductsStarted(products) {
+    if (!_isNil(products)) {
+        return { type: GET_ADDITIONAL_PRODUCTS_REQUEST_STARTED };
+    }
+
     return { type: GET_SHOP_PRODUCTS_REQUEST_STARTED };
 }
 
-function getProductsSuccess(products) {
-    return { type: GET_SHOP_PRODUCTS_REQUEST_SUCCESS, products };
+function noMoreProductsToFetch() {
+    return { type: NO_MORE_PRODUCTS_TO_FETCH };
+}
+
+function getProductsSuccess(products, count, offset, limit) {
+    return { type: GET_SHOP_PRODUCTS_REQUEST_SUCCESS, products, count, offset, limit };
 }
 
 function getProductsFailed(error) {

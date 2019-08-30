@@ -33,5 +33,9 @@ export default StyleSheet.create({
         fontWeight: 'bold',
         color: Colors.blackColorHexCode,
         // marginBottom: 10
+    },
+    activityIndicatorContainerStyle: {
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });

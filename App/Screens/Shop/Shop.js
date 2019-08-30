@@ -8,7 +8,8 @@ import {
     TouchableOpacity,
     TouchableNativeFeedback,
     TouchableWithoutFeedback,
-    Platform
+    Platform,
+    ActivityIndicator
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { isArray as _isArray, findIndex as _findIndex, get as _get, find as _find } from 'lodash';
@@ -24,7 +25,11 @@ import styles from './Shop.Styles';
 
 class Shop extends Component {
     componentDidMount() {
-        this.props.getProducts(this.props._id);
+        this.fetchProducts()
+    }
+
+    componentWillUnmount() {
+        this.props.cleanProductsData();
     }
 
     onAddToCartPress = (productInfo, quantity) => {
@@ -74,6 +79,22 @@ class Shop extends Component {
         return cartProduct ? cartProduct.quantity : 0;
     }
 
+    fetchProducts = () => {
+        const {
+            _id: shopId,
+            allProductsCount,
+            currentOffset, currentLimit,
+            getProducts,
+            products,
+            noMoreProducts,
+            areExtraProductsLoading
+        } = this.props;
+
+        if (!noMoreProducts && !areExtraProductsLoading) {
+            getProducts(shopId, products, currentLimit, currentOffset, allProductsCount);
+        }
+    }
+
     checkIfIProductsInCart = (product) => {
         const { cart, _id } = this.props;
         const shopCartProducts = _get(cart[_id], 'products', []);
@@ -105,12 +126,32 @@ class Shop extends Component {
         return width > height ? height - 20 : width - 20;
     }
 
+    renderProductsFooter = () => {
+        const { areExtraProductsLoading, noMoreProducts } = this.props;
+
+        return (
+            areExtraProductsLoading && !noMoreProducts
+            ? (
+                <View
+                    style={[
+                        this.constructProductCardStyleMemoized(this.props.width, this.props.height),
+                        styles.activityIndicatorContainerStyle
+                    ]}
+                >
+                    <ActivityIndicator color={Colors.brandColorHexCode} size='large' />
+                </View>
+            ) :
+            null
+        );
+    }
+
     renderProductsCategory = ({ item }) => {
         if (!_isArray(item.shopProducts) || item.shopProducts.length === 0) {
             return null;
         }
 
-        const TouchableComponent = Platform.OS === 'ios' ? TouchableWithoutFeedback : TouchableNativeFeedback;
+        const TouchableComponent = Platform.OS === 'ios' ?
+            TouchableWithoutFeedback : TouchableNativeFeedback;
 
         return (
             <View style={styles.categoryContainerStyle}>
@@ -128,6 +169,11 @@ class Shop extends Component {
                     renderItem={this.renderProduct}
                     showsHorizontalScrollIndicator={false}
                     snapToInterval={this.calculateSnapInterval(this.props.width, this.props.height)}
+                    keyExtractor={product => product._id}
+                    ListFooterComponent={this.renderProductsFooter()}
+                    onEndReached={this.fetchProducts}
+                    onEndReachedThreshold={0.5}
+                    style={{ width: this.props.width }}
                     // extraData={this.props.cart}
                 />
             </View>
@@ -139,7 +185,6 @@ class Shop extends Component {
 
         return (
             <ProductCard
-                key={item._id}
                 image={`${ImageHostUrl}${item.imgUrl}`}
                 name={item.productName}
                 price={item.price}
@@ -158,7 +203,7 @@ class Shop extends Component {
             address,
             products,
             cart,
-            isLoading,
+            areProductsLoading,
             width,
             height
         } = this.props;
@@ -184,13 +229,14 @@ class Shop extends Component {
                     <CustomFlatList
                         indicatorSize='large'
                         indicatorColor={Colors.brandColorHexCode}
-                        isLoading={isLoading}
+                        isLoading={areProductsLoading}
                         emptyText='No Products Available'
                         style={styles.categoriesContainerStyle}
                         data={products}
                         renderItem={this.renderProductsCategory}
                         showsVerticalScrollIndicator={false}
                         extraData={cart}
+                        keyExtractor={category => category.category}
                     />
                 </ScrollView>
             </SafeAreaView>

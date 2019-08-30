@@ -93,7 +93,9 @@ class AppRouter extends Component {
             ...cart
         }),
         dispatch => ({
-          getProducts: (shopId) => dispatch(ShopActions.getProducts(shopId)),
+          getProducts: (shopId, products, currentLimit, currentOffset, productsCount) =>
+            dispatch(ShopActions.getProducts(shopId, products, currentLimit, currentOffset, productsCount)),
+          cleanProductsData: () => dispatch(ShopActions.cleanProductsData()),
           addToCart: (shopId, shopName, product, cart) =>
             dispatch(CartActions.addToCart(shopId, shopName, product, cart)),
           removeFromCart: (shopId, shopName, product, cart) =>

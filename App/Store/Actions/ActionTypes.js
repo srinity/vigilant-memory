@@ -27,6 +27,9 @@ export const GET_SHOPS_REQUEST_FAILED = 'get_shops_request_failed';
 export const GET_SHOP_PRODUCTS_REQUEST_STARTED = 'get_shop_products_request_started';
 export const GET_SHOP_PRODUCTS_REQUEST_SUCCESS = 'get_shop_products_request_success';
 export const GET_SHOP_PRODUCTS_REQUEST_FAILED = 'get_shop_products_request_failed';
+export const GET_ADDITIONAL_PRODUCTS_REQUEST_STARTED = 'get_additional_products_request_started';
+export const NO_MORE_PRODUCTS_TO_FETCH = 'no_more_products_to_fetch';
+export const CLEAN_PRODUCTS_DATA = 'clean_products_data';
 export const GET_SHOP_CATEGORY_PRODUCTS = 'get_shop_category_products';
 
 // Cart Action Types
