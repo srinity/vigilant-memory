@@ -27,7 +27,6 @@ const ProductCard = ({
     name,
     price,
     horizontal,
-    cart,
     iconSize,
     iconColor,
     initialQuantity,
@@ -74,8 +73,7 @@ ProductCard.defaultProps = {
     horizontal: false,
     iconSize: 10,
     iconColor: '#FFFFFF',
-    initialQuantity: 0,
-    cart: {}
+    initialQuantity: 0
 };
 
 ProductCard.propTypes = {
@@ -83,7 +81,6 @@ ProductCard.propTypes = {
     name: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
     horizontal: PropTypes.bool,
-    cart: PropTypes.object,
     iconSize: PropTypes.number,
     iconColor: colorPropType,
     onQuantityChange: PropTypes.func.isRequired,
