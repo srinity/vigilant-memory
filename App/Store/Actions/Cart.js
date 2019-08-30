@@ -1,9 +1,11 @@
 import {
     cloneDeep as _cloneDeep,
     has as _has,
+    get as _get,
     remove as _remove,
     unset as _unset,
-    findIndex as _findIndex
+    findIndex as _findIndex,
+    find as _find
 } from 'lodash';
 
 import { APIURLs, AppAxios } from './../../Config/APIConfig';
@@ -87,6 +89,22 @@ export function buyShopProducts(user, products, cart) {
             dispatch(buyingProductSuccess(cartClone));
         }, 1000);
     };
+}
+
+export function checkIfIProductsInCart(product, shopId, cart) {
+    const shopCartProducts = _get(cart[shopId], 'products', []);
+
+    return _findIndex(shopCartProducts, item =>
+        item._id === product._id && item.category === product.category) !== -1;
+}
+
+export function getProductQuantityInCart(product, shopId, cart) {
+    const shopCartProducts = _get(cart[shopId], 'products', []);
+
+    const cartProduct = _find(shopCartProducts, item =>
+        item._id === product._id && item.category === product.category);
+
+    return cartProduct ? cartProduct.quantity : 0;
 }
 
 function buyingProductsStarted() {
