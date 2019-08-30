@@ -9,6 +9,7 @@ import {
     DeviceDimensions,
     Account,
     Shop,
+    Products,
     Shops,
     Cart
 } from './Reducers';
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
     deviceDimensions: DeviceDimensions,
     auth: persistReducer(persistAuthConfig, Account),
     shop: Shop,
+    products: Products,
     shops: Shops,
     cart: persistReducer(persistCartConfig, Cart)
 });

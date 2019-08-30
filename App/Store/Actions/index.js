@@ -5,5 +5,6 @@ module.exports.ActionTypes = require('./ActionTypes');
 module.exports.DeviceDimensionsActions = require('./DeviceDimensions');
 module.exports.AccountActions = require('./Account');
 module.exports.ShopActions = require('./Shop');
+module.exports.ProductsActions = require('./Products');
 module.exports.ShopsActions = require('./Shops');
 module.exports.CartActions = require('./Cart');
