@@ -8,7 +8,6 @@ const INITIAL_STATE = {
     allProductsCount: -1,
     currentOffset: -1,
     currentLimit: -1,
-    displayProduct: null,
     error: null
 };
 
@@ -19,7 +18,6 @@ export default function (state = INITIAL_STATE, action) {
                 ...state,
                 areProductsLoading: true,
                 products: null,
-                displayProduct: null,
                 error: null,
                 allProductsCount: -1,
                 currentOffset: -1,
@@ -27,7 +25,7 @@ export default function (state = INITIAL_STATE, action) {
             };
 
         case ActionTypes.GET_ADDITIONAL_PRODUCTS_REQUEST_STARTED:
-            return { ...state, areExtraProductsLoading: true };
+            return { ...state, areExtraProductsLoading: true, error: null };
         
         case ActionTypes.NO_MORE_PRODUCTS_TO_FETCH:
             return { ...state, areExtraProductsLoading: false, noMoreProducts: true };
@@ -44,7 +42,12 @@ export default function (state = INITIAL_STATE, action) {
             };
 
         case ActionTypes.GET_SHOP_PRODUCTS_REQUEST_FAILED:
-            return { ...state, areProductsLoading: false, error: action.error };
+            return {
+                ...state,
+                areProductsLoading: false,
+                areExtraProductsLoading: false,
+                error: action.error
+            };
 
         case ActionTypes.CLEAN_PRODUCTS_DATA: 
             return {
@@ -54,11 +57,10 @@ export default function (state = INITIAL_STATE, action) {
                 currentOffset: -1,
                 currentLimit: -1,
                 error: null,
-                noMoreProducts: false
+                noMoreProducts: false,
+                areProductsLoading: false,
+                areExtraProductsLoading: false
             };
-
-        case ActionTypes.GET_SHOP_CATEGORY_PRODUCTS:
-            return { ...state, displayProduct: action.products };
 
         default: 
             return state;

@@ -13,7 +13,6 @@ import {
     GET_SHOP_PRODUCTS_REQUEST_SUCCESS,
     GET_SHOP_PRODUCTS_REQUEST_FAILED,
     CLEAN_PRODUCTS_DATA,
-    GET_SHOP_CATEGORY_PRODUCTS,
     GET_ADDITIONAL_PRODUCTS_REQUEST_STARTED,
     NO_MORE_PRODUCTS_TO_FETCH
 } from './ActionTypes';
@@ -70,15 +69,6 @@ export const getProducts = (shopId, products, currentLimit, currentOffset, produ
 
 export const cleanProductsData = () => {
     return { type: CLEAN_PRODUCTS_DATA };
-};
-
-export const getCategoryProducts = (category, allShopProducts) => {
-    const displayProducts = _find(
-        allShopProducts,
-        shopCategory => shopCategory.category === category
-    );
-
-    return { type: GET_SHOP_CATEGORY_PRODUCTS, products: displayProducts.products };
 };
 
 function getProductsStarted(products) {
