@@ -26,5 +26,9 @@ export default StyleSheet.create({
     },
     activeViewingOptionStyle: {
         backgroundColor: Colors.brandColorHexCode
+    },
+    activityIndicatorContainerStyle: {
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });

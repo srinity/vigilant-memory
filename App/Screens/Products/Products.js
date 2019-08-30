@@ -2,18 +2,25 @@ import React, { Component } from 'react';
 import {
     View,
     SafeAreaView,
-    FlatList,
     TouchableOpacity,
+    TouchableNativeFeedback,
     StyleSheet,
+    Platform,
+    ActivityIndicator
 } from 'react-native';
-import { map as _map, findIndex as _findIndex } from 'lodash';
+import { map as _map } from 'lodash';
 import memoize from 'memoize-one';
 import { Dropdown } from 'react-native-material-dropdown';
 
-import { ProductCard, Icon, IconTypes } from './../../Components';
+import { ProductCard, Icon, IconTypes, CustomFlatList } from './../../Components';
+
+import { CartActions } from '../../Store/Actions';
+
+import { ImageHostUrl } from '../../Config/APIConfig';
+
+import { Colors } from '../../Theme';
 
 import styles from './Products.Styles';
-import { Colors } from '../../Theme';
 
 
 class Products extends Component {
@@ -40,36 +47,79 @@ class Products extends Component {
     }
 
     componentDidMount() {
-        this.props.getCategoryProducts(this.state.activeCategory, this.props.products);
+        this.fetchCategoryProducts();
+    }
+
+    componentWillUnmount() {
+        this.props.cleanCategoryProductsData();
     }
 
     onViewModeChange = (newViewMode) => {
         this.setState({ viewMode: newViewMode });
     }
 
-    onAddToCartPress = (productInfo) => {
-        console.tron.error(productInfo);
-        const product = { ...productInfo, quantity: 1 };
-        this.props.addToCart(this.props.shop, product, this.props.cart);
+    onProductQuantityChange = (productInfo, quantity) => {
+        const { cart, _id: shopId } = this.props;
+        const isInCart = CartActions.checkIfIProductsInCart(productInfo, shopId, cart);
+
+        if (!isInCart) {
+            this.onAddToCartPress(productInfo, quantity);
+        } else if (isInCart && quantity === 0) {
+            this.onRemoveFromCartPress(productInfo);
+        } else if (isInCart) {
+            // quantity added to cart changed changed
+            this.onCartProductQuantityChange(productInfo, quantity);
+        }
+    }
+
+    onAddToCartPress = (productInfo, quantity) => {
+        const { _id: shopId, shopName, addToCart, cart } = this.props;
+        const product = { ...productInfo, quantity };
+        addToCart(shopId, shopName, product, cart);
     }
 
     onRemoveFromCartPress = (productInfo) => {
-        console.tron.error(productInfo);
-        this.props.removeFromCart(this.props.shop, productInfo, this.props.cart);
+        const { _id: shopId, shopName, removeFromCart, cart } = this.props;
+        removeFromCart(shopId, shopName, productInfo, cart);
+    }
+
+    onCartProductQuantityChange = (productInfo, quantity) => {
+        const { _id: shopId, shopName, changeCartProductQuantity, cart } = this.props;
+        const product = { ...productInfo, quantity };
+        changeCartProductQuantity(shopId, shopName, product, cart);
     }
 
     onDropDownValueChange = (value) => {
         if (value !== this.state.activeCategory) {
-            this.setState({ activeCategory: value });
-            this.props.getCategoryProducts(value, this.props.products);
+            this.setState({ activeCategory: value }, () => {
+                this.fetchCategoryProducts(true);
+            });
         }
     }
 
-    checkIfIProductsInCart = (product) => {
-        const { cart, shop } = this.props;
+    fetchCategoryProducts = (shouldCleanData = false) => {
+        const {
+            getCategoryProducts,
+            _id: shopId,
+            categoryProducts,
+            allCategoryProductsCount,
+            currentOffset,
+            currentLimit
+        } = this.props;
 
-        return _findIndex(cart[shop], item =>
-            item.productName === product.productName && item.category === product.category) !== -1;
+        getCategoryProducts(
+            shopId,
+            this.state.activeCategory,
+            categoryProducts,
+            currentLimit,
+            currentOffset,
+            allCategoryProductsCount,
+            shouldCleanData
+        );
+    }
+
+    fetchNextProducts = () => {
+        this.fetchCategoryProducts(false);
     }
 
     constructProductCardStyle = (width, height, horizontal) => {
@@ -88,14 +138,10 @@ class Products extends Component {
         return { flex: 0, height: width / 3, width: (height / 2) - 10 };
     }
 
-    constructDropDownData = (products) => {
-        return _map(products, product => ({ value: product.category }));
-    }
-
     constructProductCardStyleMemoized = memoize(this.constructProductCardStyle)
-    constructDropDownDataMemoized = memoize(this.constructDropDownData)
 
     renderViewingOption = (viewOption = {}, viewMode) => {
+        const TouchableComponent = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
         const isDisabled = viewMode === viewOption.mode;
         const color = isDisabled ? Colors.whiteColorHexCode : Colors.blackColorHexCode;
         const style = isDisabled ? 
@@ -103,46 +149,53 @@ class Products extends Component {
             : styles.viewingOptionStyle;
 
         return (
-            <TouchableOpacity
+            <TouchableComponent
                 onPress={() => this.onViewModeChange(viewOption.mode)}
                 disabled={isDisabled}
-                style={style}
             >
-                <Icon type={viewOption.type} name={viewOption.name} size={25} color={color} />
-            </TouchableOpacity>
+                <View style={style}>
+                    <Icon type={viewOption.type} name={viewOption.name} size={25} color={color} />
+                </View>
+            </TouchableComponent>
         );
     }
 
-    renderProduct = ({ item, index }) => {
+    renderProductsFooter = () => {
+        const { areExtraCategoryProductsLoading, noMoreCategoryProducts } = this.props;
+
+        return (
+            areExtraCategoryProductsLoading && !noMoreCategoryProducts
+            ? (
+                <View style={styles.activityIndicatorContainerStyle}>
+                    <ActivityIndicator color={Colors.brandColorHexCode} size='large' />
+                </View>
+            ) :
+            null
+        );
+    }
+
+    renderProduct = ({ item }) => {
         const { viewMode } = this.state;
         const horizontal = viewMode === 'list';
-        const isInCart = this.checkIfIProductsInCart(item);
-        const buttonTitle = isInCart ? 'Remove From Cart' : 'Add To Cart';
-        const iconName = isInCart ? 'trash-can' : 'cart-plus';
-        const iconColor = isInCart ? Colors.dangerColorHexCode : Colors.brandColorHexCode;
-        const onPress = isInCart ? () => this.onRemoveFromCartPress(item) : () => this.onAddToCartPress(item);
-        console.tron.log(isInCart);
+        const { cart, _id: shopId, width, height } = this.props;
+        const initialQuantity = CartActions.getProductQuantityInCart(item, shopId, cart);
 
         return (
             <ProductCard
-                key={`${item.productName}${index}`}
                 horizontal={horizontal}
-                image={item.imgUrl}
+                image={`${ImageHostUrl}${item.imgUrl}`}
                 name={item.productName}
                 price={item.price}
-                buttonTitle={buttonTitle}
-                containerStyle={this.constructProductCardStyleMemoized(this.props.width, this.props.height, horizontal)}
-                onPress={onPress}
-                icon={iconName}
-                iconType={IconTypes.materialCommunity}
-                iconColor={iconColor}
+                containerStyle={this.constructProductCardStyleMemoized(width, height, horizontal)}
+                onQuantityChange={(quantity) => this.onProductQuantityChange(item, quantity)}
+                initialQuantity={initialQuantity}
             />
         );
     }
 
     render() {
         const { viewMode, activeCategory } = this.state;
-        const dropDownData = this.constructDropDownDataMemoized(this.props.products);
+        const { categories, categoryProducts, areCategoryProductsLoading } = this.props;
 
         console.tron.warn(this.props);
         return (
@@ -151,8 +204,10 @@ class Products extends Component {
                     <View style={styles.containerStyle}>
                         <Dropdown
                             value={activeCategory}
-                            data={dropDownData}
+                            data={categories}
                             onChangeText={this.onDropDownValueChange}
+                            baseColor={Colors.brandColorHexCode}
+                            dropdownPosition={0}
                         />
                     </View>
                     <View style={styles.containerStyle} />
@@ -162,12 +217,19 @@ class Products extends Component {
                     </View>
                 </View>
 
-                <FlatList
+                <CustomFlatList
+                    indicatorSize='large'
+                    indicatorColor={Colors.brandColorHexCode}
+                    isLoading={areCategoryProductsLoading}
+                    emptyText='No Products Available'
                     key={viewMode}
-                    data={this.props.displayProduct}
+                    data={categoryProducts}
                     renderItem={this.renderProduct}
                     numColumns={viewMode === 'grid' ? 2 : 1}
-                    extraData={this.props.cart}
+                    keyExtractor={product => product._id}
+                    ListFooterComponent={this.renderProductsFooter()}
+                    onEndReached={this.fetchNextProducts}
+                    onEndReachedThreshold={0.5}
                 />
             </SafeAreaView>
         );

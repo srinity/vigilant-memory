@@ -20,6 +20,7 @@ import {
   DeviceDimensionsActions,
   AccountActions,
   ShopActions,
+  ProductsActions,
   ShopsActions,
   CartActions
 } from './Store/Actions';
@@ -105,15 +106,16 @@ class AppRouter extends Component {
         })
       )(ShopScreen),
       Products: connect(
-        ({ deviceDimensions, auth, shop, cart }) => ({
+        ({ deviceDimensions, auth, products, cart }) => ({
           ...deviceDimensions,
           user: auth.user,
-          ...shop,
+          ...products,
           ...cart
         }),
         dispatch => ({
-          getCategoryProducts: (category, products) =>
-            dispatch(ShopActions.getCategoryProducts(category, products)),
+          getCategoryProducts: (shopId, category, products, currentLimit, currentOffset, productsCount, shouldCleanData) =>
+            dispatch(ProductsActions.getCategoryProducts(shopId, category, products, currentLimit, currentOffset, productsCount, shouldCleanData)),
+          cleanCategoryProductsData: () => dispatch(ProductsActions.cleanCategoryProductsData()),
           addToCart: (shopId, shopName, product, cart) =>
             dispatch(CartActions.addToCart(shopId, shopName, product, cart)),
           removeFromCart: (shopId, shopName, product, cart) =>
