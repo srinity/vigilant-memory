@@ -13,7 +13,8 @@ import {
   LoginScreen,
   ProductsScreen,
   RegisterScreen,
-  ShopScreen
+  ShopScreen,
+  VerificationCodeScreen
 } from './Screens';
 
 import {
@@ -79,6 +80,15 @@ class AppRouter extends Component {
             dispatch(AccountActions.register(firstName, lastName, email, password, phone))
         })
       )(RegisterScreen),
+      VerificationCode: connect(
+        ({ deviceDimensions, auth }) => ({ ...deviceDimensions, ...auth }),
+        dispatch => ({
+          verifyCode: (code, user) =>
+            dispatch(AccountActions.verifyCode(code, user)),
+          sendVerificationCode: (user) =>
+            dispatch(AccountActions.sendVerificationCode(user))
+        })
+      )(VerificationCodeScreen),
       Home: connect(
         ({ deviceDimensions, auth, shops }) => ({ ...deviceDimensions, user: auth.user, ...shops }),
         dispatch => ({
@@ -199,6 +209,13 @@ class AppRouter extends Component {
                 hideNavBar
                 title='Register'
                 component={ConnectedComponents.Register}
+              />
+              <Scene
+                key='verificationCode'
+                initial
+                hideNavBar
+                title='Verify Code'
+                component={ConnectedComponents.VerificationCode}
               />
             </Scene>
             <Scene key={ScreenTypes.app}>
