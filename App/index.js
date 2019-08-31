@@ -69,7 +69,7 @@ class AppRouter extends Component {
       Login: connect(
         ({ deviceDimensions }) => ({ ...deviceDimensions }),
         dispatch => ({
-          login: (email, password) => dispatch(AccountActions.login(email, password))
+          login: (phone, password) => dispatch(AccountActions.login(phone, password))
         })
       )(LoginScreen),
       Register: connect(
@@ -185,7 +185,7 @@ class AppRouter extends Component {
           navBarButtonColor='#fff'
         >
           <Scene key='root' hideNavBar>
-            {/* <Scene key={ScreenTypes.auth}>
+            <Scene key={ScreenTypes.auth}>
               <Scene
                 key='login'
                 initial
@@ -195,12 +195,12 @@ class AppRouter extends Component {
               />
               <Scene
                 key='register'
-                // initial
+                initial
                 hideNavBar
                 title='Register'
                 component={ConnectedComponents.Register}
               />
-            </Scene> */}
+            </Scene>
             <Scene key={ScreenTypes.app}>
               <Scene
                 initial
