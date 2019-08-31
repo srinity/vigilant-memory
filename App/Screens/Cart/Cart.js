@@ -7,10 +7,15 @@ import {
     find as _find,
     get as _get,
     reduce as _reduce,
-    has as _has
+    has as _has,
+    zipWith as _zipWith,
+    filter as _filter,
+    flatten as _flatten
 } from 'lodash';
 
 import { CartProduct, Button } from './../../Components';
+
+import { ImageHostUrl } from '../../Config/APIConfig';
 
 import { Colors } from '../../Theme';
 
@@ -18,19 +23,38 @@ import styles from './Cart.Styles';
 
 const getCartAsArray = (cart = {}) => {
     return _map(cart, (val, key) => ({
-            shopName: key,
-            products: _map(val, value => ({ shopName: key, ...value }))
+            ...val,
+            products: _map(val.products, value => ({ shopId: key, shopName: val.shopName, ...value }))
         }));
 };
 
 class Cart extends Component {
     static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.cart && Object.keys(nextProps.cart).length !== prevState.cart.length) {
-            const otherState = -_has(nextProps.cart, prevState.checkedShop) 
-                ? {} : { checkedShop: undefined };
+        const newCart = getCartAsArray(nextProps.cart) || [];
 
-            return { cart: getCartAsArray(nextProps.cart), ...otherState };
+        if (newCart.length !== prevState.cart.length) {
+            const otherState = -_has(nextProps.cart, prevState.checkedShop)
+                ? {} : { checkedShop: undefined };
+    
+            return { cart: newCart, ...otherState };
         }
+
+        const result = _flatten(_zipWith(newCart, prevState.cart, (newShop, oldShop) => {
+            if (newShop.products.length !== oldShop.products.length) {
+                return [true];
+            }
+
+            const products = _zipWith(newShop.products, oldShop.products, (newProduct, oldProduct) => {
+                return (newProduct._id !== oldProduct._id || newProduct.quantity !== oldProduct.quantity);
+            });
+
+            return _filter(products, prodShouldChange => prodShouldChange)
+        }));
+
+        if (result.length !== 0) {
+            return { cart: newCart };
+        }
+
 
         return null;
     }
@@ -44,10 +68,10 @@ class Cart extends Component {
         };
     }
 
-    onShopPress = ({ shopName }) => {
-        let newValue = shopName;
+    onShopPress = ({ shopId }) => {
+        let newValue = shopId;
 
-        if (shopName === this.state.checkedShop) {
+        if (shopId === this.state.checkedShop) {
             newValue = undefined;
         }
 
@@ -55,42 +79,32 @@ class Cart extends Component {
     }
 
     onCartProductQuantityChange = (product, newQuantity) => {
-        const { cart } = this.state;
-        // console.tron.log(product, newQuantity);
-        const newCart = _map(cart, shop => {
-            if (shop.shopName !== product.shopName) {
-                return shop;
-            }
+        const { changeCartProductQuantity, cart } = this.props;
+        const { shopId, shopName, ...productInfo } = product;
 
-            const productsWithNewQuantity = _map(shop.products, shopProduct => {
-                if (shopProduct.productName !== product.productName || shopProduct.category !== product.category) {
-                    return shopProduct;
-                }
-
-                return { ...shopProduct, quantity: newQuantity };
-            });
-
-            return {
-                ...shop,
-                products: productsWithNewQuantity
-            };
-        });
-
-        this.setState({ cart: newCart });
+        const newProduct = { ...productInfo, quantity: newQuantity };
+        changeCartProductQuantity(shopId, shopName, newProduct, cart);
     }
 
     onBuyButtonPress = () => {
         const { buyShopProducts, cart, user } = this.props;
 
         const productsToBuy = _find(this.state.cart,
-            shop => shop.shopName === this.state.checkedShop);
+            shop => shop.shopId === this.state.checkedShop);
 
         console.tron.error(productsToBuy);
         buyShopProducts(user, productsToBuy, cart);
     }
 
+    onRemoveFromCartPress = (item) => {
+        const { cart, removeFromCart } = this.props;
+        const { shopId, shopName, ...product } = item;
+
+        removeFromCart(shopId, shopName, product, cart);
+    }
+
     renderShop = ({ item }) => {
-        const { shopName, products } = item;
+        const { shopId, shopName, products } = item;
         const onShopPress = this.onShopPress.bind(this, item); 
 
         return (
@@ -98,7 +112,7 @@ class Cart extends Component {
                 <CheckBox
                     style={styles.shopCheckBoxStyle}
                     onClick={onShopPress}
-                    isChecked={this.state.checkedShop === shopName}
+                    isChecked={this.state.checkedShop === shopId}
                     rightText={shopName}
                     rightTextStyle={styles.shopCheckBoxTextStyle}
                     checkedCheckBoxColor={Colors.brandColorHexCode}
@@ -107,6 +121,7 @@ class Cart extends Component {
                 <FlatList
                     data={products}
                     renderItem={this.renderCartProduct}
+                    keyExtractor={product => product._id}
                 />
             </View>
         );
@@ -118,19 +133,20 @@ class Cart extends Component {
         return (
             <CartProduct
                 key={index}
-                image={item.imgUrl}
+                image={`${ImageHostUrl}${item.imgUrl}`}
                 name={item.productName}
                 price={item.price}
                 quantity={item.quantity}
                 onQuantityChange={onQuantityChange}
+                onRemovePress={() => this.onRemoveFromCartPress(item)}
             />
         );
     }
 
     render() {
-        // console.tron.error(this.props);
-        // console.tron.error(this.state);
-        const selectedShop = _find(this.state.cart, shop => shop.shopName === this.state.checkedShop) || {};
+        console.tron.error(this.props);
+        console.tron.error(this.state);
+        const selectedShop = _find(this.state.cart, shop => shop.shopId === this.state.checkedShop) || {};
         const selectedShopItemsCount = _get(selectedShop, 'products.length', 0);
         const totalPrice = _reduce(selectedShop.products, (sum, product) => {
             return sum + ((product.quantity || 1) * product.price);
@@ -143,6 +159,7 @@ class Cart extends Component {
                     data={this.state.cart}
                     renderItem={this.renderShop}
                     extraData={this.state.checkedShop}
+                    keyExtractor={shop => shop.shopId}
                 />
 
                 {
