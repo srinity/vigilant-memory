@@ -12,12 +12,12 @@ import {
 
 import { APIURLs, AppAxios } from './../../Config/APIConfig';
 
-export const login = (email, password) => {
+export const login = (phone, password) => {
   return async (dispatch) => {
     try {
       dispatch(loginRequestStarted());
-      const response = await AppAxios.post(APIURLs.login, { email, password });
-      console.tron.log(response.data);
+      const response = await AppAxios.post(APIURLs.login, { phone, password });
+      console.tron.warn(response.data);
       dispatch(loginRequestSuccess(response.data));
     } catch (error) {
       console.tron.error(error);

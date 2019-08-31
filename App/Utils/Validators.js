@@ -5,6 +5,12 @@ import {
   split as _split
 } from 'lodash';
 
+export function isEgyptPhone(value) {
+  const phoneRegex = new RegExp(/^(\+2)?(01)[0-9]{9}$/);
+
+  return _isString(value) && phoneRegex.test(value);
+}
+
 export function isEmail(value) {
   const emailRegex = new RegExp(/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/);
 
@@ -12,7 +18,7 @@ export function isEmail(value) {
 }
 
 export function isValidPassword(value) {
-  return _isString(value) && value.length >= 6;
+  return _isString(value) && value.length >= 1;
 }
 
 export function isValidConfirmPassword(password, confirmPassword) {
