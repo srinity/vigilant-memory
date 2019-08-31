@@ -1,11 +1,20 @@
 import React from 'react';
-import { View, ViewPropTypes, Text, Image } from 'react-native';
+import {
+    View,
+    ViewPropTypes,
+    Text,
+    Image,
+    TouchableOpacity,
+    TouchableNativeFeedback,
+    Platform
+} from 'react-native';
 import PropTypes from 'prop-types';
 import memoize from 'memoize-one';
 import { connect } from 'react-redux';
 import { isString as _isString } from 'lodash';
 
-import { NumericUpDown } from './..';
+import NumericUpDown from './../NumericUpDown/NumericUpDown';
+import { Icon, IconTypes } from './../Icon';
 
 import styles from './CartProduct.Styles';
 import { Colors } from '../../Theme';
@@ -35,6 +44,8 @@ const CartProduct = ({
     price,
     quantity,
     onQuantityChange,
+    onRemovePress,
+    removeDisabled,
     containerStyle,
     width,
     height,
@@ -42,6 +53,7 @@ const CartProduct = ({
 }) => {
     const source = constructImageSourceMemoized(image);
     const style = constructCartProductStyleMemoized(width, height);
+    const TouchableComponent = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
 
     return (
         <View style={[styles.containerStyle, style, containerStyle]}>
@@ -50,9 +62,14 @@ const CartProduct = ({
             </View>
 
             <View style={styles.infoContainerStyle}>
-                <Text style={styles.textStyle}>{name}</Text>
+                <View style={styles.nameContainerStyle}>
+                    <Text style={styles.textStyle} numberOfLines={2}>{name}</Text>
+                    <TouchableComponent onPress={onRemovePress} disabled={removeDisabled}>
+                        <Icon type={IconTypes.entypo} name='trash' color={Colors.dangerColorHexCode} size={15} />
+                    </TouchableComponent>
+                </View>
                 <View style={styles.priceContainerStyle}>
-                    <Text style={styles.textStyle}>{price} EGP</Text>
+                    <Text style={styles.textStyle} numberOfLines={1}>{price} EGP</Text>
 
                     <NumericUpDown
                         style={styles.numericUpDownStyle}
@@ -78,19 +95,18 @@ CartProduct.defaultProps = {
     onQuantityChange: () => {},
     containerStyle: {},
     quantity: 1,
+    onRemovePress: () => {},
+    removeDisabled: false,
 };
 
 CartProduct.propTypes = {
-    image: PropTypes.oneOf([
-        PropTypes.shape({
-          uri: PropTypes.string.isRequired
-        }).isRequired,
-        PropTypes.string.isRequired
-      ]).isRequired,
+    image: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    price: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
     quantity: PropTypes.number.isRequired,
     onQuantityChange: PropTypes.func.isRequired,
+    onRemovePress: PropTypes.func.isRequired,
+    removeDisabled: PropTypes.bool,
     containerStyle: ViewPropTypes.style,
     width: PropTypes.number,
     height: PropTypes.number,

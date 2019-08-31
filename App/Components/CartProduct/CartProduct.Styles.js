@@ -23,7 +23,12 @@ export default StyleSheet.create({
         flex: 2,
         justifyContent: 'space-between',
         paddingHorizontal: 10,
-        paddingVertical: 20,
+        paddingVertical: 7,
+    },
+    nameContainerStyle: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     },
     priceContainerStyle: {
         alignItems: 'center',
@@ -36,7 +41,8 @@ export default StyleSheet.create({
         fontWeight: 'bold'
     },
     numericUpDownStyle: {
-        width: 75
+        height: undefined,
+        width: 75,
     },
     numericUpDownNumbersStyle: {
         fontSize: 16,
