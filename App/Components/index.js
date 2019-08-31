@@ -7,11 +7,13 @@ import CardSection from './CardSection/CardSection';
 import CartProduct from './CartProduct/CartProduct';
 import CollapseExpandView from './CollapseExpandView/CollapseExpandView';
 import CustomFlatList from './CustomFlatList/CustomFlatList';
+import CustomInput from './CustomInput/CustomInput';
 import DeviceDimensions from './DeviceDimensions/DeviceDimensions';
 import { Icon, IconTypes } from './Icon';
 import Input from './Input/Input';
 import Logo from './Logo/Logo';
 import NumericUpDown from './NumericUpDown/NumericUpDown';
+import PasswordInput from './PasswordInput';
 import PopUpMenu from './PopUpMenu/PopUpMenu';
 import ProductCard from './ProductCard/ProductCard';
 import ShopCard from './ShopCard/ShopCard';
@@ -27,6 +29,7 @@ export {
     CartProduct,
     CollapseExpandView,
     CustomFlatList,
+    CustomInput,
     DeviceDimensions,
     Icon,
     IconTypes,
@@ -34,6 +37,7 @@ export {
     ScreenTypes,
     Logo,
     NumericUpDown,
+    PasswordInput,
     PopUpMenu,
     ProductCard,
     ShopCard,
