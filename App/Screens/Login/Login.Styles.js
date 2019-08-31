@@ -8,20 +8,10 @@ export default StyleSheet.create({
   },
   scrollContainerStyle: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)'
+    backgroundColor: Colors.whiteColorHexCode
   },
   contentContainerStyle: {
     minHeight: '100%'
-  },
-  cardStyle: {
-    flex: 1,
-    borderRadius: 5,
-    elevation: 0,
-    borderColor: 'rgba(184,23,215,0)',
-    backgroundColor: 'rgba(255,255,255,0)',
-    padding: 0,
-    shadowOpacity: 0,
-    justifyContent: 'flex-start'
   },
   cardSectionStyle: {
     borderBottomWidth: 0,
@@ -35,11 +25,11 @@ export default StyleSheet.create({
   },
   buttonStyle: {
     borderRadius: 50,
-    backgroundColor: Colors.whiteColorHexCode,
+    backgroundColor: Colors.brandColorHexCode,
     minHeight: 40
   },
   buttonTextStyle: {
-    color: Colors.brandColorHexCode
+    color: Colors.whiteColorHexCode
   },
   disabledButtonStyle: {
     backgroundColor: Colors.getWhiteColorRGBAValue(0.5)
@@ -52,11 +42,11 @@ export default StyleSheet.create({
     marginTop: 30,
   },
   actionsTextStyle: {
-    color: Colors.whiteColorHexCode,
+    color: Colors.brandColorHexCode,
     fontWeight: 'bold'
   },
   inactiveActionTextStyle: {
-    color: Colors.whiteColorHexCode,
+    color: Colors.brandColorHexCode,
     marginRight: 5
   },
   footerContainerStyle: {
