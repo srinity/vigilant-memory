@@ -11,6 +11,14 @@ export const REGISTER_REQUEST_STARTED = 'register_request_started';
 export const REGISTER_REQUEST_SUCCESS = 'register_request_success';
 export const REGISTER_REQUEST_FAILED = 'register_request_failed';
 
+// Verification Code Types
+export const SENDING_VERIFICATION_CODE_STARTED = 'sending_verification_code_started';
+export const SENDING_VERIFICATION_CODE_SUCCESS = 'sending_verification_code_success';
+export const SENDING_VERIFICATION_CODE_FAILED = 'sending_verification_code_failed';
+export const VERIFYING_USER_CODE_STARTED = 'verifying_user_code_started';
+export const VERIFYING_USER_CODE_SUCCESS = 'verifying_user_code_success';
+export const VERIFYING_USER_CODE_FAILED = 'verifying_user_code_failed';
+
 // Logout Action Types 
 export const LOGOUT_REQUEST_STARTED = 'logout_request_started';
 export const LOGOUT_REQUEST_SUCCESS = 'logout_request_success';

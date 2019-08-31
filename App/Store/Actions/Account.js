@@ -7,7 +7,13 @@ import {
   REGISTER_REQUEST_FAILED,
   LOGOUT_REQUEST_SUCCESS,
   LOGOUT_REQUEST_FAILED,
-  LOGOUT_REQUEST_STARTED
+  LOGOUT_REQUEST_STARTED,
+  SENDING_VERIFICATION_CODE_STARTED,
+  SENDING_VERIFICATION_CODE_SUCCESS,
+  SENDING_VERIFICATION_CODE_FAILED,
+  VERIFYING_USER_CODE_STARTED,
+  VERIFYING_USER_CODE_SUCCESS,
+  VERIFYING_USER_CODE_FAILED
 } from './ActionTypes';
 
 import { APIURLs, AppAxios } from './../../Config/APIConfig';
@@ -51,6 +57,46 @@ export const register = (firstName, lastName, email, password, phone) => {
   };
 };
 
+export const sendVerificationCode = (user) => {
+  return async dispatch => {
+    dispatch(sendVerificationCodeStarted());
+
+    try {
+      const response = await AppAxios.get(APIURLs.sendCode, {
+        headers: {
+          'Authorization': `bearer ${user.token}`
+        } 
+      });
+
+      console.tron.warn(response);
+      dispatch(sendVerificationCodeSuccess());
+    } catch (error) {
+      console.tron.error(error);
+      dispatch(sendVerificationCodeFailed(error));
+    }
+  }
+};
+
+export const verifyCode = (code, user) => {
+  return async dispatch => {
+    dispatch(verifyCodeStarted())
+
+    try {
+      const response = await AppAxios.post(APIURLs.verifyCode, { pinCode: code }, {
+        headers: {
+          'Authorization': `bearer ${user.token}`
+        }
+      });
+
+      console.tron.warn(response);
+      dispatch(verifyCodeCodeSuccess());
+    } catch (error) {
+      console.tron.error(error);
+      dispatch(verifyCodeCodeFailed(error));
+    }
+  }
+};
+
 export const logout = () => {
   return dispatch => {
     // dispatch(logoutRequestStarted());
@@ -80,6 +126,30 @@ function registerRequestSuccess(user) {
 
 function registerRequestFailed(error) {
   return { type: REGISTER_REQUEST_FAILED, error };
+}
+
+function sendVerificationCodeStarted() {
+  return { type: SENDING_VERIFICATION_CODE_STARTED };
+}
+
+function sendVerificationCodeSuccess() {
+  return { type: SENDING_VERIFICATION_CODE_SUCCESS };
+}
+
+function sendVerificationCodeFailed(error) {
+  return { type: SENDING_VERIFICATION_CODE_FAILED, error };
+}
+
+function verifyCodeStarted() {
+  return { type: VERIFYING_USER_CODE_STARTED };
+}
+
+function verifyCodeCodeSuccess() {
+  return { type: VERIFYING_USER_CODE_SUCCESS };
+}
+
+function verifyCodeCodeFailed(error) {
+  return { type: VERIFYING_USER_CODE_FAILED, error };
 }
 
 function logoutRequestStarted() {
