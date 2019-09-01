@@ -17,7 +17,7 @@ import {
 const persistAuthConfig = {
     key: 'Auth',
     storage,
-    whitelist: ['user']
+    whitelist: ['user', 'isLoggedIn']
 };
 
 const persistCartConfig = {

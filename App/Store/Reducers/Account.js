@@ -1,6 +1,7 @@
 import { ActionTypes } from '../Actions';
 
 const INITIAL_STATE = {
+    isLoggedIn: false,
     isLoading: false,
     user: null,
     error: null,
@@ -16,7 +17,7 @@ export default function (state = INITIAL_STATE, action) {
             return { ...state, isLoading: true, error: null };
 
         case ActionTypes.LOGIN_REQUEST_SUCCESS:
-            return { ...state, isLoading: false, user: action.user, error: null };
+            return { ...state, isLoading: false, user: action.user, error: null, isLoggedIn: true };
 
         case ActionTypes.LOGIN_REQUEST_FAILED:
             return { ...state, isLoading: false, error: action.error };
@@ -25,7 +26,7 @@ export default function (state = INITIAL_STATE, action) {
             return { ...state, isLoading: true, error: null };
 
         case ActionTypes.REGISTER_REQUEST_SUCCESS:
-            return { ...state, isLoading: false, user: action.user, error: null };
+            return { ...state, isLoading: false, user: action.user, error: null, isLoggedIn: true };
 
         case ActionTypes.REGISTER_REQUEST_FAILED:
             return { ...state, isLoading: false, error: action.error };
@@ -52,7 +53,12 @@ export default function (state = INITIAL_STATE, action) {
             return { ...state, isVerifyingCode: true, verifyingCodeError: null };
 
         case ActionTypes.VERIFYING_USER_CODE_SUCCESS:
-                return { ...state, isVerifyingCode: false, verifyingCodeError: null };
+                return {
+                    ...state,
+                    isVerifyingCode: false,
+                    verifyingCodeError: null,
+                    user: { ...state.user, inActive: false }
+                };
 
         case ActionTypes.VERIFYING_USER_CODE_FAILED:
             return { ...state, isVerifyingCode: false, verifyingCodeError: action.error };
