@@ -68,16 +68,16 @@ class AppRouter extends Component {
           dispatch(DeviceDimensionsActions.deviceDimensionsChanged(deviceDimensions))
       }))(DeviceDimensions),
       Login: connect(
-        ({ deviceDimensions }) => ({ ...deviceDimensions }),
+        ({ deviceDimensions, auth }) => ({ ...deviceDimensions, ...auth }),
         dispatch => ({
           login: (phone, password) => dispatch(AccountActions.login(phone, password))
         })
       )(LoginScreen),
       Register: connect(
-        ({ deviceDimensions }) => ({ ...deviceDimensions }),
+        ({ deviceDimensions, auth }) => ({ ...deviceDimensions, ...auth }),
         dispatch => ({
-          register: (firstName, lastName, email, password, phone) =>
-            dispatch(AccountActions.register(firstName, lastName, email, password, phone))
+          register: (firstName, lastName, email, password, phone, birthDate, gender) =>
+            dispatch(AccountActions.register(firstName, lastName, email, password, phone, birthDate, gender))
         })
       )(RegisterScreen),
       VerificationCode: connect(
@@ -185,7 +185,7 @@ class AppRouter extends Component {
 
     return (
       <View style={styles.wrapperViewContainerStyle}>
-        {/* <ConnectedComponents.AuthSwitch /> */}
+        <ConnectedComponents.AuthSwitch />
         <ConnectedComponents.DeviceDimensions />
 
         <Router
@@ -205,14 +205,14 @@ class AppRouter extends Component {
               />
               <Scene
                 key='register'
-                initial
+                // initial
                 hideNavBar
                 title='Register'
                 component={ConnectedComponents.Register}
               />
               <Scene
                 key='verificationCode'
-                initial
+                // initial
                 hideNavBar
                 title='Verify Code'
                 component={ConnectedComponents.VerificationCode}
