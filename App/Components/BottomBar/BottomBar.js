@@ -25,7 +25,7 @@ class BottomBar extends Component {
         let action = () => {};
 
         if (tab.key === 'home') {
-            action = Actions.popTo(this, tab.key);
+            action = Actions.popTo.bind(this, tab.key);
         } else if (activeTab !== 'home') {
             action = Actions.replace.bind(this, tab.key);
         } else {
