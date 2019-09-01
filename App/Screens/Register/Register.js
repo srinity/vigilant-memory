@@ -89,7 +89,7 @@ class Register extends Component {
   }
 
   onRegisterPress = () => {
-    const { firstName, lastName, email, password, confirmPassword, phone, dateOfBirth } = this.state;
+    const { firstName, lastName, email, password, confirmPassword, phone, dateOfBirth, gender } = this.state;
     console.tron.log(firstName, lastName, email, password);
 
     this.setState({
@@ -101,10 +101,18 @@ class Register extends Component {
       confirmPasswordIsValid: Validators.isValidConfirmPassword(password, confirmPassword),
       dateOfBirthIsValid: Validators.exists(dateOfBirth)
     }, () => {
-      const { firstNameIsValid, lastNameIsValid, phoneIsValid, emailIsValid, passwordIsValid, confirmPasswordIsValid, dateOfBirthIsValid } = this.state;
-      console.tron.log(firstNameIsValid, lastNameIsValid, emailIsValid, passwordIsValid, confirmPasswordIsValid);
+      const {
+        firstNameIsValid,
+        lastNameIsValid,
+        phoneIsValid,
+        emailIsValid,
+        passwordIsValid,
+        confirmPasswordIsValid,
+        dateOfBirthIsValid
+      } = this.state;
       if (firstNameIsValid && lastNameIsValid && phoneIsValid && emailIsValid && passwordIsValid && confirmPasswordIsValid && dateOfBirthIsValid) {
-        this.props.register(firstName, lastName, email, password, phone);
+        const birthDateProperFormat = dateOfBirth.split('-').reverse().join('-');
+        this.props.register(firstName, lastName, email, password, phone, birthDateProperFormat, gender);
       }
     });
   }
@@ -127,7 +135,10 @@ class Register extends Component {
       dateOfBirth,
       dateOfBirthIsValid
     } = this.state;
+    const { isLoading } = this.props;
     const currentDate = new Date();
+
+    console.tron.error(this.props)
 
     return (
       <SafeAreaView style={styles.containerStyle}>
@@ -262,7 +273,7 @@ class Register extends Component {
             <CardSection style={styles.buttonCardSectionStyle}>
               <Button
                 title='REGISTER'
-                isLoading={this.props.isLoading}
+                isLoading={isLoading}
                 indicatorColor={styles.indicatorColor.color}
                 onPress={this.onRegisterPress}
                 style={styles.buttonStyle}

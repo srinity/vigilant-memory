@@ -54,6 +54,7 @@ class Login extends Component {
 
     render() {
         const { phone, phoneIsValid, password, passwordIsValid } = this.state;
+        const { isLoading } = this.props;
 
         return (
             <View style={styles.containerStyle}>
@@ -91,7 +92,7 @@ class Login extends Component {
                         <CardSection style={styles.buttonCardSectionStyle}>
                             <Button 
                                 title='LOGIN'
-                                isLoading={this.props.isLoading}
+                                isLoading={isLoading}
                                 indicatorColor={styles.indicatorColor.color}
                                 onPress={this.onLoginPress}
                                 style={styles.buttonStyle}

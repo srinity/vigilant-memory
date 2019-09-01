@@ -32,7 +32,7 @@ export default StyleSheet.create({
     color: Colors.whiteColorHexCode
   },
   disabledButtonStyle: {
-    backgroundColor: Colors.getWhiteColorRGBAValue(0.5)
+    backgroundColor: Colors.getBrandColorRGBAValue(0.5)
   },
   indicatorColor: {
     color: Colors.brandColorHexCode
