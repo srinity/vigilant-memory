@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, ViewPropTypes, StyleSheet } from 'react-native';
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    ViewPropTypes,
+    StyleSheet,
+    ActivityIndicator
+} from 'react-native';
 import PropTypes from 'prop-types';
 import {
     has as _has,
@@ -10,6 +17,8 @@ import {
 import memoize from 'memoize-one';
 
 import { Icon, IconTypes } from './../index';
+
+import { colorPropType } from '../../Utils/PropTypesValidators';
 
 import styles from './NumericUpDown.Styles';
 
@@ -26,7 +35,7 @@ class NumericUpDown extends Component {
         // Also note that we don't limit the setting of outside value by minValue and maxValue
         // need to ask someone later about whether it is valid business to limit it, reject it or accept it.
         if (_isFinite(nextProps.value) &&
-            nextProps.value !== prevState.oldValue &&
+            // nextProps.value !== prevState.oldValue &&
             nextProps.value !== prevState.value) {
             return { value: nextProps.value, oldValue: nextProps.value };
         }
@@ -175,6 +184,9 @@ class NumericUpDown extends Component {
             style,
             minValue,
             maxValue,
+            isLoading,
+            indicatorSize,
+            indicatorColor,
             iconSize,
             iconsColor,
             buttonsColor,
@@ -196,73 +208,83 @@ class NumericUpDown extends Component {
         } = this.props;
 
         return (
-            <View style={[styles.containerStyle, style]}>
-                <TouchableOpacity
-                    style={
-                        this.getDecreaseButtonStyleMemoized(
-                            this.state.value <= minValue,
-                            styles.buttonStyle,
-                            buttonsStyle,
-                            decreaseStyle,
-                            buttonsColor,
-                            decreaseButtonColor,
-                            styles.disabledStyle,
-                            disabledStyle,
-                            disabledDecreaseStyle,
-                            disabledButtonsColor,
-                            disabledDecreaseButtonColor
-                        )
-                    }
-                    disabled={this.state.value <= minValue}
-                    onPress={this.onDecreaseButtonPress}
-                >
-                    <Icon 
-                        type={IconTypes.fontAwesome}
-                        name='minus' 
-                        color={decreaseIconColor || iconsColor} 
-                        size={iconSize} 
-                    />
-                </TouchableOpacity>
-
-                <View style={[styles.numberContainerStyle, numberContainerStyle]}>
-                    <Text 
-                        style={[
-                            styles.numbersStyle, 
-                            this.getFontSizeMemoized(this.state.value), 
-                            numbersStyle
-                        ]}
-                    >
-                        {this.state.value}
-                    </Text>
+            isLoading
+            ?
+            (
+                <View style={[styles.containerStyle, style]}>
+                    <ActivityIndicator color={indicatorColor} size={indicatorSize} />
                 </View>
+            )
+            :
+            (
+                <View style={[styles.containerStyle, style]}>
+                    <TouchableOpacity
+                        style={
+                            this.getDecreaseButtonStyleMemoized(
+                                this.state.value <= minValue,
+                                styles.buttonStyle,
+                                buttonsStyle,
+                                decreaseStyle,
+                                buttonsColor,
+                                decreaseButtonColor,
+                                styles.disabledStyle,
+                                disabledStyle,
+                                disabledDecreaseStyle,
+                                disabledButtonsColor,
+                                disabledDecreaseButtonColor
+                            )
+                        }
+                        disabled={this.state.value <= minValue}
+                        onPress={this.onDecreaseButtonPress}
+                    >
+                        <Icon 
+                            type={IconTypes.fontAwesome}
+                            name='minus' 
+                            color={decreaseIconColor || iconsColor} 
+                            size={iconSize} 
+                        />
+                    </TouchableOpacity>
 
-                <TouchableOpacity
-                    style={
-                        this.getIncreaseButtonStyleMemoized(
-                            this.state.value >= maxValue,
-                            styles.buttonStyle,
-                            buttonsStyle,
-                            increaseStyle,
-                            buttonsColor,
-                            increaseButtonColor,
-                            styles.disabledStyle,
-                            disabledStyle,
-                            disabledIncreaseStyle,
-                            disabledButtonsColor,
-                            disabledIncreaseButtonColor
-                        )
-                    }
-                    disabled={this.state.value >= maxValue}
-                    onPress={this.onIncreaseButtonPress}
-                >
-                    <Icon 
-                        type={IconTypes.fontAwesome}
-                        name='plus' 
-                        color={increaseIconColor || iconsColor} 
-                        size={iconSize}
-                    />
-                </TouchableOpacity>
-            </View>
+                    <View style={[styles.numberContainerStyle, numberContainerStyle]}>
+                        <Text 
+                            style={[
+                                styles.numbersStyle, 
+                                this.getFontSizeMemoized(this.state.value), 
+                                numbersStyle
+                            ]}
+                        >
+                            {this.state.value}
+                        </Text>
+                    </View>
+
+                    <TouchableOpacity
+                        style={
+                            this.getIncreaseButtonStyleMemoized(
+                                this.state.value >= maxValue,
+                                styles.buttonStyle,
+                                buttonsStyle,
+                                increaseStyle,
+                                buttonsColor,
+                                increaseButtonColor,
+                                styles.disabledStyle,
+                                disabledStyle,
+                                disabledIncreaseStyle,
+                                disabledButtonsColor,
+                                disabledIncreaseButtonColor
+                            )
+                        }
+                        disabled={this.state.value >= maxValue}
+                        onPress={this.onIncreaseButtonPress}
+                    >
+                        <Icon 
+                            type={IconTypes.fontAwesome}
+                            name='plus' 
+                            color={increaseIconColor || iconsColor} 
+                            size={iconSize}
+                        />
+                    </TouchableOpacity>
+                </View>
+            )
         );
     }
 }
@@ -270,6 +292,8 @@ class NumericUpDown extends Component {
 NumericUpDown.defaultProps = {
     initialValue: 0,
     step: 1,
+    isLoading: false,
+    indicatorSize: 'small',
     style: {},
     disabledStyle: {},
     disabledIncreaseStyle: {},
@@ -291,14 +315,17 @@ NumericUpDown.propTypes = {
     step: PropTypes.number,
     minValue: PropTypes.number,
     maxValue: PropTypes.number,
+    isLoading: PropTypes.bool,
     // eslint-disable-next-line object-shorthand
     onChange: function (props, propName, componentName) {
         if (_has(props, 'value') && !_isFunction(props[propName])) {
             return new Error(`Invalid prop ${propName} supplied to ${componentName}, 
-                if prop value is provided ${propName} must be provided. 
-                This function will receive the new value as a parameter.`);
+            if prop value is provided ${propName} must be provided. 
+            This function will receive the new value as a parameter.`);
         }
     },
+    indicatorColor: colorPropType,
+    indicatorSize: PropTypes.oneOf(['small', 'large']),
     style: ViewPropTypes.style,
     disabledStyle: ViewPropTypes.style,
     disabledIncreaseStyle: ViewPropTypes.style,
@@ -308,16 +335,16 @@ NumericUpDown.propTypes = {
     buttonsStyle: ViewPropTypes.style,
     increaseStyle: ViewPropTypes.style,
     decreaseStyle: ViewPropTypes.style,
-    iconsColor: PropTypes.string,
-    increaseIconColor: PropTypes.string,
-    decreaseIconColor: PropTypes.string,
+    iconsColor: colorPropType,
+    increaseIconColor: colorPropType,
+    decreaseIconColor: colorPropType,
     iconSize: PropTypes.number,
-    buttonsColor: PropTypes.string,
-    increaseButtonColor: PropTypes.string,
-    decreaseButtonColor: PropTypes.string,
-    disabledButtonsColor: PropTypes.string,
-    disabledIncreaseButtonColor: PropTypes.string,
-    disabledDecreaseButtonColor: PropTypes.string
+    buttonsColor: colorPropType,
+    increaseButtonColor: colorPropType,
+    decreaseButtonColor: colorPropType,
+    disabledButtonsColor: colorPropType,
+    disabledIncreaseButtonColor: colorPropType,
+    disabledDecreaseButtonColor: colorPropType
 };
 
 export default NumericUpDown;
