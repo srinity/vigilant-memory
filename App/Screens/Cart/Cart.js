@@ -11,7 +11,8 @@ import {
     has as _has,
     zipWith as _zipWith,
     filter as _filter,
-    flatten as _flatten
+    flatten as _flatten,
+    isNil as _isNil
 } from 'lodash';
 
 import { CartProduct, Button, ScreenTypes } from './../../Components';
@@ -69,6 +70,14 @@ class Cart extends Component {
         };
     }
 
+    componentDidMount() {
+        const { getUserCart, user } = this.props;
+
+        if (!_isNil(user)) {
+            getUserCart(user);
+        }
+    }
+
     onShopPress = ({ shopId }) => {
         let newValue = shopId;
 
@@ -80,11 +89,11 @@ class Cart extends Component {
     }
 
     onCartProductQuantityChange = (product, newQuantity) => {
-        const { changeCartProductQuantity, cart } = this.props;
+        const { changeCartProductQuantity, cart, user } = this.props;
         const { shopId, shopName, ...productInfo } = product;
 
         const newProduct = { ...productInfo, quantity: newQuantity };
-        changeCartProductQuantity(shopId, shopName, newProduct, cart);
+        changeCartProductQuantity(shopId, shopName, newProduct, cart, user);
     }
 
     onCheckOutButtonPress = () => {
@@ -106,10 +115,10 @@ class Cart extends Component {
     }
 
     onRemoveFromCartPress = (item) => {
-        const { cart, removeFromCart } = this.props;
+        const { cart, removeFromCart, user } = this.props;
         const { shopId, shopName, ...product } = item;
 
-        removeFromCart(shopId, shopName, product, cart);
+        removeFromCart(shopId, shopName, product, cart, user);
     }
 
     renderShop = ({ item }) => {

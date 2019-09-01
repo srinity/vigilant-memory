@@ -73,20 +73,20 @@ class Products extends Component {
     }
 
     onAddToCartPress = (productInfo, quantity) => {
-        const { _id: shopId, shopName, addToCart, cart } = this.props;
+        const { _id: shopId, shopName, addToCart, cart, user } = this.props;
         const product = { ...productInfo, quantity };
-        addToCart(shopId, shopName, product, cart);
+        addToCart(shopId, shopName, product, cart, user);
     }
 
     onRemoveFromCartPress = (productInfo) => {
-        const { _id: shopId, shopName, removeFromCart, cart } = this.props;
-        removeFromCart(shopId, shopName, productInfo, cart);
+        const { _id: shopId, shopName, removeFromCart, cart, user } = this.props;
+        removeFromCart(shopId, shopName, productInfo, cart, user);
     }
 
     onCartProductQuantityChange = (productInfo, quantity) => {
-        const { _id: shopId, shopName, changeCartProductQuantity, cart } = this.props;
+        const { _id: shopId, shopName, changeCartProductQuantity, cart, user } = this.props;
         const product = { ...productInfo, quantity };
-        changeCartProductQuantity(shopId, shopName, product, cart);
+        changeCartProductQuantity(shopId, shopName, product, cart, user);
     }
 
     onDropDownValueChange = (value) => {

@@ -63,7 +63,12 @@ class AppRouter extends Component {
     ];
 
     this.connectedComponents = {
-      AuthSwitch: connect(state => ({ ...state.auth }))(AuthSwitch),
+      AuthSwitch: connect(
+        ({ auth, cart }) => ({ ...auth, ...cart }),
+        dispatch => ({
+          uploadUserCart: (cart, user) => dispatch(CartActions.uploadUserCart(cart, user))
+        })
+      )(AuthSwitch),
       DeviceDimensions: connect(null, dispatch => ({
         onDimensionsChanged: deviceDimensions =>
           dispatch(DeviceDimensionsActions.deviceDimensionsChanged(deviceDimensions))
@@ -108,12 +113,12 @@ class AppRouter extends Component {
           getProducts: (shopId, products, currentLimit, currentOffset, productsCount) =>
             dispatch(ShopActions.getProducts(shopId, products, currentLimit, currentOffset, productsCount)),
           cleanProductsData: () => dispatch(ShopActions.cleanProductsData()),
-          addToCart: (shopId, shopName, product, cart) =>
-            dispatch(CartActions.addToCart(shopId, shopName, product, cart)),
-          removeFromCart: (shopId, shopName, product, cart) =>
-            dispatch(CartActions.removeFromCart(shopId, shopName, product, cart)),
-          changeCartProductQuantity: (shopId, shopName, product, cart) =>
-            dispatch(CartActions.changeCartProductQuantity(shopId, shopName, product, cart)),
+          addToCart: (shopId, shopName, product, cart, user) =>
+            dispatch(CartActions.addToCart(shopId, shopName, product, cart, user)),
+          removeFromCart: (shopId, shopName, product, cart, user) =>
+            dispatch(CartActions.removeFromCart(shopId, shopName, product, cart, user)),
+          changeCartProductQuantity: (shopId, shopName, product, cart, user) =>
+            dispatch(CartActions.changeCartProductQuantity(shopId, shopName, product, cart, user)),
         })
       )(ShopScreen),
       Products: connect(
@@ -127,12 +132,12 @@ class AppRouter extends Component {
           getCategoryProducts: (shopId, category, products, currentLimit, currentOffset, productsCount, shouldCleanData) =>
             dispatch(ProductsActions.getCategoryProducts(shopId, category, products, currentLimit, currentOffset, productsCount, shouldCleanData)),
           cleanCategoryProductsData: () => dispatch(ProductsActions.cleanCategoryProductsData()),
-          addToCart: (shopId, shopName, product, cart) =>
-            dispatch(CartActions.addToCart(shopId, shopName, product, cart)),
-          removeFromCart: (shopId, shopName, product, cart) =>
-            dispatch(CartActions.removeFromCart(shopId, shopName, product, cart)),
-          changeCartProductQuantity: (shopId, shopName, product, cart) =>
-            dispatch(CartActions.changeCartProductQuantity(shopId, shopName, product, cart)),
+          addToCart: (shopId, shopName, product, cart, user) =>
+            dispatch(CartActions.addToCart(shopId, shopName, product, cart, user)),
+          removeFromCart: (shopId, shopName, product, cart, user) =>
+            dispatch(CartActions.removeFromCart(shopId, shopName, product, cart, user)),
+          changeCartProductQuantity: (shopId, shopName, product, cart, user) =>
+            dispatch(CartActions.changeCartProductQuantity(shopId, shopName, product, cart, user)),
         })
       )(ProductsScreen),
       Cart: connect(
@@ -143,10 +148,11 @@ class AppRouter extends Component {
           ...cart
         }),
         dispatch => ({
-          removeFromCart: (shopId, shopName, product, cart) =>
-            dispatch(CartActions.removeFromCart(shopId, shopName, product, cart)),
-          changeCartProductQuantity: (shopId, shopName, product, cart) =>
-            dispatch(CartActions.changeCartProductQuantity(shopId, shopName, product, cart)),
+          removeFromCart: (shopId, shopName, product, cart, user) =>
+            dispatch(CartActions.removeFromCart(shopId, shopName, product, cart, user)),
+          changeCartProductQuantity: (shopId, shopName, product, cart, user) =>
+            dispatch(CartActions.changeCartProductQuantity(shopId, shopName, product, cart, user)),
+          getUserCart: (user) => dispatch(CartActions.getUserCart(user)),
           buyShopProducts: (user, products, cart) => 
             dispatch(CartActions.buyShopProducts(user, products, cart))
         })

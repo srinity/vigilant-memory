@@ -10,7 +10,8 @@ export const APIURLs = {
   searchAreas: '/api/admin/addresses/city',
   getShops: '/api/client/shop/getShopsAtSpecificArea',
   getProductsOfShopGroupedByCategory: '/api/client/shop/getProductsOfShopGroupedByCategory',
-  getProductsOfShopBasedOnFilter: '/api/client/shop/getProductsOfShopBasedOnFilter'
+  getProductsOfShopBasedOnFilter: '/api/client/shop/getProductsOfShopBasedOnFilter',
+  cart: '/api/user/cart'
 };
 
 export const ImageHostUrl = 'https://s3-us-west-2.amazonaws.com/elcartona/';
@@ -25,5 +26,6 @@ export const AppAxios = Axios.create({
   baseURL: APIURLs.baseURL,
   headers: {
     ...APIHeaders
-  }
+  },
+  timeout: 5000
 });
