@@ -9,6 +9,7 @@ import { AuthSwitch, DeviceDimensions, ScreenTypes, IconTypes, BottomBar } from 
 import {
   AccountScreen,
   CartScreen,
+  CheckOutScreen,
   HomeScreen,
   LoginScreen,
   ProductsScreen,
@@ -138,6 +139,7 @@ class AppRouter extends Component {
         ({ deviceDimensions, auth, cart }) => ({
           ...deviceDimensions,
           user: auth.user,
+          isLoggedIn: auth.isLoggedIn,
           ...cart
         }),
         dispatch => ({
@@ -149,6 +151,18 @@ class AppRouter extends Component {
             dispatch(CartActions.buyShopProducts(user, products, cart))
         })
       )(CartScreen),
+      CheckOut: connect(
+        ({ deviceDimensions, auth, cart }) => ({
+          ...deviceDimensions,
+          user: auth.user,
+          isLoggedIn: auth.isLoggedIn,
+          ...cart
+        }),
+        dispatch => ({
+          buyShopProducts: (user, products, cart) => 
+            dispatch(CartActions.buyShopProducts(user, products, cart))
+        })
+      )(CheckOutScreen),
       Account: connect(
         ({ deviceDimensions, auth }) => ({
           ...deviceDimensions,
@@ -250,6 +264,14 @@ class AppRouter extends Component {
                 // initial
                 // hideNavBar
                 component={ConnectedComponents.Cart}
+              />
+
+              <Scene
+                key='checkOut'
+                title='Check Out'
+                // initial
+                // hideNavBar
+                component={ConnectedComponents.CheckOut}
               />
 
               <Scene

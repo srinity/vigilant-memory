@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, FlatList, SafeAreaView, Text } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import memoize from 'memoize-one';
 import CheckBox from 'react-native-check-box';
 import {
@@ -13,7 +14,7 @@ import {
     flatten as _flatten
 } from 'lodash';
 
-import { CartProduct, Button } from './../../Components';
+import { CartProduct, Button, ScreenTypes } from './../../Components';
 
 import { ImageHostUrl } from '../../Config/APIConfig';
 
@@ -86,14 +87,22 @@ class Cart extends Component {
         changeCartProductQuantity(shopId, shopName, newProduct, cart);
     }
 
-    onBuyButtonPress = () => {
-        const { buyShopProducts, cart, user } = this.props;
+    onCheckOutButtonPress = () => {
+        // const { buyShopProducts, cart, user } = this.props;
 
-        const productsToBuy = _find(this.state.cart,
-            shop => shop.shopId === this.state.checkedShop);
+        // const productsToBuy = _find(this.state.cart,
+        //     shop => shop.shopId === this.state.checkedShop);
 
-        console.tron.error(productsToBuy);
-        buyShopProducts(user, productsToBuy, cart);
+        // console.tron.error(productsToBuy);
+        // buyShopProducts(user, productsToBuy, cart);
+
+        const { isLoggedIn, user } = this.props;
+
+        if (isLoggedIn && !user.inActive) {
+            Actions.checkOut();
+        } else {
+            Actions[ScreenTypes.auth]();
+        }
     }
 
     onRemoveFromCartPress = (item) => {
@@ -172,12 +181,12 @@ class Cart extends Component {
                         </View>
 
                         <Button
-                            title={`Buy (${selectedShopItemsCount})`}
+                            title={`Check Out (${selectedShopItemsCount})`}
                             style={styles.buyButtonStyle}
                             textStyle={styles.buyButtonTextStyle}
                             isLoading={this.props.isLoading}
                             disabled={this.props.isLoading}
-                            onPress={this.onBuyButtonPress}
+                            onPress={this.onCheckOutButtonPress}
                             disabledStyle={styles.buyButtonDisabledStyle}
                         />
                     </View>
