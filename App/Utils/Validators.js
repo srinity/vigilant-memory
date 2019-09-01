@@ -12,13 +12,13 @@ export function isEgyptPhone(value) {
 }
 
 export function isEmail(value) {
-  const emailRegex = new RegExp(/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/);
+  const emailRegex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 
-  return _isString(value) && emailRegex.test(value);
+  return _isString(value) && emailRegex.test(value.trim());
 }
 
 export function isValidPassword(value) {
-  return _isString(value) && value.length >= 1;
+  return _isString(value) && value.trim().length >= 5;
 }
 
 export function isValidConfirmPassword(password, confirmPassword) {
@@ -50,7 +50,7 @@ export function isValidName(value) {
 export function isValidFirstOrLastName(value) {
   const charactersOnlyRegex = /^[a-zA-Z]+$/;
 
-  return (_isString(value) && charactersOnlyRegex.test(value));
+  return (_isString(value) && charactersOnlyRegex.test(value.trim()));
 }
 
 export function exists(value) {
