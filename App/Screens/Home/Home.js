@@ -14,7 +14,13 @@ import styles from './Home.Styles';
 class Home extends Component {
   static getDerivedStateFromProps(props, state) {
     if (state.isLoading && !props.isLoading && props.shops !== null) {
-      return { isLoading: props.isLoading, showSearch: false };
+      return {
+        isLoading: props.isLoading,
+        showSearch: false,
+        searchBarCity: state.selectedCity,
+        searchBarArea: state.selectedArea,
+        searchBarDistrict: state.selectedDistrict
+      };
     } else if (state.isLoading !== props.isLoading) {
       return { isLoading: props.isLoading };
     }
@@ -29,7 +35,10 @@ class Home extends Component {
     districts: null,
     selectedCity: undefined,
     selectedArea: undefined,
-    selectedDistrict: undefined
+    selectedDistrict: undefined,
+    searchBarCity: undefined,
+    searchBarArea: undefined,
+    searchBarDistrict: undefined
   }
 
   componentDidMount() {
@@ -90,7 +99,15 @@ class Home extends Component {
   }
 
   render() {
-    const { showSearch, selectedArea, selectedCity, selectedDistrict } = this.state;
+    const {
+      showSearch,
+      selectedArea,
+      selectedCity,
+      selectedDistrict,
+      searchBarArea,
+      searchBarCity,
+      searchBarDistrict
+    } = this.state;
     const { isLoading } = this.props;
     console.tron.error(this.props);
     console.tron.error(this.state);
@@ -166,7 +183,7 @@ class Home extends Component {
             <TouchableWithoutFeedback onPress={this.onSearchToolBarPress}>
               <View style={styles.searchBoxContainerStyle}>
                 <Icon type={IconTypes.oct} name='search' size={15} />
-                <Text style={styles.searchTextStyle} numberOfLines={1}>{`${selectedDistrict || 'District'}, ${selectedArea || 'Area'}, ${selectedCity || 'City'}`}</Text>
+                <Text style={styles.searchTextStyle} numberOfLines={1}>{`${searchBarDistrict || 'District'}, ${searchBarArea || 'Area'}, ${searchBarCity || 'City'}`}</Text>
               </View>
             </TouchableWithoutFeedback>
           </View>
