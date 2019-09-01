@@ -33,7 +33,7 @@ export const login = (phone, password) => {
   };
 };
 
-export const register = (firstName, lastName, email, password, phone) => {
+export const register = (firstName, lastName, email, password, phone, birthDate, gender) => {
   return async (dispatch) => {
     try {
       dispatch(registerRequestStarted());
@@ -46,7 +46,9 @@ export const register = (firstName, lastName, email, password, phone) => {
         email,
         password,
         phone,
-        userRole: 'user'
+        userRole: 'user',
+        birthDate,
+        gender
       });
       console.tron.log(response);
       dispatch(registerRequestSuccess(response.data));
