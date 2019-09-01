@@ -177,7 +177,7 @@ class Products extends Component {
     renderProduct = ({ item }) => {
         const { viewMode } = this.state;
         const horizontal = viewMode === 'list';
-        const { cart, _id: shopId, width, height } = this.props;
+        const { cart, _id: shopId, width, height, cartItemsIsLoadingObject } = this.props;
         const initialQuantity = CartActions.getProductQuantityInCart(item, shopId, cart);
 
         return (
@@ -189,6 +189,8 @@ class Products extends Component {
                 containerStyle={this.constructProductCardStyleMemoized(width, height, horizontal)}
                 onQuantityChange={(quantity) => this.onProductQuantityChange(item, quantity)}
                 initialQuantity={initialQuantity}
+                quantity={CartActions.getProductQuantityInCart(item, shopId, cart)}
+                isLoading={cartItemsIsLoadingObject[item._id]}
             />
         );
     }

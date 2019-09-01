@@ -27,9 +27,11 @@ const ProductCard = ({
     name,
     price,
     horizontal,
+    isLoading,
     iconSize,
     iconColor,
     initialQuantity,
+    quantity,
     onQuantityChange,
     containerStyle,
     ...props
@@ -58,8 +60,11 @@ const ProductCard = ({
                     minValue={0}
                     maxValue={100}
                     initialValue={initialQuantity}
+                    value={quantity}
                     iconSize={iconSize}
                     iconsColor={iconColor}
+                    isLoading={isLoading}
+                    indicatorColor={Colors.brandColorHexCode}
                     {...props}
                 />
             </View>
@@ -71,9 +76,11 @@ ProductCard.defaultProps = {
     onQuantityChange: () => {},
     containerStyle: {},
     horizontal: false,
+    isLoading: false,
     iconSize: 10,
     iconColor: '#FFFFFF',
-    initialQuantity: 0
+    initialQuantity: 0,
+    quantity: 0
 };
 
 ProductCard.propTypes = {
@@ -81,10 +88,12 @@ ProductCard.propTypes = {
     name: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
     horizontal: PropTypes.bool,
+    isLoading: PropTypes.bool,
     iconSize: PropTypes.number,
     iconColor: colorPropType,
     onQuantityChange: PropTypes.func.isRequired,
     initialQuantity: PropTypes.number,
+    quantity: PropTypes.number,
     containerStyle: ViewPropTypes.style
 };
 

@@ -11,7 +11,7 @@ export const colorPropType = (props, propName, componentName) => {
 function isColor(propValue) {
   const validColorName = _findIndex(colorNames, value => value === propValue) !== -1;
   
-  return validColorName || isHexColorCode(propValue) || isRGBColor(propValue) ||
+  return propValue === undefined || validColorName || isHexColorCode(propValue) || isRGBColor(propValue) ||
     isRGBAColor(propValue) || isHSLColor(propValue) || isHSLAColor(propValue);
 }
 

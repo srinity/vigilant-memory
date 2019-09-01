@@ -176,7 +176,7 @@ class Shop extends Component {
     }
 
     renderProduct = ({ item }) => {
-        const { cart, _id: shopId } = this.props;
+        const { cart, _id: shopId, cartItemsIsLoadingObject } = this.props;
         const initialQuantity = CartActions.getProductQuantityInCart(item, shopId, cart);
 
         return (
@@ -187,6 +187,8 @@ class Shop extends Component {
                 containerStyle={this.constructProductCardStyleMemoized(this.props.width, this.props.height)}
                 onQuantityChange={(quantity) => this.onProductQuantityChange(item, quantity)}
                 initialQuantity={initialQuantity}
+                quantity={CartActions.getProductQuantityInCart(item, shopId, cart)}
+                isLoading={cartItemsIsLoadingObject[item._id]}
             />
         );
     }
