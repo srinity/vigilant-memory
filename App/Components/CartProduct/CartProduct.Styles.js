@@ -8,8 +8,8 @@ export default StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         paddingVertical: 7,
-        borderBottomColor: Colors.notAvailableColorHexCode,
-        borderBottomWidth: 1
+        borderTopColor: Colors.notAvailableColorHexCode,
+        borderTopWidth: 1
     },
     imageContainerStyle: {
         flex: 1

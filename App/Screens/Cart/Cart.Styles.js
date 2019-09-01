@@ -61,7 +61,7 @@ export default StyleSheet.create({
     shopCheckBoxStyle: {
         borderBottomColor: Colors.notAvailableColorHexCode,
         borderBottomWidth: 1,
-        paddingBottom: 5
+        paddingVertical: 10
     },
     shopCheckBoxTextStyle: {
         color: Colors.blackColorHexCode,
