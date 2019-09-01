@@ -48,9 +48,15 @@ export const NO_MORE_SHOP_CATEGORY_PRODUCTS_TO_FETCH = 'no_more_shop_category_pr
 export const CLEAN_CATEGORY_PRODUCTS_DATA = 'clean_category_products_data';
 
 // Cart Action Types
+export const CART_ITEMS_UPDATE_STARTED = 'cart_items_update_started';
 export const ADD_ITEM_TO_CART = 'add_item_to_cart';
 export const CHANGE_CART_ITEM_QUANTITY = 'change_cart_item_quantity';
 export const REMOVE_ITEM_FROM_CART = 'remove_item_from_cart';
+export const CART_ITEMS_UPDATE_FAILED = 'cart_items_update_failed';
+export const FAILED_TO_UPLOAD_USER_CART_UPON_LOGIN = 'failed_to_upload_user_cart_upon_login';
+export const GET_USER_CART_STARTED = 'get_user_cart_started';
+export const GET_USER_CART_SUCCESS = 'get_user_cart_success';
+export const GET_USER_CART_FAILED = 'get_user_cart_failed';
 export const BUY_SHOP_CART_PRODUCTS_STARTED = 'but_shop_cart_products_started';
 export const BUY_SHOP_CART_PRODUCTS_FAILED = 'but_shop_cart_products_failed';
 export const BUY_SHOP_CART_PRODUCTS_SUCCESS = 'but_shop_cart_products_success';
