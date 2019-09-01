@@ -39,6 +39,10 @@ class VerificationCode extends Component {
         this.animation = new Animated.Value(0);
     }
 
+    componentDidMount() {
+        this.onSendVerificationCodePress();
+    }
+
     componentDidUpdate(prevProps) {
         const { isSendingVerificationCode } = this.props;
         if (prevProps.isSendingVerificationCode !== isSendingVerificationCode) {
@@ -117,6 +121,7 @@ class VerificationCode extends Component {
                         inputProps={{ contextMenuHidden: true, selectionColor: 'transparent', onFocus: this.onFocus }}
                         autoFocus
                         containerProps={{ style: styles.codeInputContainerStyle }}
+                        disabled={isVerifyingCode}
                     />
 
                     {
