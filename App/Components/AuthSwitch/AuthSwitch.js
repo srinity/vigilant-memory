@@ -10,20 +10,41 @@ class AuthSwitch extends Component {
   componentDidMount() {
     setTimeout(() => {
       const initialScreen = this.rootScreenSelector(this.props);
-      Actions.reset(initialScreen);
+      this.navigateToProperScreen(initialScreen);
     }, 0);
   }
 
   componentDidUpdate(prevProps) {
-    const rootSelector = this.rootScreenSelector;
+    const { rootScreenSelector } = this;
+    const currentRootScreen = rootScreenSelector(this.props);
 
-    if (rootSelector(this.props) !== rootSelector(prevProps)) {
-      Actions.reset(rootSelector(this.props));
+    if (currentRootScreen !== rootScreenSelector(prevProps)) {
+      this.navigateToProperScreen(currentRootScreen);
     }
   }
 
   rootScreenSelector = (props) => {
-      return (props.user && props.user) ? ScreenTypes.app : ScreenTypes.auth;
+    const { isLoggedIn, user = {} } = props;
+
+    if (!isLoggedIn) {
+      return ScreenTypes.app;
+    } else if (isLoggedIn && user.inActive) {
+      return ScreenTypes.auth;
+    }
+    
+    return ScreenTypes.app;
+  }
+
+  navigateToProperScreen = (screen) => {
+    if (screen === ScreenTypes.auth) {
+      if (Actions.currentScene !== 'login' && Actions.currentScene !== 'register') {
+        Actions[ScreenTypes.auth]();
+      }
+
+      Actions.verificationCode();
+    } else {
+      Actions.reset(screen);
+    }
   }
 
   render() {
