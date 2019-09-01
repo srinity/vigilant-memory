@@ -25,6 +25,7 @@ class AuthSwitch extends Component {
         Actions.cart();
       }
     } else if (!prevProps.isLoggedIn && this.props.isLoggedIn) {
+      this.props.uploadUserCart(this.props.cart, this.props.user);
       this.navigateToProperScreen(ScreenTypes.app);
       Actions.cart();
     }
