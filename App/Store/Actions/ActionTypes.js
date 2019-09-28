@@ -60,3 +60,20 @@ export const GET_USER_CART_FAILED = 'get_user_cart_failed';
 export const BUY_SHOP_CART_PRODUCTS_STARTED = 'but_shop_cart_products_started';
 export const BUY_SHOP_CART_PRODUCTS_FAILED = 'but_shop_cart_products_failed';
 export const BUY_SHOP_CART_PRODUCTS_SUCCESS = 'but_shop_cart_products_success';
+
+// User Actions Action Types
+// User's Address Action Types
+export const ADD_ADDRESS_STARTED = 'add_address_started';
+export const ADD_ADDRESS_SUCCESS = 'add_address_success';
+export const ADD_ADDRESS_FAILED = 'add_address_failed';
+export const REMOVE_ADDRESS_STARTED = 'remove_address_started';
+export const REMOVE_ADDRESS_SUCCESS = 'remove_address_success';
+export const REMOVE_ADDRESS_FAILED = 'remove_address_failed';
+export const CHANGE_ADDRESS_STARTED = 'change_address_started';
+export const CHANGE_ADDRESS_SUCCESS = 'change_address_success';
+export const CHANGE_ADDRESS_FAILED = 'change_address_failed';
+export const SELECT_SHIPPING_ADDRESS = 'select_shipping_address';
+// User's Info Action Types
+export const GET_USER_INFO_STARTED = 'get_user_info_started';
+export const GET_USER_INFO_SUCCESS = 'get_user_info_success';
+export const GET_USER_INFO_FAILED = 'get_user_info_failed';
