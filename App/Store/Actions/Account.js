@@ -1,3 +1,6 @@
+import moment from 'moment';
+import { Actions } from 'react-native-router-flux';
+
 import {
   LOGIN_REQUEST_STARTED,
   LOGIN_REQUEST_SUCCESS,
@@ -13,7 +16,10 @@ import {
   SENDING_VERIFICATION_CODE_FAILED,
   VERIFYING_USER_CODE_STARTED,
   VERIFYING_USER_CODE_SUCCESS,
-  VERIFYING_USER_CODE_FAILED
+  VERIFYING_USER_CODE_FAILED,
+  REFRESH_TOKEN_SUCCESS,
+  REFRESH_TOKEN_STARTED,
+  REFRESH_TOKEN_FAILED
 } from './ActionTypes';
 
 import { APIURLs, AppAxios } from './../../Config/APIConfig';
@@ -38,6 +44,7 @@ export const register = (firstName, lastName, email, password, phone, birthDate,
     try {
       dispatch(registerRequestStarted());
 
+      console.tron.log(firstName, lastName, email, password, phone, birthDate, gender)
       const response = await AppAxios.post(APIURLs.register, {
         fullName: {
           firstName,
@@ -52,6 +59,7 @@ export const register = (firstName, lastName, email, password, phone, birthDate,
       });
       console.tron.log(response);
       dispatch(registerRequestSuccess(response.data));
+      // Actions.verificationCode();
     } catch (error) {
       console.tron.error(error);
       dispatch(registerRequestFailed(error.response));
@@ -96,7 +104,28 @@ export const verifyCode = (code, user) => {
       console.tron.error(error);
       dispatch(verifyCodeCodeFailed(error));
     }
-  }
+  };
+};
+
+export const refreshToken = (user) => {
+  return async dispatch => {
+    dispatch(refreshTokenStarted());
+
+    try {
+      const response = await AppAxios.post(APIURLs.refreshToken, undefined, {
+        headers: {
+          'Authorization': `bearer ${user.token}`
+        }
+      });
+
+      console.tron.warn(response.data);
+      const { message, ...userData } = response.data;
+      dispatch(refreshTokenSuccess({ ...user, ...userData }));
+    } catch (error) {
+      console.tron.error(error);
+      dispatch(refreshTokenFailed(error));
+    } 
+  };
 };
 
 export const logout = () => {
@@ -111,7 +140,7 @@ function loginRequestStarted() {
 }
 
 function loginRequestSuccess(user) {
-  return { type: LOGIN_REQUEST_SUCCESS, user };
+  return { type: LOGIN_REQUEST_SUCCESS, user, time: moment(new Date()) };
 }
 
 function loginRequestFailed(error) {
@@ -123,7 +152,7 @@ function registerRequestStarted() {
 }
 
 function registerRequestSuccess(user) {
-  return { type: REGISTER_REQUEST_SUCCESS, user };
+  return { type: REGISTER_REQUEST_SUCCESS, user, time: moment(new Date()) };
 }
 
 function registerRequestFailed(error) {
@@ -152,6 +181,18 @@ function verifyCodeCodeSuccess() {
 
 function verifyCodeCodeFailed(error) {
   return { type: VERIFYING_USER_CODE_FAILED, error };
+}
+
+function refreshTokenStarted() {
+  return { type: REFRESH_TOKEN_STARTED };
+}
+
+function refreshTokenSuccess(user) {
+  return { type: REFRESH_TOKEN_SUCCESS, user, time: moment(new Date()) };
+}
+
+function refreshTokenFailed(error) {
+  return { type: REFRESH_TOKEN_FAILED, error };
 }
 
 function logoutRequestStarted() {

@@ -47,10 +47,19 @@ export function getUserCart(user) {
             });
     
             console.tron.warn(response);
-            const cart = {}
-            // _forEach(response.data.cart, )
+            const cart = {};
+
+            _forEach(response.data.cart, shopCart => {
+                cart[shopCart.shopId] = {
+                    ...shopCart,
+                    products: _map(shopCart.products,
+                        product => ({ ...product, ...product.meta, _id: product.productId })) };
+            });
+
+            dispatch(getUserCartSuccess(cart));
         } catch (error) {
             console.tron.error(error);
+            dispatch(getUserCartFailed(error));
         }
     };
 }
@@ -233,7 +242,7 @@ function getUserCartStarted() {
     return { type: GET_USER_CART_STARTED };
 }
 
-function getUserCartSucess(cart) {
+function getUserCartSuccess(cart) {
     return { type: GET_USER_CART_SUCCESS, cart };
 }
 

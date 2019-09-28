@@ -8,7 +8,10 @@ const INITIAL_STATE = {
     isVerifyingCode: false,
     isSendingVerificationCode: false,
     verifyingCodeError: null,
-    sendingVerificationCodeError: null
+    sendingVerificationCodeError: null,
+    refreshTokenStarted: false,
+    refreshTokenError: null,
+    lastLoginTime: undefined
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -17,7 +20,14 @@ export default function (state = INITIAL_STATE, action) {
             return { ...state, isLoading: true, error: null };
 
         case ActionTypes.LOGIN_REQUEST_SUCCESS:
-            return { ...state, isLoading: false, user: action.user, error: null, isLoggedIn: true };
+            return {
+                ...state,
+                isLoading: false,
+                user: action.user,
+                error: null,
+                isLoggedIn: true,
+                lastLoginTime: action.time
+            };
 
         case ActionTypes.LOGIN_REQUEST_FAILED:
             return { ...state, isLoading: false, error: action.error };
@@ -26,7 +36,14 @@ export default function (state = INITIAL_STATE, action) {
             return { ...state, isLoading: true, error: null };
 
         case ActionTypes.REGISTER_REQUEST_SUCCESS:
-            return { ...state, isLoading: false, user: action.user, error: null, isLoggedIn: true };
+            return {
+                ...state,
+                isLoading: false,
+                user: action.user,
+                error: null,
+                isLoggedIn: true,
+                lastLoginTime: action.time
+            };
 
         case ActionTypes.REGISTER_REQUEST_FAILED:
             return { ...state, isLoading: false, error: action.error };
@@ -62,6 +79,20 @@ export default function (state = INITIAL_STATE, action) {
 
         case ActionTypes.VERIFYING_USER_CODE_FAILED:
             return { ...state, isVerifyingCode: false, verifyingCodeError: action.error };
+
+        case ActionTypes.REFRESH_TOKEN_STARTED:
+            return { ...state, refreshTokenStarted: true, refreshTokenError: null };
+
+        case ActionTypes.REFRESH_TOKEN_SUCCESS:
+            return {
+                ...state,
+                refreshTokenStarted: false,
+                user: action.user,
+                lastLoginTime: action.time
+            };
+
+        case ActionTypes.REFRESH_TOKEN_FAILED:
+            return { ...state, refreshTokenStarted: false, refreshTokenError: action.error };
 
         default:
             return { ...state };

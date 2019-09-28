@@ -5,11 +5,22 @@ const INITIAL_STATE = {
     error: null,
     isLoading: false,
     cartItemsIsLoadingObject: {},
-    updateUserCartError: null
+    updateUserCartError: null,
+    cartItemsAreLoading: false,
+    cartItemsLoadedError: null
 };
 
 export default function (state = INITIAL_STATE, action) {
     switch (action.type) {
+        case ActionTypes.GET_USER_CART_STARTED: 
+            return { ...state, cartItemsAreLoading: true, cartItemsLoadedError: null };
+        
+        case ActionTypes.GET_USER_CART_SUCCESS: 
+            return { ...state, cartItemsAreLoading: false, cart: action.cart };
+
+        case ActionTypes.GET_USER_CART_FAILED:
+            return { ...state, cartItemsAreLoading: false, cartItemsLoadedError: action.error };
+
         case ActionTypes.CART_ITEMS_UPDATE_STARTED:
             return {
                 ...state,
@@ -55,8 +66,8 @@ export default function (state = INITIAL_STATE, action) {
         case ActionTypes.BUY_SHOP_CART_PRODUCTS_FAILED:
             return { ...state, isLoading: false, error: action.error };
 
-        case ActionTypes.FAILED_TO_UPLOAD_USER_CART_UPON_LOGIN:
-            return { ...state, cart: {} };
+        // case ActionTypes.FAILED_TO_UPLOAD_USER_CART_UPON_LOGIN:
+        //     return { ...state, cart: {} };
 
         default:
             return state;

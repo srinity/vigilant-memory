@@ -19,6 +19,11 @@ export const VERIFYING_USER_CODE_STARTED = 'verifying_user_code_started';
 export const VERIFYING_USER_CODE_SUCCESS = 'verifying_user_code_success';
 export const VERIFYING_USER_CODE_FAILED = 'verifying_user_code_failed';
 
+// Refresh Token Action
+export const REFRESH_TOKEN_STARTED = 'refresh_token_started';
+export const REFRESH_TOKEN_SUCCESS = 'refresh_token_success';
+export const REFRESH_TOKEN_FAILED = 'refresh_token_failed';
+
 // Logout Action Types 
 export const LOGOUT_REQUEST_STARTED = 'logout_request_started';
 export const LOGOUT_REQUEST_SUCCESS = 'logout_request_success';
