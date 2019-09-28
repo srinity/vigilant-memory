@@ -1,17 +1,19 @@
 import Axios from 'axios';
 
 export const APIURLs = {
-  baseURL: 'https://1e1beb46.ngrok.io',
+  baseURL: 'https://77061f78.ngrok.io',
   login: '/api/auth/login',
   register: '/api/auth/signup',
   sendCode: '/api/auth/generateVerificationCode',
   verifyCode: '/api/auth/verifyCode',
-  refreshToken: '/api/auth/tokenRefresh',
+  refreshToken: '/api/auth/refreshToken',
   searchAreas: '/api/admin/addresses/city',
   getShops: '/api/client/shop/getShopsAtSpecificArea',
   getProductsOfShopGroupedByCategory: '/api/client/shop/getProductsOfShopGroupedByCategory',
   getProductsOfShopBasedOnFilter: '/api/client/shop/getProductsOfShopBasedOnFilter',
-  cart: '/api/user/cart'
+  cart: '/api/user/cart',
+  updateAddress: '/api/user/address',
+  userData: '/api/user/me'
 };
 
 export const ImageHostUrl = 'https://s3-us-west-2.amazonaws.com/elcartona/';

@@ -19,9 +19,8 @@ export default StyleSheet.create({
         paddingVertical: 10
       },
       ios: {
-        paddingTop: isIPhoneDeviceWithNotch() ? 40 : 0,
-        paddingBottom: isIPhoneDeviceWithNotch() ? 10 : 0,
-        paddingVertical: isIPhoneDeviceWithNotch() ? 0 : 10
+        paddingTop: isIPhoneDeviceWithNotch() ? 40 : 20,
+        paddingBottom: 10
       }
     })
   },

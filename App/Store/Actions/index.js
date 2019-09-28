@@ -8,3 +8,4 @@ module.exports.ShopActions = require('./Shop');
 module.exports.ProductsActions = require('./Products');
 module.exports.ShopsActions = require('./Shops');
 module.exports.CartActions = require('./Cart');
+module.exports.UserActions = require('./User');

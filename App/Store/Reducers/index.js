@@ -4,6 +4,7 @@ import Shop from './Shop';
 import Products from './Products';
 import Shops from './Shops';
 import Cart from './Cart';
+import User from './User';
 
 export {
     DeviceDimensions,
@@ -12,4 +13,5 @@ export {
     Products,
     Shops,
     Cart,
+    User,
 };

@@ -8,6 +8,7 @@ import { AuthSwitch, DeviceDimensions, ScreenTypes, IconTypes, BottomBar } from 
 
 import {
   AccountScreen,
+  AddressBookScreen,
   CartScreen,
   CheckOutScreen,
   HomeScreen,
@@ -24,7 +25,8 @@ import {
   ShopActions,
   ProductsActions,
   ShopsActions,
-  CartActions
+  CartActions,
+  UserActions
 } from './Store/Actions';
 
 import { Colors } from './Theme';
@@ -66,7 +68,10 @@ class AppRouter extends Component {
       AuthSwitch: connect(
         ({ auth, cart }) => ({ ...auth, ...cart }),
         dispatch => ({
-          uploadUserCart: (cart, user) => dispatch(CartActions.uploadUserCart(cart, user))
+          uploadUserCart: (cart, user) => dispatch(CartActions.uploadUserCart(cart, user)),
+          getSearchAreas: () => dispatch(ShopsActions.getSearchAreas()),
+          refreshToken: (user) => dispatch(AccountActions.refreshToken(user)),
+          getUserInfo: (user) => dispatch(UserActions.getUserInfo(user)),
         })
       )(AuthSwitch),
       DeviceDimensions: connect(null, dispatch => ({
@@ -158,24 +163,47 @@ class AppRouter extends Component {
         })
       )(CartScreen),
       CheckOut: connect(
-        ({ deviceDimensions, auth, cart }) => ({
+        ({ deviceDimensions, auth, cart, user, shops }) => ({
           ...deviceDimensions,
           user: auth.user,
           isLoggedIn: auth.isLoggedIn,
-          ...cart
+          ...cart,
+          ...user,
+          cities: shops.cities
         }),
         dispatch => ({
           buyShopProducts: (user, products, cart) => 
-            dispatch(CartActions.buyShopProducts(user, products, cart))
+            dispatch(CartActions.buyShopProducts(user, products, cart)),
+          selectShippingAddress: (addressId) =>
+            dispatch(UserActions.selectShippingAddress(addressId)),
+          addAddress: (user, address) => dispatch(UserActions.addAddress(user, address)),
         })
       )(CheckOutScreen),
       Account: connect(
-        ({ deviceDimensions, auth }) => ({
+        ({ deviceDimensions, auth, user }) => ({
           ...deviceDimensions,
-          user: auth.user
+          user: auth.user,
+          ...user
         }),
-        dispatch => ({})
+        dispatch => ({
+          getUserInfo: (user) => dispatch(UserActions.getUserInfo(user))
+        })
       )(AccountScreen),
+      AddressBook: connect(
+        ({ deviceDimensions, auth, user, shops }) => ({
+          ...deviceDimensions,
+          user: auth.user,
+          cities: shops.cities,
+          ...user
+        }),
+        dispatch => ({
+          selectShippingAddress: (addressId) =>
+            dispatch(UserActions.selectShippingAddress(addressId)),
+          addAddress: (user, address) => dispatch(UserActions.addAddress(user, address)),
+          changeAddress: (user, address) => dispatch(UserActions.changeAddress(user, address)),
+          deleteAddress: (user, addressId) => dispatch(UserActions.removeAddress(user, addressId)),
+        })
+      )(AddressBookScreen),
     };
   }
 
@@ -267,7 +295,7 @@ class AppRouter extends Component {
                 title='Cart'
                 onExit={this.onTabBackClick}
                 onEnter={this.handleBottomBarVisibility}
-                // initial
+                initial
                 // hideNavBar
                 component={ConnectedComponents.Cart}
               />
@@ -288,6 +316,14 @@ class AppRouter extends Component {
                 // initial
                 // hideNavBar
                 component={ConnectedComponents.Account}
+              />
+
+              <Scene
+                key='addressBook'
+                title='Shipping Addresses'
+                // initial
+                // hideNavBar
+                component={ConnectedComponents.AddressBook}
               />
             </Scene>
           </Scene>
