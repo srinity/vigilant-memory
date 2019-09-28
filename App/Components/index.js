@@ -1,3 +1,4 @@
+import AddressModal from './AddressModal/AddressModal';
 import AuthInput from './AuthInput/AuthInput';
 import AuthSwitch, { ScreenTypes } from './AuthSwitch/AuthSwitch';
 import BottomBar from './BottomBar/BottomBar';
@@ -20,6 +21,7 @@ import ShopCard from './ShopCard/ShopCard';
 import ShopHeader from './ShopHeader/ShopHeader';
 
 export {
+    AddressModal,
     AuthInput,
     AuthSwitch,
     BottomBar,
