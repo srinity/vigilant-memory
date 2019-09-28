@@ -43,6 +43,7 @@ const CartProduct = ({
     name,
     price,
     quantity,
+    isLoading,
     onQuantityChange,
     onRemovePress,
     removeDisabled,
@@ -81,7 +82,8 @@ const CartProduct = ({
                         disabledButtonsColor={Colors.getBrandColorRGBAValue(0.7)}
                         minValue={1}
                         maxValue={100}
-                        initialValue={quantity}
+                        value={quantity}
+                        isLoading={isLoading}
                         iconSize={10}
                         {...props}
                     />
@@ -97,12 +99,14 @@ CartProduct.defaultProps = {
     quantity: 1,
     onRemovePress: () => {},
     removeDisabled: false,
+    isLoading: false
 };
 
 CartProduct.propTypes = {
     image: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
+    isLoading: PropTypes.bool,
     quantity: PropTypes.number.isRequired,
     onQuantityChange: PropTypes.func.isRequired,
     onRemovePress: PropTypes.func.isRequired,

@@ -3,7 +3,7 @@ import { View, Text, ViewPropTypes, TouchableOpacity, StyleSheet } from 'react-n
 import { TextField } from 'react-native-material-textfield';
 import PropTypes from 'prop-types';
 import memoize from 'memoize-one';
-import { has as _has, isFunction as _isFunction, get as _get } from 'lodash';
+import { has as _has, isFunction as _isFunction, get as _get, isNil as _isNil } from 'lodash';
 
 import { Icon, IconTypes, iconTypesValues } from './../Icon';
 
@@ -17,7 +17,7 @@ class CustomInput extends Component {
   constructor(props) {
     super(props);
 
-    const isActive = (_has(props, 'value') && props.value !== '');
+    const isActive = (_has(props, 'value') && props.value !== '' && !_isNil(props.value));
 
     this.state = {
       isActive,
@@ -147,7 +147,7 @@ class CustomInput extends Component {
       >
         <View style={inputContainerStyles}>
           {
-            isActive
+            isActive && leftIconName
               ? <View style={styles.leftIconContainerStyle}>
                 <Icon
                   name={leftIconName}
