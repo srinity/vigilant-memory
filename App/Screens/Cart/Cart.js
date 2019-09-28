@@ -15,7 +15,7 @@ import {
     isNil as _isNil
 } from 'lodash';
 
-import { CartProduct, Button, ScreenTypes } from './../../Components';
+import { CartProduct, Button, ScreenTypes, CustomFlatList } from './../../Components';
 
 import { ImageHostUrl } from '../../Config/APIConfig';
 
@@ -93,6 +93,7 @@ class Cart extends Component {
         const { shopId, shopName, ...productInfo } = product;
 
         const newProduct = { ...productInfo, quantity: newQuantity };
+        console.tron.warn(newProduct)
         changeCartProductQuantity(shopId, shopName, newProduct, cart, user);
     }
 
@@ -105,10 +106,11 @@ class Cart extends Component {
         // console.tron.error(productsToBuy);
         // buyShopProducts(user, productsToBuy, cart);
 
-        const { isLoggedIn, user } = this.props;
+        const { isLoggedIn, user, cart } = this.props;
+        const { checkedShop } = this.state
 
         if (isLoggedIn && !user.inActive) {
-            Actions.checkOut();
+            Actions.checkOut({ shopId: checkedShop, title: cart[checkedShop].shopName });
         } else {
             Actions[ScreenTypes.auth]();
         }
@@ -140,23 +142,26 @@ class Cart extends Component {
                     data={products}
                     renderItem={this.renderCartProduct}
                     keyExtractor={product => product._id}
+                    extraData={this.props.cartItemsIsLoadingObject}
                 />
             </View>
         );
     }
 
     renderCartProduct = ({ item, index }) => {
+        const { cartItemsIsLoadingObject } = this.props;
         const onQuantityChange = this.onCartProductQuantityChange.bind(this, item);
 
         return (
             <CartProduct
-                key={index}
                 image={`${ImageHostUrl}${item.imgUrl}`}
                 name={item.productName}
                 price={item.price}
                 quantity={item.quantity}
                 onQuantityChange={onQuantityChange}
                 onRemovePress={() => this.onRemoveFromCartPress(item)}
+                isLoading={cartItemsIsLoadingObject[item._id]}
+                indicatorColor={Colors.brandColorHexCode}
             />
         );
     }
@@ -173,11 +178,13 @@ class Cart extends Component {
 
         return (
             <SafeAreaView style={styles.containerStyle}>
-                <FlatList
+                <CustomFlatList
                     data={this.state.cart}
                     renderItem={this.renderShop}
                     extraData={this.state.checkedShop}
                     keyExtractor={shop => shop.shopId}
+                    isLoading={this.props.cartItemsAreLoading}
+                    indicatorColor={Colors.brandColorHexCode}
                 />
 
                 {
