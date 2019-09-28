@@ -11,19 +11,32 @@ import {
     Shop,
     Products,
     Shops,
-    Cart
+    Cart,
+    User
 } from './Reducers';
 
 const persistAuthConfig = {
     key: 'Auth',
     storage,
-    whitelist: ['user', 'isLoggedIn']
+    whitelist: ['user', 'isLoggedIn', 'lastLoginTime']
+};
+
+const persistSearchAreasConfig = {
+    key: 'Cities',
+    storage,
+    whitelist: ['cities']
 };
 
 const persistCartConfig = {
     key: 'Cart',
     storage,
     whitelist: ['cart']
+};
+
+const persistUserConfig = {
+    key: 'User',
+    storage,
+    whitelist: ['addresses', 'lastSelectedAddress']
 };
 
 const middleWares = [Thunk];
@@ -33,8 +46,9 @@ const rootReducer = combineReducers({
     auth: persistReducer(persistAuthConfig, Account),
     shop: Shop,
     products: Products,
-    shops: Shops,
-    cart: persistReducer(persistCartConfig, Cart)
+    shops: persistReducer(persistSearchAreasConfig, Shops),
+    cart: persistReducer(persistCartConfig, Cart),
+    user: persistReducer(persistUserConfig, User)
 });
 
 const initialData = {};
