@@ -1,5 +1,5 @@
 import { APIURLs, AppAxios } from '../../Config/APIConfig';
-import { cloneDeep as _cloneDeep } from 'lodash';
+import { cloneDeep as _cloneDeep, findIndex as _findIndex } from 'lodash';
 
 import {
   ADD_ADDRESS_STARTED,
@@ -24,7 +24,7 @@ const ADDRESS_API_ACTIONS = {
 };
 
 export function getUserInfo(user) {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     dispatch(getUserInfoStarted());
 
     try {
@@ -38,6 +38,14 @@ export function getUserInfo(user) {
       console.tron.warn(response.data);
 
       dispatch(getUserInfoSuccess(userInfo, addresses));
+
+      // Reset Selected Address if the address no longer available
+      const { user: userReducer } = getState();
+
+      if (_findIndex(addresses, address =>
+          address._id === userReducer.lastSelectedAddress) === -1) {
+        dispatch(selectShippingAddress(undefined));
+      }
     } catch (error) {
       console.tron.error(error);
       dispatch(getUserInfoFailed(error));
@@ -61,16 +69,23 @@ console.tron.error(address);
 }
 
 export function removeAddress(user, addressId) {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     dispatch(removeUserAddressStarted());
 
     try {
       const response = await updateUserAddress(ADDRESS_API_ACTIONS.remove, [{ addressId }], user);
 
-      console.tron.warn(response.data)
+      console.tron.warn(response.data);
       dispatch(removeUserAddressSuccess(response.data.addresses));
+
+      const { user: userReducer } = getState();
+
+      // Reset Selected Address if the address no longer available
+      if (addressId === userReducer.lastSelectedAddress) {
+        dispatch(selectShippingAddress(undefined));
+      }
     } catch (error) {
-      console.tron.error(error)
+      console.tron.error(error);
       dispatch(removeUserAddressFailed(error));
     }
   };
