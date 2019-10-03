@@ -3,7 +3,7 @@ import { ActionTypes } from './../Actions';
 const INITIAL_STATE = {
     cart: {},
     error: null,
-    isLoading: false,
+    isBuyingLoading: false,
     cartItemsIsLoadingObject: {},
     updateUserCartError: null,
     cartItemsAreLoading: false,
@@ -58,13 +58,13 @@ export default function (state = INITIAL_STATE, action) {
             };
 
         case ActionTypes.BUY_SHOP_CART_PRODUCTS_STARTED:
-            return { ...state, isLoading: true, error: null };
+            return { ...state, isBuyingLoading: true, error: null };
         
         case ActionTypes.BUY_SHOP_CART_PRODUCTS_SUCCESS:
-            return { ...state, isLoading: false, error: null, cart: action.cart };
+            return { ...state, isBuyingLoading: false, error: null, cart: action.cart };
 
         case ActionTypes.BUY_SHOP_CART_PRODUCTS_FAILED:
-            return { ...state, isLoading: false, error: action.error };
+            return { ...state, isBuyingLoading: false, error: action.error };
 
         // case ActionTypes.FAILED_TO_UPLOAD_USER_CART_UPON_LOGIN:
         //     return { ...state, cart: {} };

@@ -158,8 +158,6 @@ class AppRouter extends Component {
           changeCartProductQuantity: (shopId, shopName, product, cart, user) =>
             dispatch(CartActions.changeCartProductQuantity(shopId, shopName, product, cart, user)),
           getUserCart: (user) => dispatch(CartActions.getUserCart(user)),
-          buyShopProducts: (user, products, cart) => 
-            dispatch(CartActions.buyShopProducts(user, products, cart))
         })
       )(CartScreen),
       CheckOut: connect(
@@ -172,8 +170,8 @@ class AppRouter extends Component {
           cities: shops.cities
         }),
         dispatch => ({
-          buyShopProducts: (user, products, cart) => 
-            dispatch(CartActions.buyShopProducts(user, products, cart)),
+          buyShopProducts: (user, shopId, products, userAddress, cart) => 
+            dispatch(CartActions.buyShopProducts(user, shopId, products, userAddress, cart)),
           selectShippingAddress: (addressId) =>
             dispatch(UserActions.selectShippingAddress(addressId)),
           addAddress: (user, address) => dispatch(UserActions.addAddress(user, address)),
@@ -295,7 +293,7 @@ class AppRouter extends Component {
                 title='Cart'
                 onExit={this.onTabBackClick}
                 onEnter={this.handleBottomBarVisibility}
-                initial
+                // initial
                 // hideNavBar
                 component={ConnectedComponents.Cart}
               />

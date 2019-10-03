@@ -1,7 +1,7 @@
 import Axios from 'axios';
 
 export const APIURLs = {
-  baseURL: 'https://77061f78.ngrok.io',
+  baseURL: 'https://e69d32e2.ngrok.io',
   login: '/api/auth/login',
   register: '/api/auth/signup',
   sendCode: '/api/auth/generateVerificationCode',
@@ -13,7 +13,8 @@ export const APIURLs = {
   getProductsOfShopBasedOnFilter: '/api/client/shop/getProductsOfShopBasedOnFilter',
   cart: '/api/user/cart',
   updateAddress: '/api/user/address',
-  userData: '/api/user/me'
+  userData: '/api/user/me',
+  buy: '/api/client/order',
 };
 
 export const ImageHostUrl = 'https://s3-us-west-2.amazonaws.com/elcartona/';

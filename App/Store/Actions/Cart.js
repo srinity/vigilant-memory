@@ -11,6 +11,7 @@ import {
     flatten as _flatten,
     forEach as _forEach
 } from 'lodash';
+import { Actions } from 'react-native-router-flux';
 
 import { APIURLs, AppAxios } from './../../Config/APIConfig';
 
@@ -196,16 +197,31 @@ export function uploadUserCart(cart, user) {
     };
 }
 
-export function buyShopProducts(user, products, cart) {
-    return dispatch => {
+export function buyShopProducts(user, shopId, products, userAddress, cart) {
+    return async dispatch => {
         dispatch(buyingProductsStarted());
 
-        setTimeout(() => {
-            const cartClone = _cloneDeep(cart);
-            _unset(cartClone, products.shopName);
-            console.tron.warn(cartClone);
-            dispatch(buyingProductSuccess(cartClone));
-        }, 1000);
+        try {
+            const body = {
+                shop: shopId,
+                userAddress,
+                cart: _map(products, product => ({ product: product.productId, quantity: product.quantity }))
+            };
+
+            console.tron.warn(body);
+            const response = await AppAxios.post(APIURLs.buy, body, {
+                headers: {
+                    'Authorization': `bearer ${user.token}`
+                }
+            });
+
+            console.tron.warn(response.data);
+
+            Actions.popTo('home');
+        } catch (error) {
+            console.tron.error(error);
+            dispatch(buyingProductFailed(error.response));
+        }
     };
 }
 

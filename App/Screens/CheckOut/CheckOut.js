@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Platform
 } from 'react-native';
-import { map as _map, reduce as _reduce } from 'lodash';
+import { map as _map, reduce as _reduce, find as _find } from 'lodash';
 import memoize from 'memoize-one';
 
 import { Icon, IconTypes, AddressModal, Card, Button } from './../../Components';
@@ -41,6 +41,13 @@ class CheckOut extends Component {
 
   onAddAddressClose = () => {
     this.setState({ isAddressModalVisible: false });
+  }
+
+  onBuyButtonPress = () => {
+    const { user, buyShopProducts, cart, lastSelectedAddress, shopId, addresses } = this.props;
+    const deliveryAddress = _find(addresses, address => address._id === lastSelectedAddress);
+
+    buyShopProducts(user, shopId, cart[shopId].products, deliveryAddress, cart);
   }
 
   calculateOrderTotalAmount = (products) => {
@@ -134,7 +141,7 @@ class CheckOut extends Component {
 
   render() {
     console.tron.error(this.props);
-    const { isAddingAddress, cities, addAddressError, cart, shopId, lastSelectedAddress, addresses } = this.props;
+    const { isAddingAddress, cities, addAddressError, cart, shopId, lastSelectedAddress, addresses, isBuyingLoading } = this.props;
 
     return (
       <View style={styles.containerStyle}>
@@ -176,6 +183,8 @@ class CheckOut extends Component {
               disabled={!lastSelectedAddress}
               style={styles.buyButtonStyle}
               disabledStyle={styles.buyButtonDisabledStyle}
+              onPress={this.onBuyButtonPress}
+              isLoading={isBuyingLoading}
             />
           </View>
         </ScrollView>
