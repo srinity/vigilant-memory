@@ -35,7 +35,6 @@ export function getUserInfo(user) {
       });
       const { user: userData = {} } = response.data;
       const { addresses, ...userInfo } = userData;
-      console.tron.warn(response.data);
 
       dispatch(getUserInfoSuccess(userInfo, addresses));
 
@@ -47,7 +46,6 @@ export function getUserInfo(user) {
         dispatch(selectShippingAddress(undefined));
       }
     } catch (error) {
-      console.tron.error(error);
       dispatch(getUserInfoFailed(error));
     }
   };
@@ -56,13 +54,11 @@ export function getUserInfo(user) {
 export function addAddress(user, address) {
   return async dispatch => {
     dispatch(addUserAddressStarted());
-console.tron.error(address);
+
     try {
       const response = await updateUserAddress(ADDRESS_API_ACTIONS.add, [address], user);
-      console.tron.warn(response.data)
       dispatch(addUserAddressSuccess(response.data.addresses));
     } catch (error) {
-      console.tron.error(error)
       dispatch(addUserAddressFailed(error));
     }
   };
@@ -75,7 +71,6 @@ export function removeAddress(user, addressId) {
     try {
       const response = await updateUserAddress(ADDRESS_API_ACTIONS.remove, [{ addressId }], user);
 
-      console.tron.warn(response.data);
       dispatch(removeUserAddressSuccess(response.data.addresses));
 
       const { user: userReducer } = getState();
@@ -85,7 +80,6 @@ export function removeAddress(user, addressId) {
         dispatch(selectShippingAddress(undefined));
       }
     } catch (error) {
-      console.tron.error(error);
       dispatch(removeUserAddressFailed(error));
     }
   };
@@ -94,14 +88,12 @@ export function removeAddress(user, addressId) {
 export function changeAddress(user, address) {
   return async dispatch => {
     dispatch(changeUserAddressStarted());
-    console.tron.warn(address)
+
     try {
       const response = await updateUserAddress(ADDRESS_API_ACTIONS.change, [address], user);
 
-      console.tron.warn(response.data)
       dispatch(changeUserAddressSuccess(response.data.addresses));
     } catch (error) {
-      console.tron.error(error)
       dispatch(changeUserAddressFailed(error));
     }
   };

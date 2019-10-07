@@ -46,7 +46,6 @@ class Home extends Component {
   }
 
   onShopPress = (shopInfo) => {
-    console.tron.warn(shopInfo);
     Actions.shop({ title: shopInfo.shopName, ...shopInfo });
   }
 
@@ -109,8 +108,6 @@ class Home extends Component {
       searchBarDistrict
     } = this.state;
     const { isLoading } = this.props;
-    console.tron.error(this.props);
-    console.tron.error(this.state);
 
     return (
       showSearch

@@ -199,7 +199,6 @@ class Products extends Component {
         const { viewMode, activeCategory } = this.state;
         const { categories, categoryProducts, areCategoryProductsLoading } = this.props;
 
-        console.tron.warn(this.props);
         return (
             <SafeAreaView style={styles.containerStyle}>
                 <View style={styles.headerOptionsContainerStyle}>

@@ -12,10 +12,6 @@ class AuthSwitch extends Component {
     const { user, isLoggedIn, lastLoginTime } = this.props;
     const currentTime = moment(new Date());
     const secondsSinceLastRefresh = moment.duration(currentTime.diff(lastLoginTime)).asSeconds();
-    console.tron.error(currentTime);
-    console.tron.error(user);
-    console.tron.error(lastLoginTime);
-    console.tron.error(secondsSinceLastRefresh);
 
     if (isLoggedIn && user && (!lastLoginTime || secondsSinceLastRefresh >= (user.expiresIn || 36000) - 1000)) {
       this.props.refreshToken(user);

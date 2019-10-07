@@ -140,7 +140,6 @@ class CheckOut extends Component {
   }
 
   render() {
-    console.tron.error(this.props);
     const { isAddingAddress, cities, addAddressError, cart, shopId, lastSelectedAddress, addresses, isBuyingLoading } = this.props;
 
     return (

@@ -170,7 +170,6 @@ class AddressBook extends Component {
     } = this.props;
     const { currentEditingAddress, isEditingAddress } = this.state
 
-    console.tron.error(this.props);
     return (
       <View style={styles.containerStyle}>
         <View style={styles.addressHeaderContainerStyle}>

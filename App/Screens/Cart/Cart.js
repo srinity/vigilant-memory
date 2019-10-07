@@ -93,7 +93,6 @@ class Cart extends Component {
         const { shopId, shopName, ...productInfo } = product;
 
         const newProduct = { ...productInfo, quantity: newQuantity };
-        console.tron.warn(newProduct)
         changeCartProductQuantity(shopId, shopName, newProduct, cart, user);
     }
 
@@ -167,8 +166,6 @@ class Cart extends Component {
     }
 
     render() {
-        console.tron.error(this.props);
-        console.tron.error(this.state);
         const selectedShop = _find(this.state.cart, shop => shop.shopId === this.state.checkedShop) || {};
         const selectedShopItemsCount = _get(selectedShop, 'products.length', 0);
         const totalPrice = _reduce(selectedShop.products, (sum, product) => {

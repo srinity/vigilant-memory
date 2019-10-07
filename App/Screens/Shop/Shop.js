@@ -35,20 +35,17 @@ class Shop extends Component {
 
     onAddToCartPress = (productInfo, quantity) => {
         const { _id: shopId, shopName, addToCart, cart, user } = this.props;
-        console.tron.error(productInfo);
         const product = { ...productInfo, quantity };
         addToCart(shopId, shopName, product, cart, user);
     }
 
     onRemoveFromCartPress = (productInfo) => {
         const { _id: shopId, shopName, removeFromCart, cart, user } = this.props;
-        console.tron.error(productInfo);
         removeFromCart(shopId, shopName, productInfo, cart, user);
     }
 
     onCartProductQuantityChange = (productInfo, quantity) => {
         const { _id: shopId, shopName, changeCartProductQuantity, cart, user } = this.props;
-        console.tron.error(productInfo);
         const product = { ...productInfo, quantity };
         changeCartProductQuantity(shopId, shopName, product, cart, user);
     }
@@ -76,8 +73,6 @@ class Shop extends Component {
         }));
 
         categories.splice(0, 0, { label: 'All Products', value: null });
-
-        console.tron.error(categories);
 
         Actions.products({ category, categories, _id, shopName, shopImage });
     }
@@ -194,7 +189,6 @@ class Shop extends Component {
     }
 
     render() {
-        console.tron.log(this.props);
         const {
             shopImage,
             shopName,

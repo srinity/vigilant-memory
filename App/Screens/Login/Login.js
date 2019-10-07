@@ -33,7 +33,7 @@ class Login extends Component {
     }
 
     onForgotPasswordPress = () => {
-        console.warn('in Forgot Passward');
+        Actions.forgotPassword();
     }
 
     onNewUserPress = () => {

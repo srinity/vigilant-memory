@@ -90,7 +90,6 @@ class Register extends Component {
 
   onRegisterPress = () => {
     const { firstName, lastName, email, password, confirmPassword, phone, dateOfBirth, gender } = this.state;
-    console.tron.log(firstName, lastName, email, password);
 
     this.setState({
       firstNameIsValid: Validators.isValidFirstOrLastName(firstName),
@@ -137,8 +136,6 @@ class Register extends Component {
     } = this.state;
     const { isLoading } = this.props;
     const currentDate = new Date();
-
-    console.tron.error(this.props)
 
     return (
       <SafeAreaView style={styles.containerStyle}>

@@ -64,7 +64,6 @@ class VerificationCode extends Component {
 
     onCodeFulfill = (code) => {
         this.setState({ code });
-        console.tron.log(code);
         this.onVerifyCode(code);
     }
 
@@ -88,7 +87,6 @@ class VerificationCode extends Component {
     }
 
     render() {
-        console.tron.error(this.props);
         const { width, isVerifyingCode, isSendingVerificationCode } = this.props;
         const { showOverlay } = this.state;
 

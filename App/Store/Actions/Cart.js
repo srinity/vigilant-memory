@@ -47,7 +47,6 @@ export function getUserCart(user) {
                 }
             });
     
-            console.tron.warn(response);
             const cart = {};
 
             _forEach(response.data.cart, shopCart => {
@@ -59,7 +58,6 @@ export function getUserCart(user) {
 
             dispatch(getUserCartSuccess(cart));
         } catch (error) {
-            console.tron.error(error);
             dispatch(getUserCartFailed(error));
         }
     };
@@ -87,10 +85,8 @@ export function addToCart(shopId, shopName, product, cart, user) {
             try {
                 const updates = [{ productId, quantity }];
                 const response = await updateUserCart(CART_ITEMS_API_ACTIONS.add, updates, user);
-                console.tron.warn(response);
                 dispatch(addCartItemSuccess(productId, newCart));
             } catch (error) {
-                console.tron.error(error);
                 dispatch(updateUserCartFailed(productId, cart, error));
             }
         } else {
@@ -127,10 +123,8 @@ export function changeCartProductQuantity(shopId, shopName, product, cart, user)
             try {
                 const updates = [{ productId, quantity }];
                 const response = await updateUserCart(CART_ITEMS_API_ACTIONS.change, updates, user);
-                console.tron.warn(response);
                 dispatch(changeCartItemQuantity(productId, newCart));
             } catch (error) {
-                console.tron.error(error);
                 dispatch(updateUserCartFailed(productId, cart, error));
             }
         } else {
@@ -164,10 +158,8 @@ export function removeFromCart(shopId, shopName, product, cart, user) {
             try {
                 const updates = [{ productId, quantity }];
                 const response = await updateUserCart(CART_ITEMS_API_ACTIONS.remove, updates, user);
-                console.tron.warn(response);
                 dispatch(removeCartItemSuccess(productId, newCart));
             } catch (error) {
-                console.tron.error(error);
                 dispatch(updateUserCartFailed(productId, cart, error));
             }
         } else {
@@ -185,13 +177,10 @@ export function uploadUserCart(cart, user) {
                 )
             )
         );
-        console.tron.error(updates);
 
         try {
             const response = await updateUserCart(CART_ITEMS_API_ACTIONS.add, updates, user);
-            console.tron.warn(response);
         } catch (error) {
-            console.tron.error(error);
             dispatch({ type: FAILED_TO_UPLOAD_USER_CART_UPON_LOGIN });
         }
     };
@@ -208,18 +197,16 @@ export function buyShopProducts(user, shopId, products, userAddress, cart) {
                 cart: _map(products, product => ({ product: product.productId, quantity: product.quantity }))
             };
 
-            console.tron.warn(body);
             const response = await AppAxios.post(APIURLs.buy, body, {
                 headers: {
                     'Authorization': `bearer ${user.token}`
                 }
             });
 
-            console.tron.warn(response.data);
+            _unset(cart, shopId);
 
             Actions.popTo('home');
         } catch (error) {
-            console.tron.error(error);
             dispatch(buyingProductFailed(error.response));
         }
     };

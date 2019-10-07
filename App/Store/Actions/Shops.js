@@ -11,12 +11,9 @@ import {
 export const getSearchAreas = () => {
   return async dispatch => {
     try {
-      console.tron.error('hereeeeeee')
       const response = await AppAxios.get(APIURLs.searchAreas);
-      console.tron.warn(response)
       dispatch(getSearchAreasSuccess(response.data.cities));
     } catch (error) {
-      console.tron.log(error)
       dispatch(getSearchAreasFailed(error));
     }
   };
