@@ -9,9 +9,13 @@ const INITIAL_STATE = {
     isSendingVerificationCode: false,
     verifyingCodeError: null,
     sendingVerificationCodeError: null,
+    isGeneratingResetPassword: false,
+    generateResetPasswordError: null,
     refreshTokenStarted: false,
     refreshTokenError: null,
-    lastLoginTime: undefined
+    lastLoginTime: undefined,
+    isResettingPassword: false,
+    resetPasswordError: null
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -77,6 +81,13 @@ export default function (state = INITIAL_STATE, action) {
                     user: { ...state.user, inActive: false }
                 };
 
+        case ActionTypes.RESET_PASSWORD_CODE_SUCCESS:
+                return {
+                    ...state,
+                    isVerifyingCode: false,
+                    verifyingCodeError: null,
+                };
+
         case ActionTypes.VERIFYING_USER_CODE_FAILED:
             return { ...state, isVerifyingCode: false, verifyingCodeError: action.error };
 
@@ -91,8 +102,46 @@ export default function (state = INITIAL_STATE, action) {
                 lastLoginTime: action.time
             };
 
+        case ActionTypes.SET_REFRESH_TOKEN:
+            return {
+                ...state,
+                user: { ...state.user, ...action.user },
+                lastLoginTime: action.time
+            };
+
+        case ActionTypes.REMOVE_TOKEN:
+            return {
+                ...state,
+                user: null,
+                isLoggedIn: false
+            };
+
         case ActionTypes.REFRESH_TOKEN_FAILED:
             return { ...state, refreshTokenStarted: false, refreshTokenError: action.error };
+
+        case ActionTypes.GENERATE_RESET_PASSWORD_CODE_STARTED:
+            return { ...state, isGeneratingResetPassword: true, generateResetPasswordError: null };
+        
+        case ActionTypes.GENERATE_RESET_PASSWORD_CODE_SUCCESS:
+            return { ...state, isGeneratingResetPassword: false, user: { ...state.user, ...action.user } };
+
+        case ActionTypes.GENERATE_RESET_PASSWORD_CODE_FAILED:
+            return { ...state, isGeneratingResetPassword: false, generateResetPasswordError: action.error };
+
+        case ActionTypes.RESET_PASSWORD_STARTED:
+            return { ...state, isResettingPassword: true, resetPasswordError: null };
+
+        case ActionTypes.RESET_PASSWORD_SUCCESS:
+                return {
+                    ...state,
+                    isResettingPassword: false,
+                    user: { ...state.user, ...action.user },
+                    isLoggedIn: true,
+                    lastLoginTime: action.time
+                };
+
+        case ActionTypes.RESET_PASSWORD_FAILED:
+                return { ...state, isResettingPassword: false, resetPasswordError: action.error };
 
         default:
             return { ...state };

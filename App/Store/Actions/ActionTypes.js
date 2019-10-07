@@ -11,6 +11,15 @@ export const REGISTER_REQUEST_STARTED = 'register_request_started';
 export const REGISTER_REQUEST_SUCCESS = 'register_request_success';
 export const REGISTER_REQUEST_FAILED = 'register_request_failed';
 
+// Forgot Password Action Types
+export const GENERATE_RESET_PASSWORD_CODE_STARTED = 'generate_reset_password_code_started';
+export const GENERATE_RESET_PASSWORD_CODE_SUCCESS = 'generate_reset_password_code_success';
+export const GENERATE_RESET_PASSWORD_CODE_FAILED = 'generate_reset_password_code_failed';
+export const RESET_PASSWORD_CODE_SUCCESS = 'reset_password_code_success';
+export const RESET_PASSWORD_STARTED = 'reset_password_started';
+export const RESET_PASSWORD_SUCCESS = 'reset_password_success';
+export const RESET_PASSWORD_FAILED = 'reset_password_failed';
+
 // Verification Code Types
 export const SENDING_VERIFICATION_CODE_STARTED = 'sending_verification_code_started';
 export const SENDING_VERIFICATION_CODE_SUCCESS = 'sending_verification_code_success';
@@ -22,6 +31,8 @@ export const VERIFYING_USER_CODE_FAILED = 'verifying_user_code_failed';
 // Refresh Token Action
 export const REFRESH_TOKEN_STARTED = 'refresh_token_started';
 export const REFRESH_TOKEN_SUCCESS = 'refresh_token_success';
+export const SET_REFRESH_TOKEN = 'set_refresh_token';
+export const REMOVE_TOKEN = 'remove_token';
 export const REFRESH_TOKEN_FAILED = 'refresh_token_failed';
 
 // Logout Action Types 

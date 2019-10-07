@@ -1,5 +1,6 @@
 import moment from 'moment';
 import { Actions } from 'react-native-router-flux';
+import { isFunction as _isFunction } from 'lodash';
 
 import {
   LOGIN_REQUEST_STARTED,
@@ -19,7 +20,16 @@ import {
   VERIFYING_USER_CODE_FAILED,
   REFRESH_TOKEN_SUCCESS,
   REFRESH_TOKEN_STARTED,
-  REFRESH_TOKEN_FAILED
+  REFRESH_TOKEN_FAILED,
+  GENERATE_RESET_PASSWORD_CODE_FAILED,
+  GENERATE_RESET_PASSWORD_CODE_STARTED,
+  GENERATE_RESET_PASSWORD_CODE_SUCCESS,
+  RESET_PASSWORD_CODE_SUCCESS,
+  RESET_PASSWORD_STARTED,
+  RESET_PASSWORD_FAILED,
+  RESET_PASSWORD_SUCCESS,
+  SET_REFRESH_TOKEN,
+  REMOVE_TOKEN
 } from './ActionTypes';
 
 import { APIURLs, AppAxios } from './../../Config/APIConfig';
@@ -29,11 +39,8 @@ export const login = (phone, password) => {
     try {
       dispatch(loginRequestStarted());
       const response = await AppAxios.post(APIURLs.login, { phone, password });
-      console.tron.warn(response.data);
       dispatch(loginRequestSuccess(response.data));
     } catch (error) {
-      console.tron.error(error);
-      console.tron.error(error.response);
       dispatch(loginRequestFailed(error.response));
     }
   };
@@ -44,7 +51,6 @@ export const register = (firstName, lastName, email, password, phone, birthDate,
     try {
       dispatch(registerRequestStarted());
 
-      console.tron.log(firstName, lastName, email, password, phone, birthDate, gender)
       const response = await AppAxios.post(APIURLs.register, {
         fullName: {
           firstName,
@@ -57,11 +63,9 @@ export const register = (firstName, lastName, email, password, phone, birthDate,
         birthDate,
         gender
       });
-      console.tron.log(response);
       dispatch(registerRequestSuccess(response.data));
       // Actions.verificationCode();
     } catch (error) {
-      console.tron.error(error);
       dispatch(registerRequestFailed(error.response));
     }
   };
@@ -78,30 +82,31 @@ export const sendVerificationCode = (user) => {
         } 
       });
 
-      console.tron.warn(response);
       dispatch(sendVerificationCodeSuccess());
     } catch (error) {
-      console.tron.error(error);
       dispatch(sendVerificationCodeFailed(error));
     }
   }
 };
 
-export const verifyCode = (code, user) => {
+export const verifyCode = (code, user = {}, onVerify) => {
   return async dispatch => {
-    dispatch(verifyCodeStarted())
+    dispatch(verifyCodeStarted());
 
     try {
       const response = await AppAxios.post(APIURLs.verifyCode, { pinCode: code }, {
         headers: {
-          'Authorization': `bearer ${user.token}`
+          'Authorization': `bearer ${(user || {}).token}`
         }
       });
 
-      console.tron.warn(response);
-      dispatch(verifyCodeCodeSuccess());
+      if (_isFunction(onVerify)) {
+        dispatch(verifyCodeResetCodeSuccess());
+        onVerify();
+      } else {
+        dispatch(verifyCodeCodeSuccess());
+      }
     } catch (error) {
-      console.tron.error(error);
       dispatch(verifyCodeCodeFailed(error));
     }
   };
@@ -118,13 +123,43 @@ export const refreshToken = (user) => {
         }
       });
 
-      console.tron.warn(response.data);
       const { message, ...userData } = response.data;
       dispatch(refreshTokenSuccess({ ...user, ...userData }));
     } catch (error) {
-      console.tron.error(error);
       dispatch(refreshTokenFailed(error));
     } 
+  };
+};
+
+export const forgotPassword = (phone) => {
+  return async dispatch => {
+    dispatch(generateResetPasswordStarted());
+
+    try {
+      const response = await AppAxios.post(APIURLs.forgotPassword, { phone });
+      dispatch(generateResetPasswordSuccess(response.data.token));
+      Actions.forgotPasswordVerificationCode();
+    } catch (error) {
+      dispatch(generateResetPasswordFailed(error));
+    }
+  };
+};
+
+export const resetPassword = (oldPassword, newPassword, user) => {
+  return async dispatch => {
+    dispatch(resetPasswordStarted());
+
+    try {
+      const response = await AppAxios.patch(APIURLs.resetPassword, { oldPassword, newPassword }, {
+        headers: {
+          'Authorization': `bearer ${user.token}`
+        }
+      });
+      dispatch(resetPasswordSuccess(response.data));
+      Actions.forgotPasswordVerificationCode();
+    } catch (error) {
+      dispatch(resetPasswordFailed(error));
+    }
   };
 };
 
@@ -179,6 +214,10 @@ function verifyCodeCodeSuccess() {
   return { type: VERIFYING_USER_CODE_SUCCESS };
 }
 
+function verifyCodeResetCodeSuccess() {
+  return { type: RESET_PASSWORD_CODE_SUCCESS };
+}
+
 function verifyCodeCodeFailed(error) {
   return { type: VERIFYING_USER_CODE_FAILED, error };
 }
@@ -191,8 +230,40 @@ function refreshTokenSuccess(user) {
   return { type: REFRESH_TOKEN_SUCCESS, user, time: moment(new Date()) };
 }
 
+export function setRefreshToken(user) {
+  return { type: SET_REFRESH_TOKEN, user, time: moment(new Date()) };
+}
+
+export function removeToken() {
+  return { type: REMOVE_TOKEN };
+}
+
 function refreshTokenFailed(error) {
   return { type: REFRESH_TOKEN_FAILED, error };
+}
+
+function generateResetPasswordStarted() {
+  return { type: GENERATE_RESET_PASSWORD_CODE_STARTED };
+}
+
+function generateResetPasswordSuccess(token) {
+  return { type: GENERATE_RESET_PASSWORD_CODE_SUCCESS, user: { token } };
+}
+
+function generateResetPasswordFailed(error) {
+  return { type: GENERATE_RESET_PASSWORD_CODE_FAILED, error };
+}
+
+function resetPasswordStarted() {
+  return { type: RESET_PASSWORD_STARTED };
+}
+
+function resetPasswordSuccess(user) {
+  return { type: RESET_PASSWORD_SUCCESS, user, time: new Date() };
+}
+
+function resetPasswordFailed(error) {
+  return { type: RESET_PASSWORD_FAILED, error };
 }
 
 function logoutRequestStarted() {
