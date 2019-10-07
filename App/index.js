@@ -11,10 +11,13 @@ import {
   AddressBookScreen,
   CartScreen,
   CheckOutScreen,
+  ForgotPasswordScreen,
+  ForgotPasswordVerificationCodeScreen,
   HomeScreen,
   LoginScreen,
   ProductsScreen,
   RegisterScreen,
+  SetForgetenPasswordScreen,
   ShopScreen,
   VerificationCodeScreen
 } from './Screens';
@@ -91,6 +94,28 @@ class AppRouter extends Component {
             dispatch(AccountActions.register(firstName, lastName, email, password, phone, birthDate, gender))
         })
       )(RegisterScreen),
+      ForgotPassword: connect(
+        ({ deviceDimensions, auth }) => ({ ...deviceDimensions, ...auth }),
+        dispatch => ({
+          forgotPassword: (phone) => dispatch(AccountActions.forgotPassword(phone))
+        })
+      )(ForgotPasswordScreen),
+      ForgotPasswordVerificationCode: connect(
+        ({ deviceDimensions, auth }) => ({ ...deviceDimensions, ...auth }),
+        dispatch => ({
+          verifyCode: (code, user, onVerify) =>
+            dispatch(AccountActions.verifyCode(code, user, onVerify)),
+          sendVerificationCode: (user) =>
+            dispatch(AccountActions.sendVerificationCode(user))
+        })
+      )(ForgotPasswordVerificationCodeScreen),
+      SetForgetenPassword: connect(
+        ({ deviceDimensions, auth }) => ({ ...deviceDimensions, ...auth }),
+        dispatch => ({
+          resetPassword: (oldPassword, newPassword, user) =>
+            dispatch(AccountActions.resetPassword(oldPassword, newPassword, user)),
+        })
+      )(SetForgetenPasswordScreen),
       VerificationCode: connect(
         ({ deviceDimensions, auth }) => ({ ...deviceDimensions, ...auth }),
         dispatch => ({
@@ -262,6 +287,30 @@ class AppRouter extends Component {
                 hideNavBar
                 title='Verify Code'
                 component={ConnectedComponents.VerificationCode}
+              />
+
+              <Scene
+                key='forgotPassword'
+                // initial
+                hideNavBar
+                title='Forgot Password'
+                component={ConnectedComponents.ForgotPassword}
+              />
+
+              <Scene
+                key='forgotPasswordVerificationCode'
+                // initial
+                hideNavBar
+                title='Verify Code'
+                component={ConnectedComponents.ForgotPasswordVerificationCode}
+              />
+
+              <Scene
+                key='resetPassword'
+                // initial
+                hideNavBar
+                title='Reset Password'
+                component={ConnectedComponents.SetForgetenPassword}
               />
             </Scene>
             <Scene key={ScreenTypes.app}>
