@@ -12,6 +12,7 @@ import CustomInput from './CustomInput/CustomInput';
 import DeviceDimensions from './DeviceDimensions/DeviceDimensions';
 import { Icon, IconTypes } from './Icon';
 import Input from './Input/Input';
+import LocalizedText from './LocalizedText/LocalizedText';
 import Logo from './Logo/Logo';
 import NumericUpDown from './NumericUpDown/NumericUpDown';
 import PasswordInput from './PasswordInput';
@@ -37,6 +38,7 @@ export {
     IconTypes,
     Input,
     ScreenTypes,
+    LocalizedText,
     Logo,
     NumericUpDown,
     PasswordInput,

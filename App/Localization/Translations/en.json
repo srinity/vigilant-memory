@@ -1,0 +1,11 @@
+{
+  "test": "Hello!!",
+  "login_screen_sign_in_title": "Sign into your account",
+  "login_screen_forget_password": "Forgot your password ? ",
+  "login_screen_reset_now": "Reset Now",
+  "login_screen_login_action_title": "SIGN IN",
+  "login_screen_email_placeholder": "Enter your email",
+  "login_screen_password_placeholder": "Enter your password",
+  "login_screen_invalid_email_error": "Please enter a valid E-mail",
+  "login_screen_invalid_password_error": "Please enter a valid password"
+}

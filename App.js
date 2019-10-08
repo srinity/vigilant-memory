@@ -7,6 +7,7 @@ import Router from './App/index';
 import store, { persistor } from './App/Store';
 
 import { refreshTokenInterceptor } from './App/Config/APIConfig';
+import './App/Localization';
 
 import { Colors } from './App/Theme';
 
