@@ -41,6 +41,7 @@
 		4B4CABE1F7C14449BFEA9412 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3863CC48D6BB4D508AC5A252 /* Feather.ttf */; };
 		4FF0886C246444CC91D24215 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7E29C4822C744BE48A71B946 /* Ionicons.ttf */; };
 		51B1570A234CCFAE00D67C71 /* libRNI18n.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 51B15707234CCF9400D67C71 /* libRNI18n.a */; };
+		51B15711234CE2DF00D67C71 /* libSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 51B15710234CE2B100D67C71 /* libSplashScreen.a */; };
 		51F8EBF4E73F42C681EDA049 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9082FA490D0E4284842699BF /* libRNVectorIcons.a */; };
 		593FA27878DC4746BD57C3D6 /* libAppCenterReactNativeCrashes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 396DF5B8B88A485995AB6E9E /* libAppCenterReactNativeCrashes.a */; };
 		59BB0C625A6E42C399C37191 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6E68E8889A294B0884E44921 /* FontAwesome5_Regular.ttf */; };
@@ -355,6 +356,13 @@
 			remoteGlobalIDString = 6476C4051EEAA69700B10F51;
 			remoteInfo = "RNI18n-tvOS";
 		};
+		51B1570F234CE2B100D67C71 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 51B1570B234CE2B100D67C71 /* SplashScreen.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3D7682761D8E76B80014119E;
+			remoteInfo = SplashScreen;
+		};
 		5E9157321DD0AC6500FF2AA8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */;
@@ -427,6 +435,7 @@
 		4C3DB7FBAE10443ABF32AF8F /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
 		51022987B1AFF2156217D7BA /* Pods_ElCartonaTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ElCartonaTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		51B15701234CCF9400D67C71 /* RNI18n.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNI18n.xcodeproj; path = "../node_modules/react-native-i18n/ios/RNI18n.xcodeproj"; sourceTree = "<group>"; };
+		51B1570B234CE2B100D67C71 /* SplashScreen.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SplashScreen.xcodeproj; path = "../node_modules/react-native-splash-screen/ios/SplashScreen.xcodeproj"; sourceTree = "<group>"; };
 		59810F4DE9A800EBAE1181A1 /* Pods_ElCartona.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ElCartona.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DD1681BBB934EFE903F4667 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
@@ -474,6 +483,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				51B15711234CE2DF00D67C71 /* libSplashScreen.a in Frameworks */,
 				51B1570A234CCFAE00D67C71 /* libRNI18n.a in Frameworks */,
 				ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
@@ -724,6 +734,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		51B1570C234CE2B100D67C71 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				51B15710234CE2B100D67C71 /* libSplashScreen.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		5E91572E1DD0AC6500FF2AA8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -745,6 +763,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				51B1570B234CE2B100D67C71 /* SplashScreen.xcodeproj */,
 				51B15701234CCF9400D67C71 /* RNI18n.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
@@ -1018,6 +1037,10 @@
 				{
 					ProductGroup = 514D21B2233E900A00393136 /* Products */;
 					ProjectRef = 4C3DB7FBAE10443ABF32AF8F /* RNVectorIcons.xcodeproj */;
+				},
+				{
+					ProductGroup = 51B1570C234CE2B100D67C71 /* Products */;
+					ProjectRef = 51B1570B234CE2B100D67C71 /* SplashScreen.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -1302,6 +1325,13 @@
 			fileType = archive.ar;
 			path = "libRNI18n-tvOS.a";
 			remoteRef = 51B15708234CCF9400D67C71 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		51B15710234CE2B100D67C71 /* libSplashScreen.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSplashScreen.a;
+			remoteRef = 51B1570F234CE2B100D67C71 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */ = {
@@ -1646,6 +1676,7 @@
 					"$(SRCROOT)/../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics",
 					"$(SRCROOT)/../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes",
 					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 				);
 				INFOPLIST_FILE = ElCartona/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1674,6 +1705,7 @@
 					"$(SRCROOT)/../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics",
 					"$(SRCROOT)/../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes",
 					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 				);
 				INFOPLIST_FILE = ElCartona/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

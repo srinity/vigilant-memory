@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Actions } from 'react-native-router-flux';
 import moment from 'moment';
+import SplashScreen from 'react-native-splash-screen';
 
 export const ScreenTypes = {
     auth: 'authScenes',
@@ -22,6 +23,7 @@ class AuthSwitch extends Component {
     setTimeout(() => {
       const initialScreen = this.rootScreenSelector(this.props);
       this.navigateToProperScreen(initialScreen);
+      SplashScreen.hide();
     }, 0);
   }
 

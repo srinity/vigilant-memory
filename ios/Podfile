@@ -10,9 +10,11 @@ target 'ElCartona' do
 
   # Pods for ElCartona
 
-  # pod 'RNI18n', :path => '../node_modules/react-native-i18n'
-
+  
   platform :ios, '9.0'
+  # pod 'RNI18n', :path => '../node_modules/react-native-i18n'
+  # pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
+
   target 'ElCartonaTests' do
     inherit! :search_paths
     # Pods for testing
