@@ -10,6 +10,9 @@
     "both": "react-native run-android && react-native run-ios"
   },
   "dependencies": {
+    "appcenter": "2.4.0",
+    "appcenter-analytics": "2.4.0",
+    "appcenter-crashes": "2.4.0",
     "axios": "^0.18.0",
     "lodash": "^4.17.11",
     "memoize-one": "^5.0.0",
