@@ -184,6 +184,7 @@ class CheckOut extends Component {
               disabledStyle={styles.buyButtonDisabledStyle}
               onPress={this.onBuyButtonPress}
               isLoading={isBuyingLoading}
+              indicatorSize='small'
             />
           </View>
         </ScrollView>

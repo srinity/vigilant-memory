@@ -56,7 +56,13 @@ export default function (state = INITIAL_STATE, action) {
             return { ...state, isLoading: true, error: null };
 
         case ActionTypes.LOGOUT_REQUEST_SUCCESS:
-            return { ...state, isLoading: false, user: action.user, error: null };
+            return {
+                ...state,
+                isLoading: false,
+                user: action.user,
+                error: null,
+                isLoggedIn: false
+            };
 
         case ActionTypes.LOGOUT_REQUEST_FAILED:
             return { ...state, isLoading: false, error: action.error };
@@ -117,7 +123,13 @@ export default function (state = INITIAL_STATE, action) {
             };
 
         case ActionTypes.REFRESH_TOKEN_FAILED:
-            return { ...state, refreshTokenStarted: false, refreshTokenError: action.error };
+            return {
+                ...state,
+                refreshTokenStarted: false,
+                refreshTokenError: action.error,
+                user: null,
+                isLoggedIn: false
+            };
 
         case ActionTypes.GENERATE_RESET_PASSWORD_CODE_STARTED:
             return { ...state, isGeneratingResetPassword: true, generateResetPasswordError: null };

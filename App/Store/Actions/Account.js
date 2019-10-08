@@ -1,6 +1,7 @@
 import moment from 'moment';
 import { Actions } from 'react-native-router-flux';
-import { isFunction as _isFunction } from 'lodash';
+import { isFunction as _isFunction, get as _get } from 'lodash';
+import Toast from 'react-native-root-toast';
 
 import {
   LOGIN_REQUEST_STARTED,
@@ -145,7 +146,7 @@ export const forgotPassword = (phone) => {
   };
 };
 
-export const resetPassword = (oldPassword, newPassword, user) => {
+export const resetPassword = (oldPassword, newPassword, user, onReset) => {
   return async dispatch => {
     dispatch(resetPasswordStarted());
 
@@ -156,9 +157,35 @@ export const resetPassword = (oldPassword, newPassword, user) => {
         }
       });
       dispatch(resetPasswordSuccess(response.data));
-      Actions.forgotPasswordVerificationCode();
+      
+      const message = 'Password Changed Successfully';
+      Toast.show(message, {
+        position: Toast.positions.BOTTOM,
+        duration: Toast.durations.SHORT,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+      });
+
+      if (_isFunction(onReset)) {
+        onReset();
+      }
     } catch (error) {
-      dispatch(resetPasswordFailed(error));
+      // console.tron.error(error);
+
+      if (error.response) {
+        const message = _get(error.response, 'data.message', 'Something went wrong');
+        Toast.show(message, {
+          position: Toast.positions.BOTTOM,
+          duration: Toast.durations.SHORT,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+        });
+        dispatch(resetPasswordFailed(error.response));
+      } else {
+        dispatch(resetPasswordFailed(error));
+      }
     }
   };
 };

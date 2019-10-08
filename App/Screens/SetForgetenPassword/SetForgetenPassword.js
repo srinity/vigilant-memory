@@ -59,16 +59,17 @@ class SetForgetenPassword extends Component {
                     <View style={styles.controlsContainerStyle}>
                         <PasswordInput
                             label='Password'
-                            hint='Enter your password'
+                            hint='Enter New password'
                             leftIconColor={Colors.brandColorHexCode}
                             rightIconColor={Colors.brandColorHexCode}
                             onChangeText={this.onPasswordChange}
                             value={password}
                             isValid={passwordIsValid}
+                            errorMessage='Please enter valid password'
                         />
 
                         <PasswordInput
-                            label='Confirm Password'
+                            label='Confirm New Password'
                             leftIconColor={Colors.brandColorHexCode}
                             rightIconColor={Colors.brandColorHexCode}
                             onChangeText={this.onConfirmPasswordChange}
@@ -86,6 +87,7 @@ class SetForgetenPassword extends Component {
                                 style={styles.buttonStyle}
                                 textStyle={styles.buttonTextStyle}
                                 disabledStyle={styles.disabledButtonStyle}
+                                indicatorSize='small'
                             />
                         </CardSection>
                     </View>

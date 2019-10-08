@@ -169,6 +169,7 @@ class Home extends Component {
               style={styles.searchButtonStyle}
               disabledStyle={styles.disabledSearchButtonStyle}
               onPress={this.onSearchPress}
+              indicatorSize='small'
             />
           </View>
         </View>

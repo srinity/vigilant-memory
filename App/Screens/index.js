@@ -1,6 +1,7 @@
 import AccountScreen from './Account/Account';
 import AddressBookScreen from './AddressBook/AddressBook';
 import CartScreen from './Cart/Cart';
+import ChangePasswordScreen from './ChangePassword/ChangePassword';
 import CheckOutScreen from './CheckOut/CheckOut';
 import ForgotPasswordScreen from './ForgotPassword/ForgotPassword';
 import ForgotPasswordVerificationCodeScreen from './ForgotPasswordVerificationCode/ForgotPasswordVerificationCode';
@@ -16,6 +17,7 @@ export {
     AccountScreen,
     AddressBookScreen,
     CartScreen,
+    ChangePasswordScreen,
     CheckOutScreen,
     ForgotPasswordScreen,
     ForgotPasswordVerificationCodeScreen,

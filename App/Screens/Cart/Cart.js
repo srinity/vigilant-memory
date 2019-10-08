@@ -201,6 +201,7 @@ class Cart extends Component {
                             disabled={this.props.isLoading}
                             onPress={this.onCheckOutButtonPress}
                             disabledStyle={styles.buyButtonDisabledStyle}
+                            indicatorSize='small'
                         />
                     </View>
                     :

@@ -98,6 +98,7 @@ class Login extends Component {
                                 style={styles.buttonStyle}
                                 textStyle={styles.buttonTextStyle}
                                 disabledStyle={styles.disabledButtonStyle}
+                                indicatorSize='small'
                             />
                         </CardSection>
 

@@ -10,6 +10,7 @@ import {
   AccountScreen,
   AddressBookScreen,
   CartScreen,
+  ChangePasswordScreen,
   CheckOutScreen,
   ForgotPasswordScreen,
   ForgotPasswordVerificationCodeScreen,
@@ -206,6 +207,7 @@ class AppRouter extends Component {
         ({ deviceDimensions, auth, user }) => ({
           ...deviceDimensions,
           user: auth.user,
+          isLoggedIn: auth.isLoggedIn,
           ...user
         }),
         dispatch => ({
@@ -227,6 +229,17 @@ class AppRouter extends Component {
           deleteAddress: (user, addressId) => dispatch(UserActions.removeAddress(user, addressId)),
         })
       )(AddressBookScreen),
+      ChangePassword: connect(
+        ({ deviceDimensions, auth }) => ({
+          ...deviceDimensions,
+          user: auth.user,
+          isResettingPassword: auth.isResettingPassword,
+        }),
+        dispatch => ({
+          resetPassword: (oldPassword, newPassword, user, onReset) =>
+            dispatch(AccountActions.resetPassword(oldPassword, newPassword, user, onReset)),
+        })
+      )(ChangePasswordScreen),
     };
   }
 
@@ -371,6 +384,14 @@ class AppRouter extends Component {
                 // initial
                 // hideNavBar
                 component={ConnectedComponents.AddressBook}
+              />
+
+              <Scene
+                key='changePassword'
+                title='Change Password'
+                // initial
+                // hideNavBar
+                component={ConnectedComponents.ChangePassword}
               />
             </Scene>
           </Scene>
