@@ -11,6 +11,7 @@ import {
 import { map as _map, reduce as _reduce, find as _find } from 'lodash';
 import memoize from 'memoize-one';
 import I18n from 'react-native-i18n';
+import { Actions } from 'react-native-router-flux';
 
 import { Icon, IconTypes, AddressModal, Card, Button, LocalizedText } from './../../Components';
 
@@ -48,7 +49,12 @@ class CheckOut extends Component {
     const { user, buyShopProducts, cart, lastSelectedAddress, shopId, addresses } = this.props;
     const deliveryAddress = _find(addresses, address => address._id === lastSelectedAddress);
 
-    buyShopProducts(user, shopId, cart[shopId].products, deliveryAddress, cart);
+    buyShopProducts(user, shopId, cart[shopId].products, deliveryAddress, cart, this.onBuySuccessful);
+  }
+
+  onBuySuccessful = () => {
+    this.props.setActiveTab('home');
+    Actions.popTo('home');
   }
 
   calculateOrderTotalAmount = (products) => {

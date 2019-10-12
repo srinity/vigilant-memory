@@ -199,11 +199,12 @@ class AppRouter extends Component {
           cities: shops.cities
         }),
         dispatch => ({
-          buyShopProducts: (user, shopId, products, userAddress, cart) => 
-            dispatch(CartActions.buyShopProducts(user, shopId, products, userAddress, cart)),
+          buyShopProducts: (user, shopId, products, userAddress, cart, onBuy) => 
+            dispatch(CartActions.buyShopProducts(user, shopId, products, userAddress, cart, onBuy)),
           selectShippingAddress: (addressId) =>
             dispatch(UserActions.selectShippingAddress(addressId)),
           addAddress: (user, address) => dispatch(UserActions.addAddress(user, address)),
+          setActiveTab: (tabName) => this.setActiveTab(tabName),
         })
       )(CheckOutScreen),
       Account: connect(

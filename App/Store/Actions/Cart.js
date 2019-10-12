@@ -7,6 +7,7 @@ import {
     findIndex as _findIndex,
     find as _find,
     isNil as _isNil,
+    isFunction as _isFunction,
     map as _map,
     flatten as _flatten,
     forEach as _forEach
@@ -186,7 +187,7 @@ export function uploadUserCart(cart, user) {
     };
 }
 
-export function buyShopProducts(user, shopId, products, userAddress, cart) {
+export function buyShopProducts(user, shopId, products, userAddress, cart, onBuy) {
     return async dispatch => {
         dispatch(buyingProductsStarted());
 
@@ -205,7 +206,9 @@ export function buyShopProducts(user, shopId, products, userAddress, cart) {
 
             _unset(cart, shopId);
 
-            Actions.popTo('home');
+            if (_isFunction(onBuy)) {
+                onBuy();
+            }
         } catch (error) {
             dispatch(buyingProductFailed(error.response));
         }
