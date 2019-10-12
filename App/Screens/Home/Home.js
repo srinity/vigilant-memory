@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { SafeAreaView, FlatList, View, Text, TouchableWithoutFeedback } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { Dropdown } from 'react-native-material-dropdown';
+import { find as _find } from 'lodash';
 
-import { ShopCard, Icon, IconTypes, Logo, Button } from './../../Components';
+import { ShopCard, Icon, IconTypes, Logo, Button, LocalizedText } from './../../Components';
 
 import { ImageHostUrl } from '../../Config/APIConfig';
 
@@ -28,17 +29,28 @@ class Home extends Component {
     return null;
   }
 
-  state = {
-    isLoading: false,
-    showSearch: true,
-    areas: null,
-    districts: null,
-    selectedCity: undefined,
-    selectedArea: undefined,
-    selectedDistrict: undefined,
-    searchBarCity: undefined,
-    searchBarArea: undefined,
-    searchBarDistrict: undefined
+  constructor(props) {
+    super(props);
+
+    const { currentSearchCity, currentSearchArea, currentSearchDistrict } = props;
+
+    const selectedCity = _find(this.props.cities, cityData => cityData.city === currentSearchCity);
+    const areas = selectedCity ? selectedCity.areas : null;
+    const selectedArea = _find(areas, areaData => areaData.area === currentSearchArea);
+    const districts = selectedArea ? selectedArea.districts : null;
+
+    this.state = {
+      isLoading: false,
+      showSearch: !(currentSearchCity && currentSearchArea && currentSearchDistrict),
+      areas,
+      districts,
+      selectedCity: currentSearchCity,
+      selectedArea: currentSearchArea,
+      selectedDistrict: currentSearchDistrict,
+      searchBarCity: currentSearchCity,
+      searchBarArea: currentSearchArea,
+      searchBarDistrict: currentSearchDistrict
+    };
   }
 
   componentDidMount() {

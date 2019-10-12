@@ -21,7 +21,7 @@ export const getSearchAreas = () => {
 
 export const getShops = (city, area, district) => {
     return async (dispatch) => {
-        dispatch(getShopsStarted());
+        dispatch(getShopsStarted(city, area, district));
         try {
           const response = await AppAxios.get(APIURLs.getShops, {
             params: {
@@ -46,8 +46,8 @@ function getSearchAreasFailed(error) {
   return { type: GET_SEARCH_AREAS_FAILED, error };
 }
 
-function getShopsStarted() {
-    return { type: GET_SHOPS_REQUEST_STARTED };
+function getShopsStarted(city, area, district) {
+    return { type: GET_SHOPS_REQUEST_STARTED, city, area, district };
 }
 
 function getShopsSuccess(shops) {
