@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>99563296075-f6dm5loavuuro62jasq6egjasj6rdbgt.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.99563296075-f6dm5loavuuro62jasq6egjasj6rdbgt</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAHV-xwYq6jZzTmnDawTZXUMYGLk-oXPb4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>99563296075</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>org.ElCartona</string>
+	<key>PROJECT_ID</key>
+	<string>elcartona-onlineshopping</string>
+	<key>STORAGE_BUCKET</key>
+	<string>elcartona-onlineshopping.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:99563296075:ios:4c13f395519b07b4f944ce</string>
+	<key>DATABASE_URL</key>
+	<string>https://elcartona-onlineshopping.firebaseio.com</string>
+</dict>
+</plist>
