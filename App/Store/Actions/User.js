@@ -103,6 +103,23 @@ export function selectShippingAddress(addressId) {
   return { type: SELECT_SHIPPING_ADDRESS, addressId };
 }
 
+export function registerUserNotificationToken(token, user) {
+  return async dispatch => {
+    try {
+      const response = await AppAxios.post(APIURLs.addDeviceId, {
+        deviceId: token
+      }, {
+        headers: {
+          'Authorization': `bearer ${user.token}`
+        }
+      });
+      console.tron.warn(response.data);
+    } catch (error) {
+      console.tron.error(error);
+    }
+  };
+}
+
 function updateUserAddress(action, updates, user) {
   const reqBody = {
       action,

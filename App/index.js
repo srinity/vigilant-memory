@@ -76,6 +76,7 @@ class AppRouter extends Component {
           getSearchAreas: () => dispatch(ShopsActions.getSearchAreas()),
           refreshToken: (user) => dispatch(AccountActions.refreshToken(user)),
           getUserInfo: (user) => dispatch(UserActions.getUserInfo(user)),
+          registerUserNotificationToken: (token, user) => dispatch(UserActions.registerUserNotificationToken(token, user)),
         })
       )(AuthSwitch),
       DeviceDimensions: connect(null, dispatch => ({
