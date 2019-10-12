@@ -16,7 +16,7 @@ import {
     isNil as _isNil
 } from 'lodash';
 
-import { CartProduct, Button, ScreenTypes, CustomFlatList } from './../../Components';
+import { CartProduct, Button, ScreenTypes, CustomFlatList, LocalizedText } from './../../Components';
 
 import { ImageHostUrl } from '../../Config/APIConfig';
 
@@ -183,6 +183,7 @@ class Cart extends Component {
                     keyExtractor={shop => shop.shopId}
                     isLoading={this.props.cartItemsAreLoading}
                     indicatorColor={Colors.brandColorHexCode}
+                    emptyText='cart_screen_empty_text'
                 />
 
                 {
@@ -190,8 +191,8 @@ class Cart extends Component {
                     ?
                     <View style={styles.purchaseInfoContainerStyle}>
                         <View style={styles.priceContainerStyle}>
-                            <Text style={styles.totalTextStyle}>Total</Text>
-                            <Text style={styles.priceTextStyle}> {totalPrice} EGP</Text>
+                            <LocalizedText style={styles.totalTextStyle}>cart_screen_total_text</LocalizedText>
+                            <Text style={styles.priceTextStyle}> {totalPrice} {I18n.t('cart_screen_currency_text')}</Text>
                         </View>
 
                         <Button
