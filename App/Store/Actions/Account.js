@@ -67,6 +67,14 @@ export const register = (firstName, lastName, email, password, phone, birthDate,
       dispatch(registerRequestSuccess(response.data));
       // Actions.verificationCode();
     } catch (error) {
+      const message = _get(error.response, 'data.message', 'Something went wrong');
+      Toast.show(message, {
+        position: Toast.positions.BOTTOM,
+        duration: Toast.durations.SHORT,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+      });
       dispatch(registerRequestFailed(error.response));
     }
   };
@@ -85,6 +93,14 @@ export const sendVerificationCode = (user) => {
 
       dispatch(sendVerificationCodeSuccess());
     } catch (error) {
+      const message = _get(error.response, 'data.message', 'Something went wrong');
+      Toast.show(message, {
+        position: Toast.positions.BOTTOM,
+        duration: Toast.durations.SHORT,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+      });
       dispatch(sendVerificationCodeFailed(error));
     }
   }
@@ -108,6 +124,14 @@ export const verifyCode = (code, user = {}, onVerify) => {
         dispatch(verifyCodeCodeSuccess());
       }
     } catch (error) {
+      const message = _get(error.response, 'data.message', 'Something went wrong');
+      Toast.show(message, {
+        position: Toast.positions.BOTTOM,
+        duration: Toast.durations.SHORT,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+      });
       dispatch(verifyCodeCodeFailed(error));
     }
   };
@@ -127,6 +151,14 @@ export const refreshToken = (user) => {
       const { message, ...userData } = response.data;
       dispatch(refreshTokenSuccess({ ...user, ...userData }));
     } catch (error) {
+      const message = _get(error.response, 'data.message', 'Something went wrong');
+      Toast.show(message, {
+        position: Toast.positions.BOTTOM,
+        duration: Toast.durations.SHORT,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+      });
       dispatch(refreshTokenFailed(error));
     } 
   };
@@ -144,6 +176,14 @@ export const forgotPassword = (phone, shouldNavigate = true) => {
         Actions.forgotPasswordVerificationCode({ phone });
       }
     } catch (error) {
+      const message = _get(error.response, 'data.message', 'Something went wrong');
+      Toast.show(message, {
+        position: Toast.positions.BOTTOM,
+        duration: Toast.durations.SHORT,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+      });
       dispatch(generateResetPasswordFailed(error));
     }
   };

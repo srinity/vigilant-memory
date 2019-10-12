@@ -1,12 +1,10 @@
-import { APIURLs, AppAxios } from './../../Config/APIConfig';
 import {
-    find as _find,
     isNil as _isNil,
-    zipWith as _zipWith,
-    map as _map,
     get as _get,
-    reduce as _reduce
 } from 'lodash';
+import Toast from 'react-native-root-toast';
+
+import { APIURLs, AppAxios } from './../../Config/APIConfig';
 
 import {
     GET_SHOP_CATEGORY_PRODUCTS_STARTED,
@@ -70,6 +68,14 @@ export const getCategoryProducts = (
                 dispatch(getCategoryProductsSuccess(allProducts, count, offset, limit));
             }
         } catch (error) {
+            const message = _get(error.response, 'data.message', 'Something went wrong');
+            Toast.show(message, {
+                position: Toast.positions.BOTTOM,
+                duration: Toast.durations.SHORT,
+                shadow: true,
+                animation: true,
+                hideOnPress: true,
+            });
             dispatch(getCategoryProductsFailed(error));
         }
     };

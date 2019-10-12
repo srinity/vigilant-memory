@@ -1,5 +1,7 @@
+import { cloneDeep as _cloneDeep, findIndex as _findIndex, get as _get } from 'lodash';
+import Toast from 'react-native-root-toast';
+
 import { APIURLs, AppAxios } from '../../Config/APIConfig';
-import { cloneDeep as _cloneDeep, findIndex as _findIndex } from 'lodash';
 
 import {
   ADD_ADDRESS_STARTED,
@@ -46,6 +48,14 @@ export function getUserInfo(user) {
         dispatch(selectShippingAddress(undefined));
       }
     } catch (error) {
+      const message = _get(error.response, 'data.message', 'Something went wrong');
+      Toast.show(message, {
+          position: Toast.positions.BOTTOM,
+          duration: Toast.durations.SHORT,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+      });
       dispatch(getUserInfoFailed(error));
     }
   };
@@ -59,6 +69,14 @@ export function addAddress(user, address) {
       const response = await updateUserAddress(ADDRESS_API_ACTIONS.add, [address], user);
       dispatch(addUserAddressSuccess(response.data.addresses));
     } catch (error) {
+      const message = _get(error.response, 'data.message', 'Something went wrong');
+      Toast.show(message, {
+          position: Toast.positions.BOTTOM,
+          duration: Toast.durations.SHORT,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+      });
       dispatch(addUserAddressFailed(error));
     }
   };
@@ -80,6 +98,14 @@ export function removeAddress(user, addressId) {
         dispatch(selectShippingAddress(undefined));
       }
     } catch (error) {
+      const message = _get(error.response, 'data.message', 'Something went wrong');
+      Toast.show(message, {
+          position: Toast.positions.BOTTOM,
+          duration: Toast.durations.SHORT,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+      });
       dispatch(removeUserAddressFailed(error));
     }
   };
@@ -94,6 +120,14 @@ export function changeAddress(user, address) {
 
       dispatch(changeUserAddressSuccess(response.data.addresses));
     } catch (error) {
+      const message = _get(error.response, 'data.message', 'Something went wrong');
+      Toast.show(message, {
+          position: Toast.positions.BOTTOM,
+          duration: Toast.durations.SHORT,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+      });
       dispatch(changeUserAddressFailed(error));
     }
   };
@@ -116,6 +150,14 @@ export function registerUserNotificationToken(token, user) {
       console.tron.warn(response.data);
     } catch (error) {
       console.tron.error(error);
+      const message = _get(error.response, 'data.message', 'Something went wrong');
+      Toast.show(message, {
+          position: Toast.positions.BOTTOM,
+          duration: Toast.durations.SHORT,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+      });
     }
   };
 }

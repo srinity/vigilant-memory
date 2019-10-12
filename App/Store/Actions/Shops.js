@@ -1,3 +1,6 @@
+import { get as _get } from 'lodash';
+import Toast from 'react-native-root-toast';
+ 
 import { APIURLs, AppAxios } from './../../Config/APIConfig';
 
 import {
@@ -14,6 +17,14 @@ export const getSearchAreas = () => {
       const response = await AppAxios.get(APIURLs.searchAreas);
       dispatch(getSearchAreasSuccess(response.data.cities));
     } catch (error) {
+      const message = _get(error.response, 'data.message', 'Something went wrong');
+      Toast.show(message, {
+          position: Toast.positions.BOTTOM,
+          duration: Toast.durations.SHORT,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+      });
       dispatch(getSearchAreasFailed(error));
     }
   };
@@ -33,6 +44,14 @@ export const getShops = (city, area, district) => {
 
           dispatch(getShopsSuccess(response.data.shops));
         } catch (error) {
+          const message = _get(error.response, 'data.message', 'Something went wrong');
+          Toast.show(message, {
+              position: Toast.positions.BOTTOM,
+              duration: Toast.durations.SHORT,
+              shadow: true,
+              animation: true,
+              hideOnPress: true,
+          });
           dispatch(getShopsFailed(error));
         }
     };

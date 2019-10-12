@@ -12,7 +12,7 @@ import {
     flatten as _flatten,
     forEach as _forEach
 } from 'lodash';
-import { Actions } from 'react-native-router-flux';
+import Toast from 'react-native-root-toast';
 
 import { APIURLs, AppAxios } from './../../Config/APIConfig';
 
@@ -59,6 +59,14 @@ export function getUserCart(user) {
 
             dispatch(getUserCartSuccess(cart));
         } catch (error) {
+            const message = _get(error.response, 'data.message', 'Something went wrong');
+            Toast.show(message, {
+                position: Toast.positions.BOTTOM,
+                duration: Toast.durations.SHORT,
+                shadow: true,
+                animation: true,
+                hideOnPress: true,
+            });
             dispatch(getUserCartFailed(error));
         }
     };
@@ -88,6 +96,14 @@ export function addToCart(shopId, shopName, product, cart, user) {
                 const response = await updateUserCart(CART_ITEMS_API_ACTIONS.add, updates, user);
                 dispatch(addCartItemSuccess(productId, newCart));
             } catch (error) {
+                const message = _get(error.response, 'data.message', 'Something went wrong');
+                Toast.show(message, {
+                    position: Toast.positions.BOTTOM,
+                    duration: Toast.durations.SHORT,
+                    shadow: true,
+                    animation: true,
+                    hideOnPress: true,
+                });
                 dispatch(updateUserCartFailed(productId, cart, error));
             }
         } else {
@@ -126,6 +142,14 @@ export function changeCartProductQuantity(shopId, shopName, product, cart, user)
                 const response = await updateUserCart(CART_ITEMS_API_ACTIONS.change, updates, user);
                 dispatch(changeCartItemQuantity(productId, newCart));
             } catch (error) {
+                const message = _get(error.response, 'data.message', 'Something went wrong');
+                Toast.show(message, {
+                    position: Toast.positions.BOTTOM,
+                    duration: Toast.durations.SHORT,
+                    shadow: true,
+                    animation: true,
+                    hideOnPress: true,
+                });
                 dispatch(updateUserCartFailed(productId, cart, error));
             }
         } else {
@@ -161,6 +185,14 @@ export function removeFromCart(shopId, shopName, product, cart, user) {
                 const response = await updateUserCart(CART_ITEMS_API_ACTIONS.remove, updates, user);
                 dispatch(removeCartItemSuccess(productId, newCart));
             } catch (error) {
+                const message = _get(error.response, 'data.message', 'Something went wrong');
+                Toast.show(message, {
+                    position: Toast.positions.BOTTOM,
+                    duration: Toast.durations.SHORT,
+                    shadow: true,
+                    animation: true,
+                    hideOnPress: true,
+                });
                 dispatch(updateUserCartFailed(productId, cart, error));
             }
         } else {
@@ -182,6 +214,14 @@ export function uploadUserCart(cart, user) {
         try {
             const response = await updateUserCart(CART_ITEMS_API_ACTIONS.add, updates, user);
         } catch (error) {
+            const message = _get(error.response, 'data.message', 'Something went wrong');
+            Toast.show(message, {
+                position: Toast.positions.BOTTOM,
+                duration: Toast.durations.SHORT,
+                shadow: true,
+                animation: true,
+                hideOnPress: true,
+            });
             dispatch({ type: FAILED_TO_UPLOAD_USER_CART_UPON_LOGIN });
         }
     };
@@ -210,6 +250,14 @@ export function buyShopProducts(user, shopId, products, userAddress, cart, onBuy
                 onBuy();
             }
         } catch (error) {
+            const message = _get(error.response, 'data.message', 'Something went wrong');
+            Toast.show(message, {
+                position: Toast.positions.BOTTOM,
+                duration: Toast.durations.SHORT,
+                shadow: true,
+                animation: true,
+                hideOnPress: true,
+            });
             dispatch(buyingProductFailed(error.response));
         }
     };
