@@ -12,7 +12,7 @@ import {
 import CodeInput from 'react-native-confirmation-code-field';
 import { Actions } from 'react-native-router-flux';
 
-import { Logo } from '../../Components';
+import { Logo, LocalizedText } from '../../Components';
 
 import { Colors } from './../../Theme';
 
@@ -49,8 +49,8 @@ class ForgotPasswordVerificationCode extends Component {
     codeVerify = createRef();
 
     onSendVerificationCodePress = () => {
-        const { sendVerificationCode, user } = this.props;
-        sendVerificationCode(user);
+        const { sendVerificationCode, phone } = this.props;
+        sendVerificationCode(phone, false);
     }
 
     onVerifyCode = (code) => {
@@ -124,7 +124,7 @@ class ForgotPasswordVerificationCode extends Component {
                         (
                             <TouchableComponent onPress={this.onSendVerificationCodePress} disabled={isSendingVerificationCode}>
                                 <View style={styles.sendCodeContainerStyle}>
-                                    <Text style={styles.actionTextStyle}>Re-Send Code</Text>
+                                    <LocalizedText style={styles.actionTextStyle}>forget_password_verification_code_screen_re_send_verification_code_button</LocalizedText>
                                 </View>
                             </TouchableComponent>
                         ) 
@@ -132,7 +132,7 @@ class ForgotPasswordVerificationCode extends Component {
                         (
                             <View style={styles.verifyingCodeStyle}>
                                 <ActivityIndicator color={Colors.brandColorHexCode} size='small' style={styles.indicatorStyle} />
-                                <Text style={styles.actionTextStyle}>Verifying...</Text>
+                                <LocalizedText style={styles.actionTextStyle}>forget_password_verification_code_screen_verifying_text</LocalizedText>
                             </View>
                         )
                     }

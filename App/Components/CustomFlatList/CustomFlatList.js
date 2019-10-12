@@ -2,6 +2,8 @@ import React from 'react';
 import { FlatList, View, Text, ActivityIndicator, ViewPropTypes } from 'react-native';
 import PropTypes from 'prop-types';
 
+import LocalizedText from './../LocalizedText/LocalizedText';
+
 import { colorPropType } from '../../Utils/PropTypesValidators';
 
 import styles from './CustomFlatList.Styles';
@@ -29,7 +31,7 @@ const CustomFlatList = ({
   } else if (!isLoading && (!data || data.length < 1)) {
     return (
       <View style={styles.emptyDataContainerStyle}>
-        <Text style={[styles.emptyTextStyle, emptyTextStyle]}>{emptyText}</Text>
+        <LocalizedText style={[styles.emptyTextStyle, emptyTextStyle]}>{emptyText}</LocalizedText>
       </View>
     );
   }

@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 
-import { Icon, IconTypes, ScreenTypes } from './../../Components';
+import { Icon, IconTypes, ScreenTypes, LocalizedText } from './../../Components';
 
 import { Colors } from '../../Theme';
 
@@ -51,14 +51,14 @@ class Account extends Component {
         <TouchableComponent onPress={this.onShippingAddressesPress}>
           <View style={styles.accountOptionButtonStyle}>
             <Icon name='location-pin' type={IconTypes.entypo} color={Colors.brandColorHexCode} />
-            <Text style={styles.accountOptionButtonTextStyle}>Shipping Addresses</Text>
+            <LocalizedText style={styles.accountOptionButtonTextStyle}>account_screen_shipping_addresses_action</LocalizedText>
           </View>
         </TouchableComponent>
 
         <TouchableComponent onPress={this.onChangePasswordPress}>
           <View style={styles.accountOptionButtonStyle}>
             <Icon name='key-variant' type={IconTypes.materialCommunity} color={Colors.brandColorHexCode} />
-            <Text style={styles.accountOptionButtonTextStyle}>Change Password</Text>
+            <LocalizedText style={styles.accountOptionButtonTextStyle}>account_screen_change_password_action</LocalizedText>
           </View>
         </TouchableComponent>
       </View>  
@@ -79,10 +79,10 @@ class Account extends Component {
     if (gettingUserInfoFailed) {
       return (
         <View style={styles.retryButtonContainerStyle}>
-          <Text>Something went wrong!</Text>
+          <LocalizedText>account_screen_error_message</LocalizedText>
           <TouchableComponent onPress={this.getUserInfo}>
             <View style={styles.retryButtonStyle}>
-              <Text>Reload</Text>
+              <LocalizedText>account_screen_reload_button_text</LocalizedText>
             </View>
           </TouchableComponent>
         </View>
@@ -109,7 +109,7 @@ class Account extends Component {
         <View style={styles.loginButtonContainerStyle}>
           <TouchableComponent onPress={this.onLoginPress}>
             <View style={styles.loginButtonStyle}>
-              <Text>Login now</Text>
+              <LocalizedText>account_screen_Login_now_button_text</LocalizedText>
             </View>
           </TouchableComponent>
         </View>

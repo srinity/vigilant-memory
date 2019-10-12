@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import memoize from 'memoize-one';
 
-import { Icon, IconTypes, AddressModal } from './../../Components';
+import { Icon, IconTypes, AddressModal, LocalizedText } from './../../Components';
 
 import { Colors } from '../../Theme';
 
@@ -123,14 +123,14 @@ class AddressBook extends Component {
         <View style={styles.addressActionsContainerStyle}>
           <TouchableComponent onPress={() => this.onDeleteAddressPress(item._id)} disabled={actionsDisabled}>
             <View style={styles.removeAddressContainerStyle}>
-              <Text style={styles.removeAddressTextStyle}>Remove</Text>
+              <LocalizedText style={styles.removeAddressTextStyle}>address_book_screen_remove_address_action</LocalizedText>
               {/* <Icon type={IconTypes.entypo} name='trash' color={Colors.dangerColorHexCode} size={15} /> */}
             </View>
           </TouchableComponent>
 
           <TouchableComponent onPress={() => this.onEditAddressPress(item)} disabled={actionsDisabled}>
             <View style={styles.editAddressContainerStyle}>
-              <Text style={styles.editAddressTextStyle}>Edit</Text>
+              <LocalizedText style={styles.editAddressTextStyle}>address_book_screen_edit_address_action</LocalizedText>
             </View>
           </TouchableComponent>
         </View>
@@ -142,7 +142,7 @@ class AddressBook extends Component {
     if (!addresses || !addresses.length || addresses.length === 0) {
       return (
         <View style={styles.noAddressDetailsContainerStyles}>
-          <Text style={styles.noAvailableAddressTextStyle}>No Addresses Available</Text>
+          <LocalizedText style={styles.noAvailableAddressTextStyle}>address_book_screen_no_addresses_available</LocalizedText>
         </View>
       );
     }
@@ -168,7 +168,7 @@ class AddressBook extends Component {
       isChangingAddress,
       isRemovingAddress
     } = this.props;
-    const { currentEditingAddress, isEditingAddress } = this.state
+    const { currentEditingAddress, isEditingAddress } = this.state;
 
     return (
       <View style={styles.containerStyle}>
@@ -176,7 +176,7 @@ class AddressBook extends Component {
           <TouchableComponent onPress={this.onAddAddressPress}>
             <View style={styles.addAddressContainerStyle}>
               <Icon type={IconTypes.entypo} name='address' color={Colors.brandColorHexCode} size={20} />
-              <Text style={styles.addAddressTextStyle}>Add a new address</Text>
+              <LocalizedText style={styles.addAddressTextStyle}>address_book_screen_add_new_address</LocalizedText>
             </View>
           </TouchableComponent>
         </View>
@@ -190,7 +190,7 @@ class AddressBook extends Component {
           onClose={this.onAddressModalClose}
           onPress={(address) => this.onAddressModalPress(address)}
           initialAddress={currentEditingAddress}
-          buttonText={isEditingAddress ? 'EDIT' : 'ADD'}
+          buttonText={isEditingAddress ? 'address_book_screen_edit_address_button_text' : 'address_book_screen_add_address_button_text'}
           isLoading={isEditingAddress ? isChangingAddress : isAddingAddress}
           cities={cities}
           error={isEditingAddress ? changeAddressError : addAddressError}

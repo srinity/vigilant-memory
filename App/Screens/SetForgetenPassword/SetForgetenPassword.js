@@ -58,29 +58,29 @@ class SetForgetenPassword extends Component {
 
                     <View style={styles.controlsContainerStyle}>
                         <PasswordInput
-                            label='Password'
-                            hint='Enter New password'
+                            label='set_forgoten_password_screen_password_label'
+                            hint='set_forgoten_password_screen_password_hint'
                             leftIconColor={Colors.brandColorHexCode}
                             rightIconColor={Colors.brandColorHexCode}
                             onChangeText={this.onPasswordChange}
                             value={password}
                             isValid={passwordIsValid}
-                            errorMessage='Please enter valid password'
+                            errorMessage='set_forgoten_password_screen_password_error_message'
                         />
 
                         <PasswordInput
-                            label='Confirm New Password'
+                            label='set_forgoten_password_screen_confirm_password_label'
                             leftIconColor={Colors.brandColorHexCode}
                             rightIconColor={Colors.brandColorHexCode}
                             onChangeText={this.onConfirmPasswordChange}
                             value={confirmPassword}
                             isValid={confirmPasswordIsValid}
-                            errorMessage='Confirm password must match password'
+                            errorMessage='set_forgoten_password_screen_confirm_password_error_message'
                         />
 
                         <CardSection style={styles.buttonCardSectionStyle}>
                             <Button 
-                                title='RESET PASSWORD'
+                                title='set_forgoten_password_screen_reset_password_button_title'
                                 isLoading={isResettingPassword}
                                 indicatorColor={styles.indicatorColor.color}
                                 onPress={this.onResetPasswordPress}

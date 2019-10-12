@@ -55,18 +55,18 @@ class ForgotPassword extends Component {
                             leftIconName={Platform.OS === 'ios' ? 'cellphone-iphone' : 'cellphone'}
                             leftIconType={IconTypes.materialCommunity}
                             leftIconColor={Colors.brandColorHexCode}
-                            label='Phone Number'
-                            hint='Enter your phone number'
+                            label='forget_password_screen_phone_label'
+                            hint='forget_password_screen_phone_hint'
                             onChangeText={this.onPhoneChange}
                             value={phone}
                             isValid={phoneIsValid}
-                            errorMessage='Invalid Phone Number'
+                            errorMessage='forget_password_screen_phone_error_message'
                             keyboardType='phone-pad'
                         />
 
                         <CardSection style={styles.buttonCardSectionStyle}>
                             <Button 
-                                title='SEND VERIFICATION CODE'
+                                title='forget_password_screen_send_verification_code_button'
                                 isLoading={isGeneratingResetPassword}
                                 indicatorColor={styles.indicatorColor.color}
                                 onPress={this.onForgotPasswordPress}

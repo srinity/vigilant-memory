@@ -10,8 +10,9 @@ import {
 } from 'react-native';
 import { map as _map, reduce as _reduce, find as _find } from 'lodash';
 import memoize from 'memoize-one';
+import I18n from 'react-native-i18n';
 
-import { Icon, IconTypes, AddressModal, Card, Button } from './../../Components';
+import { Icon, IconTypes, AddressModal, Card, Button, LocalizedText } from './../../Components';
 
 import { Colors } from '../../Theme';
 
@@ -74,7 +75,7 @@ class CheckOut extends Component {
   renderTotalAmount = (products) => {
     return (
       <View style={styles.orderTotalAmountContainerStyle}>
-        <Text style={styles.orderTotalAmountTextStyle}>Total Amount</Text>
+        <LocalizedText style={styles.orderTotalAmountTextStyle}>check_out_screen_total_amount</LocalizedText>
         <Text style={styles.orderTotalAmountPriceTextStyle}>{this.calculateOrderTotalAmount(products)}</Text>
       </View>
     );
@@ -118,10 +119,10 @@ class CheckOut extends Component {
     if (!addresses || !addresses.length || addresses.length === 0) {
       return (
         <View style={styles.addressDetailsContainerStyles}>
-          <Text style={styles.noAvailableAddressTextStyle}>No Address Available</Text>
+          <LocalizedText style={styles.noAvailableAddressTextStyle}>check_out_screen_no_address_available</LocalizedText>
 
           <TouchableComponent onPress={this.onAddAddressPress}>
-            <Text style={styles.addAddressTextStyle}>Add</Text>
+            <LocalizedText style={styles.addAddressTextStyle}>check_out_screen_add_address</LocalizedText>
           </TouchableComponent>
         </View>
       );
@@ -148,13 +149,13 @@ class CheckOut extends Component {
           <View style={styles.addressContainerStyle}>
             <View style={styles.addressHeaderContainerStyle}>
               <Icon type={IconTypes.entypo} name='address' color={Colors.brandColorHexCode} size={20} />
-              <Text style={styles.addressHeaderTextStyle}>Address</Text>
+              <LocalizedText style={styles.addressHeaderTextStyle}>check_out_screen_address_header</LocalizedText>
             </View>
             {this.renderAddresses(addresses, lastSelectedAddress)}
           </View>
 
           <Card style={styles.cardStyle}>
-            <Text style={styles.orderSummaryHeaderStyle}>Order Summary</Text>
+            <LocalizedText style={styles.orderSummaryHeaderStyle}>check_out_screen_order_summary</LocalizedText>
 
             {this.renderOrderProducts(cart[shopId].products)}
             {this.renderTotalAmount(cart[shopId].products)}
@@ -162,14 +163,14 @@ class CheckOut extends Component {
 
           <Card style={styles.cardStyle}>
             <View style={styles.paymentMethodContainerStyle}>
-              <Text style={styles.paymentMethodHeaderStyle}>Payment Method</Text>
-              <Text style={styles.paymentMethodTotalAmountHeaderStyle}>{this.calculateOrderTotalAmount((cart[shopId].products))} EGP</Text>
+              <LocalizedText style={styles.paymentMethodHeaderStyle}>check_out_screen_payment_method</LocalizedText>
+              <Text style={styles.paymentMethodTotalAmountHeaderStyle}>{this.calculateOrderTotalAmount((cart[shopId].products))} {I18n.t('check_out_screen_payment_currency')}</Text>
             </View>
 
             <View style={styles.paymentOptionContainerStyle}>
               <View style={styles.paymentOptionInfoContainerStyle}>
                 <Icon type={IconTypes.ant} name='checkcircle' color={Colors.successColorHexCode} size={20} />
-                <Text style={styles.paymentOptionInfoTextStyle}>Cash</Text>
+                <LocalizedText style={styles.paymentOptionInfoTextStyle}>check_out_screen_cash_payment</LocalizedText>
               </View>
 
               <Icon type={IconTypes.materialCommunity} name='cash-multiple' color={Colors.notAvailableColorHexCode} size={20} />
@@ -178,7 +179,7 @@ class CheckOut extends Component {
 
           <View style={styles.buyButtonContainerStyle}>
             <Button
-              title='Buy'
+              title='check_out_screen_buy_button_text'
               disabled={!lastSelectedAddress}
               style={styles.buyButtonStyle}
               disabledStyle={styles.buyButtonDisabledStyle}
@@ -193,7 +194,7 @@ class CheckOut extends Component {
           isVisible={this.state.isAddressModalVisible}
           onClose={this.onAddAddressClose}
           onPress={(address) => this.onAddAddressRequest(address)}
-          buttonText='ADD'
+          buttonText='check_out_screen_address_add_button_text'
           isLoading={isAddingAddress}
           cities={cities}
           error={addAddressError}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, ScrollView, Text, Platform } from 'react-native';
+import { View, TouchableOpacity, ScrollView, Platform } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 
 import {
@@ -8,13 +8,15 @@ import {
     CustomInput,
     IconTypes,
     Logo,
-    PasswordInput
+    PasswordInput,
+    LocalizedText
 } from './../../Components';
 
 import { isEgyptPhone, isValidPassword } from './../../Utils/Validators';
 
-import styles from './Login.Styles';
 import { Colors } from '../../Theme';
+
+import styles from './Login.Styles';
 
 class Login extends Component {
     state = {
@@ -70,18 +72,18 @@ class Login extends Component {
                             leftIconName={Platform.OS === 'ios' ? 'cellphone-iphone' : 'cellphone'}
                             leftIconType={IconTypes.materialCommunity}
                             leftIconColor={Colors.brandColorHexCode}
-                            label='Phone Number'
-                            hint='Enter your phone number'
+                            label='login_screen_phone_label'
+                            hint='login_screen_phone_hint'
                             onChangeText={this.onPhoneChange}
                             value={phone}
                             isValid={phoneIsValid}
-                            errorMessage='Invalid Phone Number'
+                            errorMessage='login_screen_phone_error_message'
                             keyboardType='phone-pad'
                         />
 
                         <PasswordInput
-                            label='Password'
-                            hint='Enter your password'
+                            label='login_screen_password_label'
+                            hint='login_screen_password_hint'
                             leftIconColor={Colors.brandColorHexCode}
                             rightIconColor={Colors.brandColorHexCode}
                             onChangeText={this.onPasswordChange}
@@ -91,7 +93,7 @@ class Login extends Component {
 
                         <CardSection style={styles.buttonCardSectionStyle}>
                             <Button 
-                                title='LOGIN'
+                                title='login_screen_login_button_text'
                                 isLoading={isLoading}
                                 indicatorColor={styles.indicatorColor.color}
                                 onPress={this.onLoginPress}
@@ -103,16 +105,16 @@ class Login extends Component {
                         </CardSection>
 
                         <CardSection style={[styles.cardSectionStyle, styles.actionsContainerStyle]}>
-                            <Text style={styles.inactiveActionTextStyle}>Don't have an account?</Text>
+                            <LocalizedText style={styles.inactiveActionTextStyle}>login_screen_do_not_have_an_account</LocalizedText>
                             <TouchableOpacity onPress={this.onNewUserPress}>
-                                <Text style={styles.actionsTextStyle}>Sign Up Now</Text>
+                                <LocalizedText style={styles.actionsTextStyle}>login_screen_register_now</LocalizedText>
                             </TouchableOpacity>
                         </CardSection>
                     </View>
 
                     <CardSection style={[styles.cardSectionStyle, styles.footerContainerStyle]}>
                         <TouchableOpacity onPress={this.onForgotPasswordPress}>
-                                <Text style={styles.actionsTextStyle}>Forgot Password</Text>
+                                <LocalizedText style={styles.actionsTextStyle}>login_screen_forgot_password</LocalizedText>
                         </TouchableOpacity>
                     </CardSection>
                 </ScrollView>

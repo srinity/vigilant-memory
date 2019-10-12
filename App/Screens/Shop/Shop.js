@@ -14,7 +14,7 @@ import { Actions } from 'react-native-router-flux';
 import { isArray as _isArray, map as _map } from 'lodash';
 import memoize from 'memoize-one';
 
-import { ProductCard, ShopHeader, CustomFlatList } from './../../Components';
+import { ProductCard, ShopHeader, CustomFlatList, LocalizedText } from './../../Components';
 
 import { CartActions } from './../../Store/Actions';
 
@@ -149,7 +149,7 @@ class Shop extends Component {
                     <Text style={styles.categoryTextStyle}>{item.category}</Text>
 
                     <TouchableComponent onPress={() => this.onShowMorePress(item.category)}>
-                        <Text style={styles.showMoreTextStyle}>Show more</Text>
+                        <LocalizedText style={styles.showMoreTextStyle}>shop_screen_show_more_text</LocalizedText>
                     </TouchableComponent>
                 </View>
 
@@ -215,7 +215,7 @@ class Shop extends Component {
                         indicatorSize='large'
                         indicatorColor={Colors.brandColorHexCode}
                         isLoading={areProductsLoading}
-                        emptyText='No Products Available'
+                        emptyText='shop_screen_empty_text'
                         style={styles.categoriesContainerStyle}
                         data={products}
                         renderItem={this.renderProductsCategory}

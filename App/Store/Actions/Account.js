@@ -132,14 +132,17 @@ export const refreshToken = (user) => {
   };
 };
 
-export const forgotPassword = (phone) => {
+export const forgotPassword = (phone, shouldNavigate = true) => {
   return async dispatch => {
     dispatch(generateResetPasswordStarted());
 
     try {
       const response = await AppAxios.post(APIURLs.forgotPassword, { phone });
       dispatch(generateResetPasswordSuccess(response.data.token));
-      Actions.forgotPasswordVerificationCode();
+
+      if (shouldNavigate) {
+        Actions.forgotPasswordVerificationCode({ phone });
+      }
     } catch (error) {
       dispatch(generateResetPasswordFailed(error));
     }

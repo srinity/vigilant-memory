@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { Router, Scene, Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { isFunction as _isFunction, findIndex as _findIndex, get as _get } from 'lodash';
+import I18n from 'react-native-i18n';
 
 import { AuthSwitch, DeviceDimensions, ScreenTypes, IconTypes, BottomBar } from './Components';
 
@@ -46,7 +47,7 @@ class AppRouter extends Component {
         key: 'home',
         type: IconTypes.entypo,
         icon: 'home',
-        label: 'Home',
+        label: I18n.t('bottom_bar_home_text'),
         barColor: Colors.whiteColorHexCode,
         pressColor: 'rgba(255, 255, 255, 0.16)'
       },
@@ -54,7 +55,7 @@ class AppRouter extends Component {
         key: 'cart',
         type: IconTypes.entypo,
         icon: 'shopping-cart',
-        label: 'Cart',
+        label: I18n.t('bottom_bar_cart_text'),
         barColor: Colors.whiteColorHexCode,
         pressColor: 'rgba(255, 255, 255, 0.16)'
       },
@@ -62,7 +63,7 @@ class AppRouter extends Component {
         key: 'account',
         type: IconTypes.materialCommunity,
         icon: 'account',
-        label: 'Account',
+        label: I18n.t('bottom_bar_account_text'),
         barColor: Colors.whiteColorHexCode,
         pressColor: 'rgba(255, 255, 255, 0.16)'
       }
@@ -108,8 +109,8 @@ class AppRouter extends Component {
         dispatch => ({
           verifyCode: (code, user, onVerify) =>
             dispatch(AccountActions.verifyCode(code, user, onVerify)),
-          sendVerificationCode: (user) =>
-            dispatch(AccountActions.sendVerificationCode(user))
+          sendVerificationCode: (phone, shouldNavigate) =>
+            dispatch(AccountActions.forgotPassword(phone, shouldNavigate))
         })
       )(ForgotPasswordVerificationCodeScreen),
       SetForgetenPassword: connect(
@@ -290,21 +291,21 @@ class AppRouter extends Component {
                 key='login'
                 initial
                 hideNavBar
-                title='Login'
+                title={I18n.t('header_login_title')}
                 component={ConnectedComponents.Login}
               />
               <Scene
                 key='register'
                 // initial
                 hideNavBar
-                title='Register'
+                title={I18n.t('header_register_title')}
                 component={ConnectedComponents.Register}
               />
               <Scene
                 key='verificationCode'
                 // initial
                 hideNavBar
-                title='Verify Code'
+                title={I18n.t('header_verify_code_title')}
                 component={ConnectedComponents.VerificationCode}
               />
 
@@ -312,7 +313,7 @@ class AppRouter extends Component {
                 key='forgotPassword'
                 // initial
                 hideNavBar
-                title='Forgot Password'
+                title={I18n.t('header_forget_password_title')}
                 component={ConnectedComponents.ForgotPassword}
               />
 
@@ -320,7 +321,7 @@ class AppRouter extends Component {
                 key='forgotPasswordVerificationCode'
                 // initial
                 hideNavBar
-                title='Verify Code'
+                title={I18n.t('header_verify_code_title')}
                 component={ConnectedComponents.ForgotPasswordVerificationCode}
               />
 
@@ -328,7 +329,7 @@ class AppRouter extends Component {
                 key='resetPassword'
                 // initial
                 hideNavBar
-                title='Reset Password'
+                title={I18n.t('header_reset_password_title')}
                 component={ConnectedComponents.SetForgetenPassword}
               />
             </Scene>
@@ -337,20 +338,20 @@ class AppRouter extends Component {
                 initial
                 key='home'
                 hideNavBar
-                title='Home'
+                title={I18n.t('header_home_title')}
                 component={ConnectedComponents.Home}
                 onExit={this.handleBottomBarVisibility}
                 onEnter={this.handleBottomBarVisibility}
               />
               <Scene
                 key='shop'
-                title='Shop'
+                title={I18n.t('header_shop_title')}
                 // initial
                 component={ConnectedComponents.Shop}
               />
               <Scene
                 key='products'
-                title='Products'
+                title={I18n.t('header_products_title')}
                 // initial
                 // hideNavBar
                 component={ConnectedComponents.Products}
@@ -358,7 +359,7 @@ class AppRouter extends Component {
 
               <Scene
                 key='cart'
-                title='Cart'
+                title={I18n.t('header_cart_title')}
                 onExit={this.onTabBackClick}
                 onEnter={this.handleBottomBarVisibility}
                 // initial
@@ -368,7 +369,7 @@ class AppRouter extends Component {
 
               <Scene
                 key='checkOut'
-                title='Check Out'
+                title={I18n.t('header_check_out_title')}
                 // initial
                 // hideNavBar
                 component={ConnectedComponents.CheckOut}
@@ -376,7 +377,7 @@ class AppRouter extends Component {
 
               <Scene
                 key='account'
-                title='Account'
+                title={I18n.t('header_account_title')}
                 onExit={this.onTabBackClick}
                 onEnter={this.handleBottomBarVisibility}
                 // initial
@@ -386,7 +387,7 @@ class AppRouter extends Component {
 
               <Scene
                 key='addressBook'
-                title='Shipping Addresses'
+                title={I18n.t('header_address_book_title')}
                 // initial
                 // hideNavBar
                 component={ConnectedComponents.AddressBook}
@@ -394,7 +395,7 @@ class AppRouter extends Component {
 
               <Scene
                 key='changePassword'
-                title='Change Password'
+                title={I18n.t('header_change_password_title')}
                 // initial
                 // hideNavBar
                 component={ConnectedComponents.ChangePassword}

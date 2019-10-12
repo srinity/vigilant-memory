@@ -5,8 +5,8 @@ import memoize from 'memoize-one';
 
 import { colorPropType } from './../../Utils/PropTypesValidators';
 
-import { Icon, IconTypes } from './../index';
-import { iconTypesValues } from './../Icon/IconTypes';
+import { Icon, IconTypes, iconTypesValues } from './../Icon';
+import LocalizedText from './../LocalizedText/LocalizedText';
 
 import styles from './Button.Styles';
 
@@ -36,6 +36,7 @@ const button = ({
     rightIconName,
     rightIconColor,
     rightIconSize,
+    localize,
     ...props 
 }) => {
     const disabledButtonStyle = getDisabledStyleMemoized(disabled || isLoading, disabledStyle);
@@ -60,7 +61,7 @@ const button = ({
                         :
                         null
                     }
-                    <Text style={[styles.textStyle, textStyle]}>{title}</Text>
+                    <LocalizedText localize={localize} style={[styles.textStyle, textStyle]}>{title}</LocalizedText>
                     {
                         rightIcon
                         ?
@@ -118,7 +119,8 @@ button.propTypes = {
         }
     },
     rightIconColor: colorPropType,
-    rightIconSize: PropTypes.number
+    rightIconSize: PropTypes.number,
+    localize: PropTypes.bool
 };
 
 export default button;

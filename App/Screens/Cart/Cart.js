@@ -3,6 +3,7 @@ import { View, FlatList, SafeAreaView, Text } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import memoize from 'memoize-one';
 import CheckBox from 'react-native-check-box';
+import I18n from 'react-native-i18n';
 import {
     map as _map,
     find as _find,
@@ -194,7 +195,7 @@ class Cart extends Component {
                         </View>
 
                         <Button
-                            title={`Check Out (${selectedShopItemsCount})`}
+                            title={`${I18n.t('cart_screen_checkout_button_title')} (${selectedShopItemsCount})`}
                             style={styles.buyButtonStyle}
                             textStyle={styles.buyButtonTextStyle}
                             isLoading={this.props.isLoading}

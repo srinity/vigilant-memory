@@ -3,8 +3,9 @@ import { SafeAreaView, FlatList, View, Text, TouchableWithoutFeedback } from 're
 import { Actions } from 'react-native-router-flux';
 import { Dropdown } from 'react-native-material-dropdown';
 import { find as _find } from 'lodash';
+import I18n from 'react-native-i18n';
 
-import { ShopCard, Icon, IconTypes, Logo, Button, LocalizedText } from './../../Components';
+import { ShopCard, Icon, IconTypes, Logo, Button } from './../../Components';
 
 import { ImageHostUrl } from '../../Config/APIConfig';
 
@@ -141,7 +142,7 @@ class Home extends Component {
 
           <View style={styles.searchSelectionContainerStyle}>
             <Dropdown
-              label='City'
+              label={I18n.t('home_screen_city_drop_down')}
               value={selectedCity}
               data={this.props.cities || []}
               onChangeText={this.onCityValueChange}
@@ -152,7 +153,7 @@ class Home extends Component {
             />
 
             <Dropdown
-              label='Area'
+              label={I18n.t('home_screen_area_drop_down')}
               value={selectedArea}
               data={this.state.areas || []}
               onChangeText={this.onAreaValueChange}
@@ -164,7 +165,7 @@ class Home extends Component {
             />
 
             <Dropdown
-              label='District'
+              label={I18n.t('home_screen_district_drop_down')}
               value={selectedDistrict}
               data={this.state.districts || []}
               onChangeText={this.onDistrictValueChange}
@@ -175,7 +176,7 @@ class Home extends Component {
             />
 
             <Button
-              title='Search'
+              title='home_screen_search_button_title'
               disabled={!selectedCity || !selectedArea || !selectedDistrict}
               isLoading={isLoading}
               style={styles.searchButtonStyle}
@@ -193,7 +194,7 @@ class Home extends Component {
             <TouchableWithoutFeedback onPress={this.onSearchToolBarPress}>
               <View style={styles.searchBoxContainerStyle}>
                 <Icon type={IconTypes.oct} name='search' size={15} />
-                <Text style={styles.searchTextStyle} numberOfLines={1}>{`${searchBarDistrict || 'District'}, ${searchBarArea || 'Area'}, ${searchBarCity || 'City'}`}</Text>
+                <Text style={styles.searchTextStyle} numberOfLines={1}>{`${searchBarDistrict || I18n.t('home_screen_district_drop_down')}, ${searchBarArea || I18n.t('home_screen_area_drop_down')}, ${searchBarCity || I18n.t('home_screen_city_drop_down')}`}</Text>
               </View>
             </TouchableWithoutFeedback>
           </View>

@@ -3,6 +3,7 @@ import { View, Animated, StyleSheet, TouchableWithoutFeedback, Keyboard, Platfor
 import PropTypes from 'prop-types';
 import { Dropdown } from 'react-native-material-dropdown';
 import { find as _find } from 'lodash';
+import I18n from 'react-native-i18n';
 
 import CustomInput from './../CustomInput';
 import Button from './../Button/Button';
@@ -253,12 +254,12 @@ class AddressModal extends Component {
           <Fragment>
             <Animated.View style={[this.getContainerStyle(isKeyboardOpen), animatedContentStyle]}>
               <CustomInput
-                label='Street'
-                hint='Enter your street'
+                label='address_modal_street_label'
+                hint='address_modal_street_hint'
                 onChangeText={this.onStreetChange}
                 value={street}
                 isValid={streetIsValid}
-                errorMessage='Invalid Street details, street can not be empty'
+                errorMessage='address_modal_street_error_message'
                 inputContainerStyle={styles.inputContainerStyle}
                 containerStyle={styles.streetInputStyle}
                 labelFontSize={12}
@@ -267,12 +268,12 @@ class AddressModal extends Component {
 
               <View style={styles.rowStyle}>
                 <CustomInput
-                  label='Building Number'
-                  hint='Building'
+                  label='address_modal_building_number_label'
+                  hint='address_modal_building_number_hint'
                   onChangeText={this.onBuildingNumberChange}
                   value={buildingNumber}
                   isValid={buildingNumberIsValid}
-                  errorMessage='Invalid Building Number'
+                  errorMessage='address_modal_building_number_error_message'
                   keyboardType='number-pad'
                   containerStyle={styles.rowInputStyle}
                   inputContainerStyle={styles.inputContainerStyle}
@@ -281,12 +282,12 @@ class AddressModal extends Component {
                 />
 
                 <CustomInput
-                  label='Floor Number'
-                  hint='Floor'
+                  label='address_modal_floor_number_label'
+                  hint='address_modal_floor_number_hint'
                   onChangeText={this.onFloorChange}
                   value={floorNumber}
                   // isValid={buildingNumberIsValid}
-                  // errorMessage='Invalid Floor Number'
+                  // errorMessage='address_modal_floor_number_error_message'
                   keyboardType='number-pad'
                   containerStyle={styles.rowInputStyle}
                   inputContainerStyle={styles.inputContainerStyle}
@@ -295,12 +296,12 @@ class AddressModal extends Component {
                 />
 
                 <CustomInput
-                  label='Apartment Number'
-                  hint='Apartment'
+                  label='address_modal_apartment_number_label'
+                  hint='address_modal_apartment_number_hint'
                   onChangeText={this.onApartmentNumberChange}
                   value={apartmentNumber}
                   // isValid={phoneIsValid}
-                  // errorMessage='Invalid Apartment Number'
+                  // errorMessage='address_modal_apartment_number_error_message'
                   keyboardType='number-pad'
                   containerStyle={styles.lastRowInputStyle}
                   inputContainerStyle={styles.inputContainerStyle}
@@ -310,7 +311,7 @@ class AddressModal extends Component {
               </View>
 
               <Dropdown
-                label='City'
+                label={I18n.t('address_modal_city_drop_down')}
                 value={city}
                 data={cities || []}
                 onChangeText={this.onCityValueChange}
@@ -325,7 +326,7 @@ class AddressModal extends Component {
               <View style={styles.rowStyle}>
 
                 <Dropdown
-                  label='Area'
+                  label={I18n.t('address_modal_area_drop_down')}
                   value={area}
                   data={areas || []}
                   onChangeText={this.onAreaValueChange}
@@ -340,7 +341,7 @@ class AddressModal extends Component {
                 />
 
                 <Dropdown
-                  label='District'
+                  label={I18n.t('address_modal_district_drop_down')}
                   value={district}
                   data={districts || []}
                   onChangeText={this.onDistrictValueChange}
@@ -356,7 +357,7 @@ class AddressModal extends Component {
 
               <View style={styles.buttonsContainerStyle}>
                 <Button
-                  title='CANCEL'
+                  title='address_modal_cancel_button_text'
                   style={styles.cancelButtonStyle}
                   disabledStyle={styles.disabledCancelButtonStyle}
                   disabled={isLoading}

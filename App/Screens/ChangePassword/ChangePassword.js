@@ -63,44 +63,44 @@ class ChangePassword extends Component {
     return (
       <View style={styles.containerStyle}>
         <PasswordInput
-          label='Old Password'
-          hint='Enter Old password'
+          label='change_password_screen_old_password_label'
+          hint='change_password_screen_old_password_hint'
           leftIconName={undefined}
           leftIconColor={Colors.brandColorHexCode}
           rightIconColor={Colors.brandColorHexCode}
           onChangeText={this.onOldPasswordChange}
           value={oldPassword}
           isValid={oldPasswordIsValid}
-          errorMessage='Please enter valid password'
+          errorMessage='change_password_screen_old_password_error_message'
         />
 
         <PasswordInput
-          label='New Password'
-          hint='Enter New password'
+          label='change_password_screen_new_password_label'
+          hint='change_password_screen_new_password_hint'
           leftIconName={undefined}
           leftIconColor={Colors.brandColorHexCode}
           rightIconColor={Colors.brandColorHexCode}
           onChangeText={this.onPasswordChange}
           value={password}
           isValid={passwordIsValid}
-          errorMessage='Please enter valid password'
+          errorMessage='change_password_screen_new_password_error_message'
         />
 
         <PasswordInput
-          label='Confirm Password'
-          hint='Confirm New Password'
+          label='change_password_screen_confirm_new_password_label'
+          hint='change_password_screen_confirm_new_password_hint'
           leftIconName={undefined}
           leftIconColor={Colors.brandColorHexCode}
           rightIconColor={Colors.brandColorHexCode}
           onChangeText={this.onConfirmPasswordChange}
           value={confirmPassword}
           isValid={confirmPasswordIsValid}
-          errorMessage='Confirm password must match password'
+          errorMessage='change_password_screen_confirm_new_password_error_message'
         />
 
         <Button
           onPress={this.onResetPasswordPress}
-          title='Change Password'
+          title='change_password_screen_change_password_button_text'
           isLoading={isResettingPassword}
           indicatorColor={styles.indicatorColor.color}
           indicatorSize='small'

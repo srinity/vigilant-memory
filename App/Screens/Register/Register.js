@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
-import { View, Platform, Text, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
+import { View, Platform, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
 import { Dropdown } from 'react-native-material-dropdown';
 import DatePicker from 'react-native-datepicker';
 import { Actions } from 'react-native-router-flux';
+import I18n from 'react-native-i18n';
 
 import {
-  AuthInput,
   Button,
-  Card,
   CardSection,
   Icon,
   IconTypes,
   Logo,
   CustomInput,
-  PasswordInput
+  PasswordInput,
+  LocalizedText
 } from './../../Components';
 
 import * as Validators from './../../Utils/Validators';
@@ -46,11 +46,11 @@ class Register extends Component {
 
     this.dropDownData = [
       {
-        label: 'Male',
+        label: I18n.t('register_screen_male_text'),
         value: 'M'
       },
       {
-        label: 'Female',
+        label: I18n.t('register_screen_female_text'),
         value: 'F'
       }
     ];
@@ -145,79 +145,79 @@ class Register extends Component {
           <View style={styles.inputsContainerStyle}>
             <View style={styles.nameInputsContainerStyle}>
               <CustomInput
-                label='First Name'
+                label='register_screen_first_name_label'
                 leftIconName='person'
                 leftIconType={IconTypes.oct}
                 leftIconColor={Colors.brandColorHexCode}
                 value={firstName}
                 onChangeText={this.onFirstNameChange}
                 isValid={firstNameIsValid}
-                errorMessage='First name can not be empty'
+                errorMessage='register_screen_first_name_error_message'
                 containerStyle={styles.nameInputStyle}
               />
 
               <CustomInput
-                label='Last Name'
+                label='register_screen_last_name_label'
                 leftIconName='person'
                 leftIconType={IconTypes.oct}
                 leftIconColor={Colors.brandColorHexCode}
                 value={lastName}
                 onChangeText={this.onLastNameChange}
                 isValid={lastNameIsValid}
-                errorMessage='Last name can not be empty'
+                errorMessage='register_screen_last_name_error_message'
                 containerStyle={styles.nameInputStyle}
               />
             </View>
 
             <CustomInput
-                label='Phone Number'
-                hint='Enter your phone number'
+                label='register_screen_phone_number_label'
+                hint='register_screen_phone_number_hint'
                 leftIconName={Platform.OS === 'ios' ? 'cellphone-iphone' : 'cellphone'}
                 leftIconType={IconTypes.materialCommunity}
                 leftIconColor={Colors.brandColorHexCode}
                 value={phone}
                 onChangeText={this.onPhoneChange}
                 isValid={phoneIsValid}
-                errorMessage='Please enter a valid phone'
+                errorMessage='register_screen_phone_number_error_message'
                 keyboardType='phone-pad'
             />
 
             <CustomInput
-                label='E-mail'
-                hint='Enter your e-mail'
+                label='register_screen_email_label'
+                hint='register_screen_email_hint'
                 leftIconName='email'
                 leftIconType={IconTypes.materialCommunity}
                 leftIconColor={Colors.brandColorHexCode}
                 value={email}
                 onChangeText={this.onEmailChange}
                 isValid={emailIsValid}
-                errorMessage='Please enter a valid e-mail'
+                errorMessage='register_screen_email_error_message'
                 keyboardType='email-address'
             />
 
             <PasswordInput
-              label='Password'
-              hint='Enter your password'
+              label='register_screen_password_label'
+              hint='register_screen_password_hint'
               leftIconColor={Colors.brandColorHexCode}
               rightIconColor={Colors.brandColorHexCode}
               onChangeText={this.onPasswordChange}
               value={password}
               isValid={passwordIsValid}
-              errorMessage='Please enter a valid password'
+              errorMessage='register_screen_password_error_message'
             />
 
             <PasswordInput
-              label='Confirm Password'
+              label='register_screen_confirm_password_label'
               leftIconColor={Colors.brandColorHexCode}
               rightIconColor={Colors.brandColorHexCode}
               onChangeText={this.onConfirmPasswordChange}
               value={confirmPassword}
               isValid={confirmPasswordIsValid}
-              errorMessage='Confirm password must match password'
+              errorMessage='register_screen_confirm_password_error_message'
             />
 
             <Dropdown
-              label='Gender'
+              label={I18n.t('register_screen_gender_drop_down')}
               value={gender}
               data={this.dropDownData}
               onChangeText={this.onGenderChange}
@@ -233,12 +233,12 @@ class Register extends Component {
               style={[styles.datePickerStyle, dateOfBirthIsValid ? undefined : styles.datePickerInvalidStyle]}
               date={dateOfBirth}
               mode='date'
-              placeholder='Birthday'
+              placeholder={I18n.t('register_screen_birthday_text')}
               format='DD-MM-YYYY'
               minDate='01-01-1950'
               maxDate={`${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`}
-              confirmBtnText='Confirm'
-              cancelBtnText='Cancel'
+              confirmBtnText={I18n.t('register_screen_birthday_confirm_text')}
+              cancelBtnText={I18n.t('register_screen_birthday_cancel_text')}
               showIcon
               iconComponent={(
                   <View style={styles.datePickerIconStyle}>
@@ -262,14 +262,14 @@ class Register extends Component {
                     color={Colors.dangerColorHexCode}
                     size={24}
                   />
-                  <Text style={styles.errorTextStyle}>Please enter date of birth</Text>
+                  <LocalizedText style={styles.errorTextStyle}>register_screen_birthday_error_text</LocalizedText>
                 </View>
                 : null
             }
 
             <CardSection style={styles.buttonCardSectionStyle}>
               <Button
-                title='REGISTER'
+                title='register_screen_register_button_text'
                 isLoading={isLoading}
                 indicatorColor={styles.indicatorColor.color}
                 onPress={this.onRegisterPress}
@@ -283,9 +283,9 @@ class Register extends Component {
           </View>
 
           <CardSection style={[styles.actionsCardSectionStyle, styles.footerContainerStyle]}>
-            <Text style={styles.inactiveActionTextStyle}>Already have an account?</Text>
+            <LocalizedText style={styles.inactiveActionTextStyle}>register_screen_already_have_account</LocalizedText>
             <TouchableOpacity onPress={Actions.login}>
-              <Text style={styles.actionsTextStyle}>Login Now</Text>
+              <LocalizedText style={styles.actionsTextStyle}>register_screen_login_now</LocalizedText>
             </TouchableOpacity>
           </CardSection>
         </ScrollView>

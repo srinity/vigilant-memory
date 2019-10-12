@@ -4,8 +4,10 @@ import { TextField } from 'react-native-material-textfield';
 import PropTypes from 'prop-types';
 import memoize from 'memoize-one';
 import { has as _has, isFunction as _isFunction, get as _get, isNil as _isNil } from 'lodash';
+import I18n from 'react-native-i18n';
 
 import { Icon, IconTypes, iconTypesValues } from './../Icon';
+import LocalizedText from '../LocalizedText/LocalizedText';
 
 import { colorPropType } from './../../Utils/PropTypesValidators';
 
@@ -164,7 +166,7 @@ class CustomInput extends Component {
           <TextField
             {...props}
             ref={this.setUpRef}
-            label={label}
+            label={I18n.t(label)}
             tintColor={tintColor}
             baseColor={baseColor}
             activeLineWidth={0}
@@ -208,12 +210,13 @@ class CustomInput extends Component {
                 size={errorIconSize}
                 style={errorIconStyle}
               />
-              <Text
+              <LocalizedText
                 style={styles.errorTextStyle}
                 accessibilityLabel='warnningMsg'
+                numberOfLines={1}
               >
                 {errorMessage}
-              </Text>
+              </LocalizedText>
             </View>
             : null
         }

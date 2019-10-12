@@ -2,17 +2,15 @@ import React, { Component, createRef } from 'react';
 import {
     SafeAreaView,
     View,
-    Text,
     TouchableNativeFeedback,
     TouchableOpacity,
     Platform,
     ActivityIndicator,
-    Animated,
-    StyleSheet
+    Animated
 } from 'react-native';
 import CodeInput from 'react-native-confirmation-code-field';
 
-import { Logo } from '../../Components';
+import { Logo, LocalizedText } from '../../Components';
 
 import { Colors } from './../../Theme';
 
@@ -128,7 +126,7 @@ class VerificationCode extends Component {
                         (
                             <TouchableComponent onPress={this.onSendVerificationCodePress} disabled={isSendingVerificationCode}>
                                 <View style={styles.sendCodeContainerStyle}>
-                                    <Text style={styles.actionTextStyle}>Re-Send Code</Text>
+                                    <LocalizedText style={styles.actionTextStyle}>verification_code_screen_resend_code</LocalizedText>
                                 </View>
                             </TouchableComponent>
                         ) 
@@ -136,7 +134,7 @@ class VerificationCode extends Component {
                         (
                             <View style={styles.verifyingCodeStyle}>
                                 <ActivityIndicator color={Colors.brandColorHexCode} size='small' style={styles.indicatorStyle} />
-                                <Text style={styles.actionTextStyle}>Verifying...</Text>
+                                <LocalizedText style={styles.actionTextStyle}>verification_code_screen_verifying_code</LocalizedText>
                             </View>
                         )
                     }

@@ -222,7 +222,7 @@ class Products extends Component {
                     indicatorSize='large'
                     indicatorColor={Colors.brandColorHexCode}
                     isLoading={areCategoryProductsLoading}
-                    emptyText='No Products Available'
+                    emptyText='products_screen_no_products_text'
                     key={viewMode}
                     data={categoryProducts}
                     renderItem={this.renderProduct}
