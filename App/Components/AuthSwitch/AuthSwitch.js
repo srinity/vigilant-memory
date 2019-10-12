@@ -43,12 +43,14 @@ class AuthSwitch extends Component {
 
       if (currentRootScreen === ScreenTypes.app) {
         // Actions.cart();
+        this.props.setActiveTab('home');
       }
     } else if (!prevProps.isLoggedIn && this.props.isLoggedIn) {
       this.props.uploadUserCart(this.props.cart, this.props.user);
       this.handleUserNotification();
       this.navigateToProperScreen(ScreenTypes.app);
-      Actions.cart();
+      // Actions.cart();
+      this.props.setActiveTab('home');
     }
   }
 

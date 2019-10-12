@@ -77,6 +77,7 @@ class AppRouter extends Component {
           refreshToken: (user) => dispatch(AccountActions.refreshToken(user)),
           getUserInfo: (user) => dispatch(UserActions.getUserInfo(user)),
           registerUserNotificationToken: (token, user) => dispatch(UserActions.registerUserNotificationToken(token, user)),
+          setActiveTab: (tabName) => this.setActiveTab(tabName),
         })
       )(AuthSwitch),
       DeviceDimensions: connect(null, dispatch => ({
@@ -249,6 +250,10 @@ class AppRouter extends Component {
     if (_isFunction(this.bottomBar.setActiveTab) && Actions.currentScene === 'home') {
       this.bottomBar.setActiveTab('home');
     }
+  }
+
+  setActiveTab = (tabName = 'home') => {
+    this.bottomBar.setActiveTab(tabName);
   }
 
   setUpBottomBarRef = (comp) => {
