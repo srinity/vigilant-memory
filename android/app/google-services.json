@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "99563296075",
+    "firebase_url": "https://elcartona-onlineshopping.firebaseio.com",
+    "project_id": "elcartona-onlineshopping",
+    "storage_bucket": "elcartona-onlineshopping.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:99563296075:android:28ba2c7e75afda74f944ce",
+        "android_client_info": {
+          "package_name": "com.elcartona"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "99563296075-4udgpdaq7vl8lqlpkb5shoer89g7nrsv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4AgBdbebVBQw7bng9nA4VJXOonx1cG8c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "99563296075-4udgpdaq7vl8lqlpkb5shoer89g7nrsv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
