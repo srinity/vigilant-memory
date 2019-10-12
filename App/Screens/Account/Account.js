@@ -35,6 +35,10 @@ class Account extends Component {
     Actions.changePassword();
   }
 
+  onLogoutPress = () => {
+    this.props.logout();
+  }
+
   onLoginPress = () => {
     // Actions.reset(ScreenTypes.auth);
     Actions[ScreenTypes.auth]();
@@ -59,6 +63,13 @@ class Account extends Component {
           <View style={styles.accountOptionButtonStyle}>
             <Icon name='key-variant' type={IconTypes.materialCommunity} color={Colors.brandColorHexCode} />
             <LocalizedText style={styles.accountOptionButtonTextStyle}>account_screen_change_password_action</LocalizedText>
+          </View>
+        </TouchableComponent>
+
+        <TouchableComponent onPress={this.onLogoutPress}>
+          <View style={styles.lastAccountOptionButtonStyle}>
+            <Icon name='logout' type={IconTypes.materialCommunity} color={Colors.brandColorHexCode} />
+            <LocalizedText style={styles.accountOptionButtonTextStyle}>account_screen_logout_action</LocalizedText>
           </View>
         </TouchableComponent>
       </View>  

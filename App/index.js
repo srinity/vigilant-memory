@@ -214,7 +214,8 @@ class AppRouter extends Component {
           ...user
         }),
         dispatch => ({
-          getUserInfo: (user) => dispatch(UserActions.getUserInfo(user))
+          getUserInfo: (user) => dispatch(UserActions.getUserInfo(user)),
+          logout: () => dispatch(AccountActions.logout()),
         })
       )(AccountScreen),
       AddressBook: connect(

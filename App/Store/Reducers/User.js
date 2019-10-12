@@ -55,6 +55,9 @@ export default function (state = INITIAL_STATE, action) {
     case ActionTypes.SELECT_SHIPPING_ADDRESS:
       return { ...state, lastSelectedAddress: action.addressId };
 
+    case ActionTypes.LOGOUT_REQUEST_SUCCESS:
+      return { ...state, lastSelectedAddress: undefined, userInfo: null, addresses: null };
+
     default:
       return { ...state };
   }

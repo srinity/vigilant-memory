@@ -56,6 +56,11 @@ export default StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: Colors.notAvailableColorHexCode
   },
+  lastAccountOptionButtonStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 5
+  },
   accountOptionButtonTextStyle: {
     marginLeft: 5,
     fontSize: 16,

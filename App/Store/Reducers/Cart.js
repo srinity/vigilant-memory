@@ -69,6 +69,9 @@ export default function (state = INITIAL_STATE, action) {
         // case ActionTypes.FAILED_TO_UPLOAD_USER_CART_UPON_LOGIN:
         //     return { ...state, cart: {} };
 
+        case ActionTypes.LOGOUT_REQUEST_SUCCESS:
+            return { ...state, cart: {} };
+
         default:
             return state;
     }
