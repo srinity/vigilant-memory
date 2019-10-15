@@ -249,6 +249,14 @@ export function buyShopProducts(user, shopId, products, userAddress, cart, onBuy
             if (_isFunction(onBuy)) {
                 onBuy();
             }
+
+            Toast.show(response.data.message, {
+                position: Toast.positions.BOTTOM,
+                duration: Toast.durations.SHORT,
+                shadow: true,
+                animation: true,
+                hideOnPress: true,
+            });
         } catch (error) {
             const message = _get(error.response, 'data.message', 'Something went wrong');
             Toast.show(message, {
