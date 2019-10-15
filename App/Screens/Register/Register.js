@@ -29,7 +29,6 @@ class Register extends Component {
     this.state = {
       firstName: '',
       lastName: '',
-      email: '',
       password: '',
       confirmPassword: '',
       phone: '',
@@ -37,7 +36,6 @@ class Register extends Component {
       dateOfBirth: undefined,
       firstNameIsValid: true,
       lastNameIsValid: true,
-      emailIsValid: true,
       passwordIsValid: true,
       confirmPasswordIsValid: true,
       phoneIsValid: true,
@@ -64,10 +62,6 @@ class Register extends Component {
     this.setState({ lastName, lastNameIsValid: true });
   }
 
-  onEmailChange = (email) => {
-    this.setState({ email, emailIsValid: true });
-  }
-
   onPasswordChange = (password) => {
     this.setState({ password, passwordIsValid: true });
   }
@@ -89,13 +83,12 @@ class Register extends Component {
   }
 
   onRegisterPress = () => {
-    const { firstName, lastName, email, password, confirmPassword, phone, dateOfBirth, gender } = this.state;
+    const { firstName, lastName, password, confirmPassword, phone, dateOfBirth, gender } = this.state;
 
     this.setState({
       firstNameIsValid: Validators.isValidFirstOrLastName(firstName),
       lastNameIsValid: Validators.isValidFirstOrLastName(lastName),
       phoneIsValid: Validators.isEgyptPhone(phone),
-      emailIsValid: Validators.isEmail(email),
       passwordIsValid: Validators.isValidPassword(password),
       confirmPasswordIsValid: Validators.isValidConfirmPassword(password, confirmPassword),
       dateOfBirthIsValid: Validators.exists(dateOfBirth)
@@ -104,14 +97,13 @@ class Register extends Component {
         firstNameIsValid,
         lastNameIsValid,
         phoneIsValid,
-        emailIsValid,
         passwordIsValid,
         confirmPasswordIsValid,
         dateOfBirthIsValid
       } = this.state;
-      if (firstNameIsValid && lastNameIsValid && phoneIsValid && emailIsValid && passwordIsValid && confirmPasswordIsValid && dateOfBirthIsValid) {
+      if (firstNameIsValid && lastNameIsValid && phoneIsValid && passwordIsValid && confirmPasswordIsValid && dateOfBirthIsValid) {
         const birthDateProperFormat = dateOfBirth.split('-').reverse().join('-');
-        this.props.register(firstName, lastName, email, password, phone, birthDateProperFormat, gender);
+        this.props.register(firstName, lastName, password, phone, birthDateProperFormat, gender);
       }
     });
   }
@@ -124,8 +116,6 @@ class Register extends Component {
       lastNameIsValid,
       confirmPassword,
       confirmPasswordIsValid,
-      email,
-      emailIsValid,
       password,
       passwordIsValid,
       phone,
@@ -180,19 +170,6 @@ class Register extends Component {
                 isValid={phoneIsValid}
                 errorMessage='register_screen_phone_number_error_message'
                 keyboardType='phone-pad'
-            />
-
-            <CustomInput
-                label='register_screen_email_label'
-                hint='register_screen_email_hint'
-                leftIconName='email'
-                leftIconType={IconTypes.materialCommunity}
-                leftIconColor={Colors.brandColorHexCode}
-                value={email}
-                onChangeText={this.onEmailChange}
-                isValid={emailIsValid}
-                errorMessage='register_screen_email_error_message'
-                keyboardType='email-address'
             />
 
             <PasswordInput

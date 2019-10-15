@@ -47,7 +47,7 @@ export const login = (phone, password) => {
   };
 };
 
-export const register = (firstName, lastName, email, password, phone, birthDate, gender) => {
+export const register = (firstName, lastName, password, phone, birthDate, gender) => {
   return async (dispatch) => {
     try {
       dispatch(registerRequestStarted());
@@ -57,7 +57,6 @@ export const register = (firstName, lastName, email, password, phone, birthDate,
           firstName,
           lastName
         },
-        email,
         password,
         phone,
         userRole: 'user',

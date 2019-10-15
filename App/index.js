@@ -94,8 +94,8 @@ class AppRouter extends Component {
       Register: connect(
         ({ deviceDimensions, auth }) => ({ ...deviceDimensions, ...auth }),
         dispatch => ({
-          register: (firstName, lastName, email, password, phone, birthDate, gender) =>
-            dispatch(AccountActions.register(firstName, lastName, email, password, phone, birthDate, gender))
+          register: (firstName, lastName, password, phone, birthDate, gender) =>
+            dispatch(AccountActions.register(firstName, lastName, password, phone, birthDate, gender))
         })
       )(RegisterScreen),
       ForgotPassword: connect(
