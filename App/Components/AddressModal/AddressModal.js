@@ -1,9 +1,22 @@
 import React, { Component, Fragment } from 'react';
-import { View, Animated, StyleSheet, TouchableWithoutFeedback, Keyboard, Platform, ScrollView } from 'react-native';
+import {
+  View,
+  Animated,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Platform
+} from 'react-native';
 import PropTypes from 'prop-types';
 import { Dropdown } from 'react-native-material-dropdown';
-import { find as _find } from 'lodash';
+import {
+  find as _find,
+  isNumber as _isNumber,
+  toNumber as _toNumber,
+  isNaN as _isNaN
+} from 'lodash';
 import I18n from 'react-native-i18n';
+import Toast from 'react-native-root-toast';
 
 import CustomInput from './../CustomInput';
 import Button from './../Button/Button';
@@ -63,6 +76,11 @@ class AddressModal extends Component {
       floorNumber: addressDetails.floor,
       buildingNumber: addressDetails.buildingNumber,
       street: addressDetails.streetName,
+      cityIsValid: true,
+      areaIsValid: true,
+      districtIsValid: true,
+      apartmentNumberIsValid: true,
+      floorNumberIsValid: true,
       buildingNumberIsValid: true,
       streetIsValid: true,
       isKeyboardOpen: false,
@@ -100,19 +118,19 @@ class AddressModal extends Component {
   }
 
   onStreetChange = (street) => {
-    this.setState({ street });
+    this.setState({ street, streetIsValid: true });
   }
 
   onFloorChange = (floorNumber) => {
-    this.setState({ floorNumber });
+    this.setState({ floorNumber, floorNumberIsValid: true });
   }
 
   onApartmentNumberChange = (apartmentNumber) => {
-    this.setState({ apartmentNumber });
+    this.setState({ apartmentNumber, apartmentNumberIsValid: true });
   }
 
   onBuildingNumberChange = (buildingNumber) => {
-    this.setState({ buildingNumber });
+    this.setState({ buildingNumber, buildingNumberIsValid: true });
   }
 
   onCityValueChange = (selectedCity) => {
@@ -120,7 +138,8 @@ class AddressModal extends Component {
       areas: selectedCity.areas,
       city: selectedCity.city,
       area: '',
-      district: ''
+      district: '',
+      cityIsValid: true
     });
   }
 
@@ -128,12 +147,13 @@ class AddressModal extends Component {
     this.setState({
       districts: selectedArea.districts,
       area: selectedArea.area,
-      district: ''
+      district: '',
+      areaIsValid: true
     });
   }
 
   onDistrictValueChange = (district) => {
-    this.setState({ district });
+    this.setState({ district, districtIsValid: true });
   }
 
   onAddAddressPress = () => {
@@ -148,20 +168,58 @@ class AddressModal extends Component {
       area
     } = this.state;
 
-    const address = {
-      _id: initialAddress._id,
-			city,
-			area,
-			district,
-			addressDetails: {
-				streetName,
-				apartmentNumber,
-				floor,
-				buildingNumber,
-			},
-    };
-    
-    onPress(address);
+    this.setState({
+      apartmentNumberIsValid: this.isValidNumericValue(apartmentNumber),
+      buildingNumberIsValid: this.isValidNumericValue(buildingNumber),
+      floorNumberIsValid: this.isValidNumericValue(floor),
+      streetIsValid: (!streetName || (streetName && streetName.length > 7)),
+      cityIsValid: !!city,
+      areaIsValid: !!area,
+      districtIsValid: !!district
+    }, () => {
+      const {
+        apartmentNumberIsValid,
+        areaIsValid,
+        buildingNumberIsValid,
+        cityIsValid,
+        districtIsValid,
+        floorNumberIsValid,
+        streetIsValid
+      } = this.state;
+
+      if (
+        apartmentNumberIsValid
+        && areaIsValid
+        && buildingNumberIsValid
+        && cityIsValid
+        && districtIsValid
+        && floorNumberIsValid
+        && streetIsValid
+      ) {
+        const address = {
+          _id: initialAddress._id,
+          city,
+          area,
+          district,
+          addressDetails: {
+            streetName,
+            apartmentNumber,
+            floor,
+            buildingNumber,
+          },
+        };
+        
+        onPress(address);
+      } else {
+        Toast.show('Please enter valid values', {
+          position: Toast.positions.BOTTOM,
+          duration: Toast.durations.SHORT,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+        });
+      }
+    });
   }
 
   onDropDownFocus = () => {
@@ -184,6 +242,11 @@ class AddressModal extends Component {
     }
 
     return styles.contentContainerStyle;
+  }
+
+  isValidNumericValue = (value = '') => {
+    const numericValue = _toNumber(value);
+    return (!_isNaN(numericValue) && _isNumber(numericValue));
   }
 
   handleKeyboardDidShow = ({ endCoordinates }) => {
@@ -224,6 +287,11 @@ class AddressModal extends Component {
       street,
       areas,
       districts,
+      cityIsValid,
+      areaIsValid,
+      districtIsValid,
+      apartmentNumberIsValid,
+      floorNumberIsValid,
       buildingNumberIsValid,
       streetIsValid,
       isKeyboardOpen
@@ -286,8 +354,8 @@ class AddressModal extends Component {
                   hint='address_modal_floor_number_hint'
                   onChangeText={this.onFloorChange}
                   value={floorNumber}
-                  // isValid={buildingNumberIsValid}
-                  // errorMessage='address_modal_floor_number_error_message'
+                  isValid={floorNumberIsValid}
+                  errorMessage='address_modal_floor_number_error_message'
                   keyboardType='number-pad'
                   containerStyle={styles.rowInputStyle}
                   inputContainerStyle={styles.inputContainerStyle}
@@ -300,8 +368,8 @@ class AddressModal extends Component {
                   hint='address_modal_apartment_number_hint'
                   onChangeText={this.onApartmentNumberChange}
                   value={apartmentNumber}
-                  // isValid={phoneIsValid}
-                  // errorMessage='address_modal_apartment_number_error_message'
+                  isValid={apartmentNumberIsValid}
+                  errorMessage='address_modal_apartment_number_error_message'
                   keyboardType='number-pad'
                   containerStyle={styles.lastRowInputStyle}
                   inputContainerStyle={styles.inputContainerStyle}
