@@ -97,6 +97,14 @@ class Home extends Component {
     this.props.getShops(selectedCity, selectedArea, selectedDistrict);    
   }
 
+  onCityDropDownFocus = () => {
+    const { cities, getSearchAreas } = this.props;
+
+    if (!cities || !cities.length) {
+      getSearchAreas();
+    }
+  }
+
   renderItem = ({ item }) => {
     return (
       <ShopCard
@@ -150,6 +158,7 @@ class Home extends Component {
               labelExtractor={item => item.city}
               baseColor={Colors.brandColorHexCode}
               dropdownPosition={2}
+              onFocus={this.onCityDropDownFocus}
             />
 
             <Dropdown

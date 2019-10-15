@@ -19,6 +19,10 @@ class AuthSwitch extends Component {
 
     if (isLoggedIn && user && (!lastLoginTime || secondsSinceLastRefresh >= (user.expiresIn || 36000) - 1000)) {
       this.props.refreshToken(user);
+
+      setTimeout(() => {
+        this.props.getUserInfo(user);
+      }, 1000);
     } else if (isLoggedIn && user) {
       this.props.getUserInfo(user);
     }
