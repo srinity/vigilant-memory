@@ -17,6 +17,8 @@ import {
   ForgotPasswordVerificationCodeScreen,
   HomeScreen,
   LoginScreen,
+  OrderScreen,
+  OrdersScreen,
   ProductsScreen,
   RegisterScreen,
   SetForgetenPasswordScreen,
@@ -234,6 +236,24 @@ class AppRouter extends Component {
           deleteAddress: (user, addressId) => dispatch(UserActions.removeAddress(user, addressId)),
         })
       )(AddressBookScreen),
+      Orders: connect(
+        ({ deviceDimensions, auth, cart }) => ({
+          ...deviceDimensions,
+          user: auth.user,
+          ...cart
+        }),
+        dispatch => ({
+          getOrders: (shouldClean, currentLimit, currentOffset, ordersCount, currentOrders, user) =>
+            dispatch(CartActions.getOrders(shouldClean, currentLimit, currentOffset, ordersCount, currentOrders, user)),
+        })
+      )(OrdersScreen),
+      Order: connect(
+        ({ deviceDimensions, auth }) => ({
+          ...deviceDimensions,
+          user: auth.user,
+        }),
+        dispatch => ({})
+      )(OrderScreen),
       ChangePassword: connect(
         ({ deviceDimensions, auth }) => ({
           ...deviceDimensions,
@@ -393,6 +413,22 @@ class AppRouter extends Component {
                 // initial
                 // hideNavBar
                 component={ConnectedComponents.AddressBook}
+              />
+
+              <Scene
+                key='orders'
+                title={I18n.t('header_orders_title')}
+                // initial
+                // hideNavBar
+                component={ConnectedComponents.Orders}
+              />
+
+              <Scene
+                key='order'
+                title={I18n.t('header_order_title')}
+                // initial
+                // hideNavBar
+                component={ConnectedComponents.Order}
               />
 
               <Scene

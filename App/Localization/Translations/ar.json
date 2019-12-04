@@ -8,6 +8,7 @@
   "account_screen_error_message": "Something went wrong! Ar",
   "account_screen_reload_button_text": "Reload Ar",
   "account_screen_shipping_addresses_action": "Shipping Addresses Ar",
+  "account_screen_orders_action": "Orders Ar",
   "account_screen_change_password_action": "Change Password Ar",
   "account_screen_logout_action": "Logout Ar",
   "address_book_screen_add_new_address": "Add a new address Ar",
@@ -46,6 +47,8 @@
   "change_password_screen_confirm_new_password_hint": "Confirm new password Ar",
   "change_password_screen_confirm_new_password_error_message": "Confirm password must match the new password Ar",
   "change_password_screen_change_password_button_text": "Change Password Ar",
+  "orders_screen_error_message": "Something went wrong! Ar",
+  "orders_screen_reload_button_text": "Try Again Ar",
   "check_out_screen_total_amount": "Total Amount Ar",
   "check_out_screen_address_header": "Address Ar",
   "check_out_screen_no_address_available": "No Address Available Ar",
@@ -122,5 +125,7 @@
   "header_check_out_title": "Check Out Ar",
   "header_account_title": "Account Ar",
   "header_address_book_title": "Shipping Addresses Ar",
+  "header_orders_title": "Orders Ar",
+  "header_order_title": "Order Details Ar",
   "header_change_password_title": "Change Password Ar"
 }

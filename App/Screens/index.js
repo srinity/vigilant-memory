@@ -7,6 +7,8 @@ import ForgotPasswordScreen from './ForgotPassword/ForgotPassword';
 import ForgotPasswordVerificationCodeScreen from './ForgotPasswordVerificationCode/ForgotPasswordVerificationCode';
 import HomeScreen from './Home/Home';
 import LoginScreen from './Login/Login';
+import OrderScreen from './Order/Order';
+import OrdersScreen from './Orders/Orders';
 import ProductsScreen from './Products/Products';
 import RegisterScreen from './Register/Register';
 import SetForgetenPasswordScreen from './SetForgetenPassword/SetForgetenPassword';
@@ -23,6 +25,8 @@ export {
     ForgotPasswordVerificationCodeScreen,
     HomeScreen,
     LoginScreen,
+    OrderScreen,
+    OrdersScreen,
     ProductsScreen,
     RegisterScreen,
     SetForgetenPasswordScreen,

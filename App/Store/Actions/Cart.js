@@ -28,7 +28,12 @@ import {
     FAILED_TO_UPLOAD_USER_CART_UPON_LOGIN,
     GET_USER_CART_STARTED,
     GET_USER_CART_SUCCESS,
-    GET_USER_CART_FAILED
+    GET_USER_CART_FAILED,
+    GET_ORDERS_STARTED,
+    GET_ORDERS_SUCCESS,
+    GET_ORDERS_FAILED,
+    GET_ADDITIONAL_ORDERS_STARTED,
+    NO_MORE_ORDERS_TO_FETCH
 } from './ActionTypes';
 
 const CART_ITEMS_API_ACTIONS = {
@@ -235,7 +240,7 @@ export function buyShopProducts(user, shopId, products, userAddress, cart, onBuy
             const body = {
                 shop: shopId,
                 userAddress,
-                cart: _map(products, product => ({ product: product.productId, quantity: product.quantity }))
+                productOrders: _map(products, product => ({ product: product.productId, quantity: product.quantity }))
             };
 
             const response = await AppAxios.post(APIURLs.buy, body, {
@@ -267,6 +272,60 @@ export function buyShopProducts(user, shopId, products, userAddress, cart, onBuy
                 hideOnPress: true,
             });
             dispatch(buyingProductFailed(error.response));
+        }
+    };
+}
+
+export function getOrders(shouldClean, currentLimit, currentOffset, ordersCount, currentOrders, user) {
+    return async dispatch => {
+        dispatch(getOrdersStarted(shouldClean));
+
+        try {
+            const currentOrdersCount = _get(currentOrders, 'length', 0);
+
+            if (ordersCount !== -1 && currentOrdersCount >= ordersCount) {
+                dispatch(noMoreOrdersToFetch());
+            } else {
+                const params = {};
+    
+                if (currentLimit !== -1 && !_isNil(currentLimit)) {
+                    params.limit = currentLimit;
+                }
+    
+                if (currentOffset !== -1 && !_isNil(currentOffset)) {
+                    params.offset = currentOffset + (params.limit || 0);
+                }
+
+                const response = await AppAxios.get(APIURLs.getOrders, {
+                    headers: {
+                        'Authorization': `bearer ${user.token}`
+                    },
+                    params
+                });
+                console.tron.warn(response.data);
+
+                const { orders, count } = response.data;
+    
+                let allOrders = orders;
+        
+                if (!_isNil(currentOrders) && !shouldClean) {
+                    allOrders = [...currentOrders, ...orders];
+                }
+    
+                dispatch(getOrdersSuccess(allOrders, count, currentLimit, params.offset || currentLimit));
+            }
+        } catch (error) {
+            console.tron.error(error);
+
+            const message = _get(error.response, 'data.message', 'Something went wrong');
+            Toast.show(message, {
+                position: Toast.positions.BOTTOM,
+                duration: Toast.durations.SHORT,
+                shadow: true,
+                animation: true,
+                hideOnPress: true,
+            });
+            dispatch(getOrdersFailed(error.response));
         }
     };
 }
@@ -342,4 +401,24 @@ function buyingProductSuccess(newCart) {
 
 function buyingProductFailed(error) {
     return { type: BUY_SHOP_CART_PRODUCTS_FAILED, error };
+}
+
+function getOrdersStarted(shouldClean) {
+    if (shouldClean) {
+        return { type: GET_ORDERS_STARTED };
+    }
+
+    return { type: GET_ADDITIONAL_ORDERS_STARTED };
+}
+
+function noMoreOrdersToFetch() {
+    return { type: NO_MORE_ORDERS_TO_FETCH };
+}
+
+function getOrdersSuccess(orders, count, currentLimit, currentOffset) {
+    return { type: GET_ORDERS_SUCCESS, orders, count, currentLimit, currentOffset };
+}
+
+function getOrdersFailed(error) {
+    return { type: GET_ORDERS_FAILED, error };
 }

@@ -7,7 +7,15 @@ const INITIAL_STATE = {
     cartItemsIsLoadingObject: {},
     updateUserCartError: null,
     cartItemsAreLoading: false,
-    cartItemsLoadedError: null
+    cartItemsLoadedError: null,
+    isLoadingOrders: false,
+    isLoadingAdditionalOrders: false,
+    orders: null,
+    noMoreOrders: false,
+    ordersCount: -1,
+    ordersCurrentOffset: -1,
+    ordersCurrentLimit: -1,
+    getOrdersError: null
 };
 
 export default function (state = INITIAL_STATE, action) {
@@ -65,6 +73,45 @@ export default function (state = INITIAL_STATE, action) {
 
         case ActionTypes.BUY_SHOP_CART_PRODUCTS_FAILED:
             return { ...state, isBuyingLoading: false, error: action.error };
+
+        case ActionTypes.GET_ORDERS_STARTED:
+            return {
+                ...state,
+                isLoadingOrders: true,
+                isLoadingAdditionalOrders: false,
+                getOrdersError: null,
+                ordersCount: -1,
+                ordersCurrentOffset: -1,
+                ordersCurrentLimit: -1,
+            };
+
+        case ActionTypes.GET_ADDITIONAL_ORDERS_STARTED:
+            return {
+                ...state,
+                isLoadingAdditionalOrders: true,
+                getOrdersError: null,
+            };
+
+        case ActionTypes.GET_ORDERS_SUCCESS:
+            return {
+                ...state,
+                isLoadingOrders: false,
+                isLoadingAdditionalOrders: false,
+                orders: action.orders,
+                ordersCount: action.count,
+                ordersCurrentOffset: action.currentOffset,
+                ordersCurrentLimit: action.currentLimit,
+            };
+
+        case ActionTypes.NO_MORE_ORDERS_TO_FETCH:
+            return {
+                ...state,
+                isLoadingAdditionalOrders: false,
+                noMoreOrders: true,
+            };
+        
+        case ActionTypes.GET_ORDERS_FAILED:
+                return { ...state, isLoadingOrders: false, getOrdersError: action.error };
 
         // case ActionTypes.FAILED_TO_UPLOAD_USER_CART_UPON_LOGIN:
         //     return { ...state, cart: {} };

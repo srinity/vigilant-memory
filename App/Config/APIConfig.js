@@ -4,7 +4,7 @@ import { get as _get } from 'lodash';
 import { removeToken, setRefreshToken } from '../Store/Actions/Account';
 
 export const APIURLs = {
-  baseURL: 'https://24bcbf6b.ngrok.io',
+  baseURL: 'https://403ff698.ngrok.io',
   login: '/api/auth/login',
   register: '/api/auth/signup',
   sendCode: '/api/auth/generateVerificationCode',
@@ -21,6 +21,7 @@ export const APIURLs = {
   userData: '/api/user/me',
   buy: '/api/client/order',
   addDeviceId: '/api/user/deviceId',
+  getOrders: '/api/client/getclientorders'
 };
 
 export const ImageHostUrl = 'https://s3-us-west-2.amazonaws.com/elcartona/';

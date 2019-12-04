@@ -31,6 +31,10 @@ class Account extends Component {
     Actions.addressBook();
   }
 
+  onOrdersPress = () => {
+    Actions.orders();
+  }
+
   onChangePasswordPress = () => {
     Actions.changePassword();
   }
@@ -63,6 +67,13 @@ class Account extends Component {
           <View style={styles.accountOptionButtonStyle}>
             <Icon name='key-variant' type={IconTypes.materialCommunity} color={Colors.brandColorHexCode} />
             <LocalizedText style={styles.accountOptionButtonTextStyle}>account_screen_change_password_action</LocalizedText>
+          </View>
+        </TouchableComponent>
+
+        <TouchableComponent onPress={this.onOrdersPress}>
+          <View style={styles.accountOptionButtonStyle}>
+            <Icon name='clipboard-text' type={IconTypes.materialCommunity} color={Colors.brandColorHexCode} />
+            <LocalizedText style={styles.accountOptionButtonTextStyle}>account_screen_orders_action</LocalizedText>
           </View>
         </TouchableComponent>
 

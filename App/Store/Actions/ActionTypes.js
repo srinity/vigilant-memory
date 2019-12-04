@@ -76,6 +76,11 @@ export const GET_USER_CART_FAILED = 'get_user_cart_failed';
 export const BUY_SHOP_CART_PRODUCTS_STARTED = 'but_shop_cart_products_started';
 export const BUY_SHOP_CART_PRODUCTS_FAILED = 'but_shop_cart_products_failed';
 export const BUY_SHOP_CART_PRODUCTS_SUCCESS = 'but_shop_cart_products_success';
+export const GET_ORDERS_STARTED = 'get_orders_started';
+export const GET_ADDITIONAL_ORDERS_STARTED = 'get_additional_orders_started';
+export const GET_ORDERS_SUCCESS = 'get_orders_success';
+export const GET_ORDERS_FAILED = 'get_orders_failed';
+export const NO_MORE_ORDERS_TO_FETCH = 'no_more_orders_to_fetch';
 
 // User Actions Action Types
 // User's Address Action Types
