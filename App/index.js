@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, TouchableNativeFeedback, Platform } from 'react-native';
 import { Router, Scene, Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { isFunction as _isFunction, findIndex as _findIndex, get as _get } from 'lodash';
 import I18n from 'react-native-i18n';
 
-import { AuthSwitch, DeviceDimensions, ScreenTypes, IconTypes, BottomBar } from './Components';
+import { AuthSwitch, DeviceDimensions, ScreenTypes, IconTypes, BottomBar, Icon } from './Components';
 
 import {
   AccountScreen,
@@ -39,6 +39,9 @@ import {
 import { Colors } from './Theme';
 
 const screensWithBottomBar = ['home', 'cart', 'account'];
+
+const TouchableComponent = Platform.OS === 'ios' ?
+      TouchableOpacity : TouchableNativeFeedback;
 
 class AppRouter extends Component {
   constructor(props) {
@@ -275,6 +278,11 @@ class AppRouter extends Component {
     }
   }
 
+  onCartIconPress = () => {
+    Actions.cart();
+    this.bottomBar.setActiveTab('cart');
+  }
+
   setActiveTab = (tabName = 'home') => {
     this.bottomBar.setActiveTab(tabName);
   }
@@ -292,6 +300,13 @@ class AppRouter extends Component {
     }
   }
 
+  renderCartIcon = () => (
+    <TouchableComponent onPress={this.onCartIconPress}>
+      <View style={{ marginHorizontal: 15, padding: 5 }}>
+        <Icon type={IconTypes.fontAwesome} name='shopping-cart' color={Colors.whiteColorHexCode} size={20} />
+      </View>
+    </TouchableComponent>
+  )
 
   render() {
     const ConnectedComponents = this.connectedComponents;
@@ -370,6 +385,7 @@ class AppRouter extends Component {
                 title={I18n.t('header_shop_title')}
                 // initial
                 component={ConnectedComponents.Shop}
+                renderRightButton={this.renderCartIcon}
               />
               <Scene
                 key='products'
@@ -377,6 +393,7 @@ class AppRouter extends Component {
                 // initial
                 // hideNavBar
                 component={ConnectedComponents.Products}
+                renderRightButton={this.renderCartIcon}
               />
 
               <Scene
