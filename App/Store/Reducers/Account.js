@@ -1,6 +1,7 @@
 import { ActionTypes } from '../Actions';
 
 const INITIAL_STATE = {
+    phone: undefined,
     isLoggedIn: false,
     isLoading: false,
     user: null,
@@ -30,7 +31,8 @@ export default function (state = INITIAL_STATE, action) {
                 user: action.user,
                 error: null,
                 isLoggedIn: true,
-                lastLoginTime: action.time
+                lastLoginTime: action.time,
+                phone: action.phone
             };
 
         case ActionTypes.LOGIN_REQUEST_FAILED:
@@ -46,7 +48,8 @@ export default function (state = INITIAL_STATE, action) {
                 user: action.user,
                 error: null,
                 isLoggedIn: true,
-                lastLoginTime: action.time
+                lastLoginTime: action.time,
+                phone: action.phone
             };
 
         case ActionTypes.REGISTER_REQUEST_FAILED:
@@ -92,6 +95,7 @@ export default function (state = INITIAL_STATE, action) {
                     ...state,
                     isVerifyingCode: false,
                     verifyingCodeError: null,
+                    user: action.user
                 };
 
         case ActionTypes.VERIFYING_USER_CODE_FAILED:

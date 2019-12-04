@@ -56,8 +56,8 @@ class VerificationCode extends Component {
     }
 
     onVerifyCode = (code) => {
-        const { verifyCode, user } = this.props;
-        verifyCode(code, user);
+        const { verifyCode, user, phone } = this.props;
+        verifyCode(code, user, phone);
     }
 
     onCodeFulfill = (code) => {

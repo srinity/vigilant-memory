@@ -112,8 +112,8 @@ class AppRouter extends Component {
       ForgotPasswordVerificationCode: connect(
         ({ deviceDimensions, auth }) => ({ ...deviceDimensions, ...auth }),
         dispatch => ({
-          verifyCode: (code, user, onVerify) =>
-            dispatch(AccountActions.verifyCode(code, user, onVerify)),
+          verifyCode: (code, user, onVerify, phone) =>
+            dispatch(AccountActions.verifyCode(code, user, onVerify, phone)),
           sendVerificationCode: (phone, shouldNavigate) =>
             dispatch(AccountActions.forgotPassword(phone, shouldNavigate))
         })
@@ -128,8 +128,8 @@ class AppRouter extends Component {
       VerificationCode: connect(
         ({ deviceDimensions, auth }) => ({ ...deviceDimensions, ...auth }),
         dispatch => ({
-          verifyCode: (code, user) =>
-            dispatch(AccountActions.verifyCode(code, user)),
+          verifyCode: (code, user, phone) =>
+            dispatch(AccountActions.verifyCode(code, user, undefined, phone)),
           sendVerificationCode: (user) =>
             dispatch(AccountActions.sendVerificationCode(user))
         })

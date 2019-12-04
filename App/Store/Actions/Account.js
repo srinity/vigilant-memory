@@ -35,23 +35,57 @@ import {
 
 import { APIURLs, AppAxios } from './../../Config/APIConfig';
 
+/**
+ * @param  {string} phone the user's phone number used for login
+ * @param  {string} password the user's password used for login
+ */
 export const login = (phone, password) => {
+  // return a function that will be handled by the thunk middleware to dispatch multiple actions
   return async (dispatch) => {
     try {
+      // Dispatching that the login attempt has started, this will reset any error messages
+      // in the reducer and also set the isLoading flag to be true
       dispatch(loginRequestStarted());
+      // Start the Api call for the login with the user's entered phone and password
       const response = await AppAxios.post(APIURLs.login, { phone, password });
-      dispatch(loginRequestSuccess(response.data));
+      // Dispatch an action with the user returned from api to be stored in the reducer with the user's token
+      // We also now save the phone used for login in case verifying the code was not done immediately,
+      // we can use the phone to verify the code along with the pin number sent 
+      dispatch(loginRequestSuccess(response.data, phone));
     } catch (error) {
+      // Get the error message returned from the api
+      const message = _get(error.response, 'data.message', 'Something went wrong');
+      // Display that message in a Toast for the use to see
+      Toast.show(message, {
+        position: Toast.positions.BOTTOM,
+        duration: Toast.durations.SHORT,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+      });
+      // Dispatch an action with error returned from the api to be handled by the UI
       dispatch(loginRequestFailed(error.response));
     }
   };
 };
 
+/**
+ * @param  {string} firstName the user's first name
+ * @param  {string} lastName the user's last name
+ * @param  {string} password the user's password
+ * @param  {string} phone the user's phone number
+ * @param  {Date} birthDate the user's birth date
+ * @param  {('M' | 'F')} gender the user's gender
+ */
 export const register = (firstName, lastName, password, phone, birthDate, gender) => {
+  // return a function that will be handled by the thunk middleware to dispatch multiple actions
   return async (dispatch) => {
     try {
+      // Dispatching that the register attempt has started, this will reset any error messages
+      // in the reducer and also set the isLoading flag to be true
       dispatch(registerRequestStarted());
 
+      // Start the Api call for the register with the user's data provided
       const response = await AppAxios.post(APIURLs.register, {
         fullName: {
           firstName,
@@ -63,10 +97,16 @@ export const register = (firstName, lastName, password, phone, birthDate, gender
         birthDate,
         gender
       });
-      dispatch(registerRequestSuccess(response.data));
+
+      // Dispatch an action with the user returned from api to be stored in the reducer with the user's token
+      // We also now save the phone used for register in case verifying the code was not done immediately,
+      // we can use the phone to verify the code along with the pin number sent 
+      dispatch(registerRequestSuccess(response.data, phone));
       // Actions.verificationCode();
     } catch (error) {
+      // Get the error message returned from the api
       const message = _get(error.response, 'data.message', 'Something went wrong');
+      // Display that message in a Toast for the use to see
       Toast.show(message, {
         position: Toast.positions.BOTTOM,
         duration: Toast.durations.SHORT,
@@ -74,25 +114,35 @@ export const register = (firstName, lastName, password, phone, birthDate, gender
         animation: true,
         hideOnPress: true,
       });
+      // Dispatch an action with error returned from the api to be handled by the UI
       dispatch(registerRequestFailed(error.response));
     }
   };
 };
 
+/**
+ * @param  {{ token: string }} user the user currently logged in
+ */
 export const sendVerificationCode = (user) => {
+  // return a function that will be handled by the thunk middleware to dispatch multiple actions
   return async dispatch => {
+    // Dispatch an action indicating that sending the verification code has started
     dispatch(sendVerificationCodeStarted());
 
     try {
+      // Call the Api to attempt to send code to the user's mobile number
       const response = await AppAxios.get(APIURLs.sendCode, {
         headers: {
           'Authorization': `bearer ${user.token}`
         } 
       });
 
+      // Upon success we dispatch the action to notify that we have successfully sent the code
       dispatch(sendVerificationCodeSuccess());
     } catch (error) {
+      // Get the error message returned from the api
       const message = _get(error.response, 'data.message', 'Something went wrong');
+      // Display that message in a Toast for the use to see
       Toast.show(message, {
         position: Toast.positions.BOTTOM,
         duration: Toast.durations.SHORT,
@@ -100,24 +150,30 @@ export const sendVerificationCode = (user) => {
         animation: true,
         hideOnPress: true,
       });
+      // Dispatch an action with error returned from the api to be handled by the UI
       dispatch(sendVerificationCodeFailed(error));
     }
-  }
+  };
 };
-
-export const verifyCode = (code, user = {}, onVerify) => {
+/**
+ * @param  {string} code The code that was sent to the phone
+ * @param  {{ token: string }} user={} The user that is currently logged in
+ * @param  {Function} onVerify Optional method that will be invoked upon successfully verifying the code
+ * @param  {string} phone The user's phone number
+ */
+export const verifyCode = (code, user = {}, onVerify, phone) => {
   return async dispatch => {
     dispatch(verifyCodeStarted());
 
     try {
-      const response = await AppAxios.post(APIURLs.verifyCode, { pinCode: code }, {
+      const response = await AppAxios.post(APIURLs.verifyCode, { pinCode: code, phone }, {
         headers: {
           'Authorization': `bearer ${(user || {}).token}`
         }
       });
 
       if (_isFunction(onVerify)) {
-        dispatch(verifyCodeResetCodeSuccess());
+        dispatch(verifyCodeResetCodeSuccess(response.data.token));
         onVerify();
       } else {
         dispatch(verifyCodeCodeSuccess());
@@ -169,10 +225,10 @@ export const forgotPassword = (phone, shouldNavigate = true) => {
 
     try {
       const response = await AppAxios.post(APIURLs.forgotPassword, { phone });
-      dispatch(generateResetPasswordSuccess(response.data.token));
+      // dispatch(generateResetPasswordSuccess(response.data.token));
 
       if (shouldNavigate) {
-        Actions.forgotPasswordVerificationCode({ phone });
+        Actions.forgotPasswordVerificationCode({ userPhone: phone });
       }
     } catch (error) {
       const message = _get(error.response, 'data.message', 'Something went wrong');
@@ -193,13 +249,15 @@ export const resetPassword = (oldPassword, newPassword, user, onReset) => {
     dispatch(resetPasswordStarted());
 
     try {
+      console.tron.error(user);
       const response = await AppAxios.patch(APIURLs.resetPassword, { oldPassword, newPassword }, {
         headers: {
           'Authorization': `bearer ${user.token}`
         }
       });
+      console.tron.warn(response);
       dispatch(resetPasswordSuccess(response.data));
-      
+      console.tron.warn("HERE!!!!");
       const message = 'Password Changed Successfully';
       Toast.show(message, {
         position: Toast.positions.BOTTOM,
@@ -208,7 +266,7 @@ export const resetPassword = (oldPassword, newPassword, user, onReset) => {
         animation: true,
         hideOnPress: true,
       });
-
+      console.tron.warn("HERE TWO!!!!");
       if (_isFunction(onReset)) {
         onReset();
       }
@@ -243,8 +301,8 @@ function loginRequestStarted() {
   return { type: LOGIN_REQUEST_STARTED };
 }
 
-function loginRequestSuccess(user) {
-  return { type: LOGIN_REQUEST_SUCCESS, user, time: moment(new Date()) };
+function loginRequestSuccess(user, phone) {
+  return { type: LOGIN_REQUEST_SUCCESS, user, time: moment(new Date()), phone };
 }
 
 function loginRequestFailed(error) {
@@ -255,8 +313,8 @@ function registerRequestStarted() {
   return { type: REGISTER_REQUEST_STARTED };
 }
 
-function registerRequestSuccess(user) {
-  return { type: REGISTER_REQUEST_SUCCESS, user, time: moment(new Date()) };
+function registerRequestSuccess(user, phone) {
+  return { type: REGISTER_REQUEST_SUCCESS, user, time: moment(new Date()), phone };
 }
 
 function registerRequestFailed(error) {
@@ -283,8 +341,8 @@ function verifyCodeCodeSuccess() {
   return { type: VERIFYING_USER_CODE_SUCCESS };
 }
 
-function verifyCodeResetCodeSuccess() {
-  return { type: RESET_PASSWORD_CODE_SUCCESS };
+function verifyCodeResetCodeSuccess(token) {
+  return { type: RESET_PASSWORD_CODE_SUCCESS, user: { token } };
 }
 
 function verifyCodeCodeFailed(error) {

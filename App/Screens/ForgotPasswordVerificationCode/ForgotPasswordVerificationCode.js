@@ -49,13 +49,13 @@ class ForgotPasswordVerificationCode extends Component {
     codeVerify = createRef();
 
     onSendVerificationCodePress = () => {
-        const { sendVerificationCode, phone } = this.props;
-        sendVerificationCode(phone, false);
+        const { sendVerificationCode, userPhone } = this.props;
+        sendVerificationCode(userPhone, false);
     }
 
     onVerifyCode = (code) => {
-        const { verifyCode, user } = this.props;
-        verifyCode(code, user, () => Actions.resetPassword());
+        const { verifyCode, userPhone, user } = this.props;
+        verifyCode(code, user, () => Actions.resetPassword(), userPhone);
     }
 
     onCodeFulfill = (code) => {

@@ -18,7 +18,7 @@ import {
 const persistAuthConfig = {
     key: 'Auth',
     storage,
-    whitelist: ['user', 'isLoggedIn', 'lastLoginTime']
+    whitelist: ['user', 'isLoggedIn', 'lastLoginTime', 'phone']
 };
 
 const persistSearchAreasConfig = {
