@@ -88,7 +88,7 @@ class VerificationCode extends Component {
         const { width, isVerifyingCode, isSendingVerificationCode } = this.props;
         const { showOverlay } = this.state;
 
-        const size = Math.floor((width - 100) / 4);
+        const size = Math.floor((width - 100) / 6);
 
         const TouchableComponent = Platform.OS === 'ios' ?
             TouchableOpacity : TouchableNativeFeedback;
@@ -108,7 +108,7 @@ class VerificationCode extends Component {
                     <CodeInput
                         ref={this.codeVerify}
                         size={size}
-                        codeLength={4}
+                        codeLength={6}
                         variant='border-b'
                         inactiveColor={Colors.blackColorHexCode}
                         activeColor={Colors.brandColorHexCode}

@@ -4,7 +4,7 @@ import { get as _get } from 'lodash';
 import { removeToken, setRefreshToken } from '../Store/Actions/Account';
 
 export const APIURLs = {
-  baseURL: 'https://403ff698.ngrok.io',
+  baseURL: 'https://c09f9d19.ngrok.io',
   login: '/api/auth/login',
   register: '/api/auth/signup',
   sendCode: '/api/auth/generateVerificationCode',

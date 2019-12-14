@@ -49,7 +49,7 @@ class AuthSwitch extends Component {
         // Actions.cart();
         this.props.setActiveTab('home');
       }
-    } else if (!prevProps.isLoggedIn && this.props.isLoggedIn) {
+    } else if (!prevProps.isLoggedIn && this.props.isLoggedIn && this.props.user && !this.props.user.inActive) {
       this.props.uploadUserCart(this.props.cart, this.props.user);
       this.props.getUserInfo(this.props.user);
       this.handleUserNotification();
@@ -127,7 +127,7 @@ class AuthSwitch extends Component {
       }
 
       Actions.verificationCode();
-    } else {
+    } else if (!(screen === ScreenTypes.app && this.props.isLoggedIn && this.props.user && this.props.user.inActive)) {
       Actions.reset(screen);
     }
   }
