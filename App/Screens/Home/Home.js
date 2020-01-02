@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SafeAreaView, FlatList, View, Text, TouchableWithoutFeedback } from 'react-native';
+import { SafeAreaView, FlatList, View, Text, TouchableWithoutFeedback, BackHandler } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { Dropdown } from 'react-native-material-dropdown';
 import { find as _find } from 'lodash';
@@ -55,7 +55,21 @@ class Home extends Component {
   }
 
   componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.onBackButtonPress)
     this.props.getSearchAreas();
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.onBackButtonPress)
+  }
+
+  onBackButtonPress = () => {
+    if (Actions.currentScene === 'home' && !this.state.showSearch) {
+      this.setState({ showSearch: true });
+      return true;
+    }
+
+    return false;
   }
 
   onShopPress = (shopInfo) => {
