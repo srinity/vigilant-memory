@@ -150,6 +150,7 @@ export const sendVerificationCode = (user) => {
         animation: true,
         hideOnPress: true,
       });
+      // console.tron.error(error)
       // Dispatch an action with error returned from the api to be handled by the UI
       dispatch(sendVerificationCodeFailed(error));
     }
@@ -163,6 +164,7 @@ export const sendVerificationCode = (user) => {
  */
 export const verifyCode = (code, user = {}, onVerify, phone) => {
   return async dispatch => {
+    // Dispatch an action indicating that the verification action has started
     dispatch(verifyCodeStarted());
 
     try {
@@ -172,6 +174,7 @@ export const verifyCode = (code, user = {}, onVerify, phone) => {
         }
       });
 
+      // Dispatch success actions based on wether or not a function is passed as a parameter
       if (_isFunction(onVerify)) {
         dispatch(verifyCodeResetCodeSuccess(response.data.token));
         onVerify();
@@ -179,6 +182,7 @@ export const verifyCode = (code, user = {}, onVerify, phone) => {
         dispatch(verifyCodeCodeSuccess());
       }
     } catch (error) {
+      // Get the error message returned from the api
       const message = _get(error.response, 'data.message', 'Something went wrong');
       Toast.show(message, {
         position: Toast.positions.BOTTOM,
@@ -187,13 +191,18 @@ export const verifyCode = (code, user = {}, onVerify, phone) => {
         animation: true,
         hideOnPress: true,
       });
+      // Dispatch an action with error returned from the api to be handled by the UI
       dispatch(verifyCodeCodeFailed(error));
     }
   };
 };
 
+/**
+ * @param  {{ token: string }} user the current user logged in
+ */
 export const refreshToken = (user) => {
   return async dispatch => {
+    // Dispatch an action indicating that the refresh token action has started
     dispatch(refreshTokenStarted());
 
     try {
@@ -204,8 +213,11 @@ export const refreshToken = (user) => {
       });
 
       const { message, ...userData } = response.data;
+
+      // dispatch a success action with the new token
       dispatch(refreshTokenSuccess({ ...user, ...userData }));
     } catch (error) {
+      // Get the error message returned from the api
       const message = _get(error.response, 'data.message', 'Something went wrong');
       Toast.show(message, {
         position: Toast.positions.BOTTOM,
@@ -214,13 +226,19 @@ export const refreshToken = (user) => {
         animation: true,
         hideOnPress: true,
       });
+      // Dispatch an action with error returned from the api to be handled by the UI
       dispatch(refreshTokenFailed(error));
     } 
   };
 };
 
+/**
+ * @param  {string} phone the phone number you wish to reset the password for
+ * @param  {boolean} shouldNavigate=true flag for navigation actions
+ */
 export const forgotPassword = (phone, shouldNavigate = true) => {
   return async dispatch => {
+    // Dispatch an action indicating that the forget password started
     dispatch(generateResetPasswordStarted());
 
     try {
@@ -244,20 +262,29 @@ export const forgotPassword = (phone, shouldNavigate = true) => {
   };
 };
 
+/**
+ * @param  {string} oldPassword
+ * @param  {string} newPassword
+ * @param  {{ token: string }} user
+ * @param  {Function} onReset
+ */
 export const resetPassword = (oldPassword, newPassword, user, onReset) => {
   return async dispatch => {
+    // Dispatch an action indicating that the change password action started
     dispatch(resetPasswordStarted());
 
     try {
-      console.tron.error(user);
+      // console.tron.error(user);
       const response = await AppAxios.patch(APIURLs.resetPassword, { oldPassword, newPassword }, {
         headers: {
           'Authorization': `bearer ${user.token}`
         }
       });
-      console.tron.warn(response);
+      // console.tron.warn(response);
+      // dispatch an action indicating that the password has been changed successfully
       dispatch(resetPasswordSuccess(response.data));
-      console.tron.warn("HERE!!!!");
+
+      // show a toast to notify the user that the password has been changed
       const message = 'Password Changed Successfully';
       Toast.show(message, {
         position: Toast.positions.BOTTOM,
@@ -266,7 +293,7 @@ export const resetPassword = (oldPassword, newPassword, user, onReset) => {
         animation: true,
         hideOnPress: true,
       });
-      console.tron.warn("HERE TWO!!!!");
+
       if (_isFunction(onReset)) {
         onReset();
       }
@@ -290,6 +317,9 @@ export const resetPassword = (oldPassword, newPassword, user, onReset) => {
   };
 };
 
+/**
+ * remove the current user data
+ */
 export const logout = () => {
   return dispatch => {
     // dispatch(logoutRequestStarted());

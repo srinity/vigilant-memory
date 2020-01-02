@@ -38,7 +38,7 @@ class Order extends Component {
   }
 
   render() {
-    console.tron.error(this.props);
+    // console.tron.error(this.props);
     const { order } = this.props;
     const { userAddress = {} } = order;
 

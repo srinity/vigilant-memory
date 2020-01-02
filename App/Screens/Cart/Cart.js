@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { View, FlatList, SafeAreaView, Text } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import memoize from 'memoize-one';
 import CheckBox from 'react-native-check-box';
 import I18n from 'react-native-i18n';
 import {
@@ -35,6 +34,7 @@ class Cart extends Component {
     static getDerivedStateFromProps(nextProps, prevState) {
         const newCart = getCartAsArray(nextProps.cart) || [];
 
+        // if the new cart provided has changed than the current cart
         if (newCart.length !== prevState.cart.length) {
             const otherState = -_has(nextProps.cart, prevState.checkedShop)
                 ? {} : { checkedShop: undefined };
@@ -42,6 +42,7 @@ class Cart extends Component {
             return { cart: newCart, ...otherState };
         }
 
+        // create an array indicating that some product/quantity have changed
         const result = _flatten(_zipWith(newCart, prevState.cart, (newShop, oldShop) => {
             if (newShop.products.length !== oldShop.products.length) {
                 return [true];
@@ -54,6 +55,7 @@ class Cart extends Component {
             return _filter(products, prodShouldChange => prodShouldChange)
         }));
 
+        // if the cart changed then use the newly created cart from props
         if (result.length !== 0) {
             return { cart: newCart };
         }

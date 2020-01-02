@@ -42,8 +42,12 @@ const CART_ITEMS_API_ACTIONS = {
     change: 'CHANGE_QUANTITY'
 };
 
+/**
+ * @param  {{ token: string }} user
+ */
 export function getUserCart(user) {
     return async dispatch => {
+        // dispatch an action indicating that that retrieving the user cart started
         dispatch(getUserCartStarted());
 
         try {
@@ -55,6 +59,7 @@ export function getUserCart(user) {
     
             const cart = {};
 
+            // map the cart returned from the api to the proper shape
             _forEach(response.data.cart, shopCart => {
                 cart[shopCart.shopId] = {
                     ...shopCart,
@@ -62,8 +67,10 @@ export function getUserCart(user) {
                         product => ({ ...product, ...product.meta, _id: product.productId })) };
             });
 
+            // dispatch a success action with the new cart
             dispatch(getUserCartSuccess(cart));
         } catch (error) {
+            // Get the error message from the backend
             const message = _get(error.response, 'data.message', 'Something went wrong');
             Toast.show(message, {
                 position: Toast.positions.BOTTOM,
@@ -72,17 +79,28 @@ export function getUserCart(user) {
                 animation: true,
                 hideOnPress: true,
             });
+
+            // dispatch an error action indicating a failure
             dispatch(getUserCartFailed(error));
         }
     };
 }
 
+/**
+ * @param  {string} shopId
+ * @param  {string} shopName
+ * @param  {object} product
+ * @param  {object} cart
+ * @param  {object} user
+ */
 export function addToCart(shopId, shopName, product, cart, user) {
     return async dispatch => {
         const { _id: productId, quantity } = product;
 
+        // dispatch an action indicating that that product cart quantity change started 
         dispatch(cartItemUpdateStarted(productId));
 
+        // modify the product
         let shopCartItems = { shopId, shopName, products: [] };
 
         const newCart = _cloneDeep(cart);
@@ -95,6 +113,8 @@ export function addToCart(shopId, shopName, product, cart, user) {
     
         newCart[shopId] = shopCartItems;
 
+        // if the there is a user
+        // then call the api and update the cart in the backend
         if (!_isNil(user)) {
             try {
                 const updates = [{ productId, quantity }];
@@ -112,17 +132,27 @@ export function addToCart(shopId, shopName, product, cart, user) {
                 dispatch(updateUserCartFailed(productId, cart, error));
             }
         } else {
+            // if the no user is logged in then changed the store directly
             dispatch(addCartItemSuccess(productId, newCart));
         }
     };
 }
 
+/**
+ * @param  {string} shopId
+ * @param  {string} shopName
+ * @param  {object} product
+ * @param  {object} cart
+ * @param  {object} user
+ */
 export function changeCartProductQuantity(shopId, shopName, product, cart, user) {
     return async dispatch => {
         const { _id: productId, quantity } = product;
 
+        // dispatch an action indicating that that product cart quantity change started 
         dispatch(cartItemUpdateStarted(productId));
 
+        // modify the product
         let shopCartItems = { shopId, shopName, products: [] };
 
         const newCart = _cloneDeep(cart);
@@ -141,6 +171,8 @@ export function changeCartProductQuantity(shopId, shopName, product, cart, user)
     
         newCart[shopId] = shopCartItems;
     
+        // if the there is a user
+        // then call the api and update the cart in the backend
         if (!_isNil(user)) {
             try {
                 const updates = [{ productId, quantity }];
@@ -158,17 +190,27 @@ export function changeCartProductQuantity(shopId, shopName, product, cart, user)
                 dispatch(updateUserCartFailed(productId, cart, error));
             }
         } else {
+            // if the no user is logged in then changed the store directly
             dispatch(changeCartItemQuantity(productId, newCart));
         }
     };
 }
 
+/**
+ * @param  {string} shopId
+ * @param  {string} shopName
+ * @param  {object} product
+ * @param  {object} cart
+ * @param  {object} user
+ */
 export function removeFromCart(shopId, shopName, product, cart, user) {
     return async dispatch => {
         const { _id: productId, quantity } = product;
 
+        // dispatch an action indicating that that product cart quantity change started 
         dispatch(cartItemUpdateStarted(productId));
 
+        // modify the product
         let shopCartItems = { shopId, shopName, products: [] };
 
         const newCart = _cloneDeep(cart);
@@ -184,6 +226,8 @@ export function removeFromCart(shopId, shopName, product, cart, user) {
             newCart[shopId] = shopCartItems;
         }
 
+        // if the there is a user
+        // then call the api and update the cart in the backend
         if (!_isNil(user)) {
             try {
                 const updates = [{ productId, quantity }];
@@ -201,13 +245,19 @@ export function removeFromCart(shopId, shopName, product, cart, user) {
                 dispatch(updateUserCartFailed(productId, cart, error));
             }
         } else {
+            // if the no user is logged in then changed the store directly
             dispatch(removeCartItemSuccess(productId, newCart));
         }
     };
 }
 
+/**
+ * @param  {object} cart
+ * @param  {object} user
+ */
 export function uploadUserCart(cart, user) {
     return async dispatch => {
+        // update the user cart
         const updates = _flatten(
             _map(cart, shop => 
                 _map(shop.products, product =>
@@ -232,11 +282,21 @@ export function uploadUserCart(cart, user) {
     };
 }
 
+/**
+ * @param  {object} user
+ * @param  {string} shopId
+ * @param  {array} products
+ * @param  {object} userAddress
+ * @param  {object} cart
+ * @param  {Function} onBuy
+ */
 export function buyShopProducts(user, shopId, products, userAddress, cart, onBuy) {
     return async dispatch => {
+        // dispatch an action to indicate that the buy action started
         dispatch(buyingProductsStarted());
 
         try {
+            // construct the body of the request
             const body = {
                 shop: shopId,
                 userAddress,
@@ -249,9 +309,11 @@ export function buyShopProducts(user, shopId, products, userAddress, cart, onBuy
                 }
             });
 
+            // remove the shop from the cart after the buy
             _unset(cart, shopId);
 
             if (_isFunction(onBuy)) {
+                // execute onBuy if provided
                 onBuy();
             }
 
@@ -276,14 +338,24 @@ export function buyShopProducts(user, shopId, products, userAddress, cart, onBuy
     };
 }
 
+/**
+ * @param  {boolean} shouldClean
+ * @param  {number} currentLimit
+ * @param  {number} currentOffset
+ * @param  {number} ordersCount
+ * @param  {Array} currentOrders
+ * @param  {object} user
+ */
 export function getOrders(shouldClean, currentLimit, currentOffset, ordersCount, currentOrders, user) {
     return async dispatch => {
+        // dispatch an action indicating that getting order started
         dispatch(getOrdersStarted(shouldClean));
 
         try {
             const currentOrdersCount = _get(currentOrders, 'length', 0);
 
             if (ordersCount !== -1 && currentOrdersCount >= ordersCount) {
+                // fetched all if the user's orders
                 dispatch(noMoreOrdersToFetch());
             } else {
                 const params = {};
@@ -296,13 +368,14 @@ export function getOrders(shouldClean, currentLimit, currentOffset, ordersCount,
                     params.offset = currentOffset + (params.limit || 0);
                 }
 
+                // get the new orders after the currently displayed orders
                 const response = await AppAxios.get(APIURLs.getOrders, {
                     headers: {
                         'Authorization': `bearer ${user.token}`
                     },
                     params
                 });
-                console.tron.warn(response.data);
+                // console.tron.warn(response.data);
 
                 const { orders, count } = response.data;
     
@@ -312,10 +385,11 @@ export function getOrders(shouldClean, currentLimit, currentOffset, ordersCount,
                     allOrders = [...currentOrders, ...orders];
                 }
     
+                // dispatch the success action with the new orders
                 dispatch(getOrdersSuccess(allOrders, count, currentLimit, params.offset || currentLimit));
             }
         } catch (error) {
-            console.tron.error(error);
+            // console.tron.error(error);
 
             const message = _get(error.response, 'data.message', 'Something went wrong');
             Toast.show(message, {
@@ -330,14 +404,26 @@ export function getOrders(shouldClean, currentLimit, currentOffset, ordersCount,
     };
 }
 
+/**
+ * @param  {object} product
+ * @param  {string} shopId
+ * @param  {object} cart
+ */
 export function checkIfIProductsInCart(product, shopId, cart) {
+    // check if the product is already in the cart
     const shopCartProducts = _get(cart[shopId], 'products', []);
 
     return _findIndex(shopCartProducts, item =>
         item._id === product._id && item.category === product.category) !== -1;
 }
 
+/**
+ * @param  {object} product
+ * @param  {string} shopId
+ * @param  {object} cart
+ */
 export function getProductQuantityInCart(product, shopId, cart) {
+    // check if the product is already in the cart if so return its quantity else return 0
     const shopCartProducts = _get(cart[shopId], 'products', []);
 
     const cartProduct = _find(shopCartProducts, item =>

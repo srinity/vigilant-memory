@@ -41,12 +41,15 @@ export const AppAxios = Axios.create({
 });
 
 export function refreshTokenInterceptor(dispatch) {
+  // add an interceptor to the app axios
   AppAxios.interceptors.response.use(
     response => response,
     error => {
+      // if the api fails with code 400(token epired)
       const errorResponseStatus = _get(error, 'response.status');
   
-      console.tron.error(error);
+      // console.tron.error(error);
+      // if the failure is not due to token then propogate the failure
       if (errorResponseStatus !== 400) {
         return Promise.reject(error);
       }
@@ -54,19 +57,22 @@ export function refreshTokenInterceptor(dispatch) {
       // need to call refresh token
       const requestToken = _get(error, 'response.config.headers.Authorization');
 
+      // refresh the token with the token used for request
       if (requestToken) {
         Axios.post(`${APIURLs.baseURL}${APIURLs.refreshToken}`, undefined, {
           headers: {
             'Authorization': requestToken
           }
         }).then(response => {
-          console.tron.warn(response.data);
+          // console.tron.warn(response.data);
           const { message, ...userData } = response.data;
           dispatch(setRefreshToken(userData));
+          // retry the request that failed
           error.response.config.headers['Authorization'] = `bearer ${response.data.token}`;
           return AppAxios(error.response.config);
         }).catch(err => {
-          console.tron.error(err);
+          // console.tron.error(err);
+          // remove the token in case of failure
           dispatch(removeToken());
           return Promise.reject(error);
         });

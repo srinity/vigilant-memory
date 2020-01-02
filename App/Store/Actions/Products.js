@@ -15,6 +15,15 @@ import {
     CLEAN_CATEGORY_PRODUCTS_DATA
 } from './ActionTypes';
 
+/**
+ * @param  {string} shopId
+ * @param  {string} category
+ * @param  {array} products
+ * @param  {number} currentLimit
+ * @param  {number} currentOffset
+ * @param  {number} productsCount
+ * @param  {boolean} shouldCleanData
+ */
 export const getCategoryProducts = (
     shopId,
     category,
@@ -29,12 +38,14 @@ export const getCategoryProducts = (
             dispatch(cleanCategoryProductsData());
         }
 
+        // dispatch an action indicating that the getting products started
         dispatch(getCategoryProductsStarted(shouldCleanData ? null : products));
 
         try {
             const currentProductsCount = _get(products, 'length', 0);
 
             if (productsCount !== -1 && currentProductsCount >= productsCount && !shouldCleanData) {
+                // no more products available
                 dispatch(noMoreCategoryProductsToFetch());
             } else {
                 const params = {
@@ -53,6 +64,7 @@ export const getCategoryProducts = (
                     params.offset = currentOffset + (params.limit || 0);
                 }
     
+                // get the next products
                 const response = await AppAxios.get(APIURLs.getProductsOfShopBasedOnFilter, {
                     params
                 });
@@ -65,6 +77,7 @@ export const getCategoryProducts = (
                     allProducts = [...products, ...shopProducts];
                 }
     
+                // dispatch an action with the products
                 dispatch(getCategoryProductsSuccess(allProducts, count, offset, limit));
             }
         } catch (error) {

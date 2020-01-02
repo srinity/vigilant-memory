@@ -76,7 +76,7 @@ class Orders extends Component {
 
   render() {
     const { orders, isLoadingOrders, getOrdersError } = this.props;
-    console.tron.warn(this.props);
+    // console.tron.warn(this.props);
     return (
       <SafeAreaView style={styles.containerStyle}>
         {

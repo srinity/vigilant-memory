@@ -18,8 +18,16 @@ import {
     NO_MORE_PRODUCTS_TO_FETCH
 } from './ActionTypes';
 
+/**
+ * @param  {string} shopId
+ * @param  {Array} products
+ * @param  {number} currentLimit
+ * @param  {number} currentOffset
+ * @param  {number} productsCount
+ */
 export const getProducts = (shopId, products, currentLimit, currentOffset, productsCount) => {
     return async (dispatch) => {
+        // dispatch an action indicating that getting the products started
         dispatch(getProductsStarted(products));
 
         try {
@@ -29,6 +37,7 @@ export const getProducts = (shopId, products, currentLimit, currentOffset, produ
                 (sum, currentCategoryCount) => sum + currentCategoryCount, 0);
 
             if (productsCount !== -1 && !_isNil(productsCount) && currentProductsCount >= productsCount) {
+                // no more products to fetch
                 dispatch(noMoreProductsToFetch());
             } else {
                 const params = {
@@ -43,6 +52,7 @@ export const getProducts = (shopId, products, currentLimit, currentOffset, produ
                     params.offset = currentOffset + (params.limit || 0);
                 }
 
+                // get the next products
                 const response = await AppAxios.get(APIURLs.getProductsOfShopGroupedByCategory, {
                     params
                 });
@@ -51,6 +61,7 @@ export const getProducts = (shopId, products, currentLimit, currentOffset, produ
     
                 let allProducts = shopProducts;
     
+                // concat the old products with the newly fetched ones
                 if (!_isNil(products)) {
                     allProducts = _zipWith(products, shopProducts, (oldProduct, newProduct) => {
                         return {
@@ -60,6 +71,7 @@ export const getProducts = (shopId, products, currentLimit, currentOffset, produ
                     });
                 }
     
+                // dispatch an action with the all the products
                 dispatch(getProductsSuccess(allProducts, count, offset, limit));
             }
         } catch (error) {

@@ -35,7 +35,7 @@ class PopUpMenu extends Component {
     }
 
     onLayout = (event) => {
-        console.tron.error(event);
+        // console.tron.error(event);
     }
 
     render() {

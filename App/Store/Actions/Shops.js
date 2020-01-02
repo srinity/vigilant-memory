@@ -11,6 +11,9 @@ import {
     GET_SEARCH_AREAS_FAILED
 } from './ActionTypes';
 
+/**
+ * get the search areas from the backend
+ */
 export const getSearchAreas = () => {
   return async dispatch => {
     try {
@@ -30,30 +33,38 @@ export const getSearchAreas = () => {
   };
 };
 
+/**
+ * @param  {string} city
+ * @param  {string} area
+ * @param  {string} district
+ */
 export const getShops = (city, area, district) => {
     return async (dispatch) => {
-        dispatch(getShopsStarted(city, area, district));
-        try {
-          const response = await AppAxios.get(APIURLs.getShops, {
-            params: {
-              city,
-              area,
-              district
-            }
-          });
+      // dispatch an action indicating that fetching shops started
+      dispatch(getShopsStarted(city, area, district));
 
-          dispatch(getShopsSuccess(response.data.shops));
-        } catch (error) {
-          const message = _get(error.response, 'data.message', 'Something went wrong');
-          Toast.show(message, {
-              position: Toast.positions.BOTTOM,
-              duration: Toast.durations.SHORT,
-              shadow: true,
-              animation: true,
-              hideOnPress: true,
-          });
-          dispatch(getShopsFailed(error));
-        }
+      try {
+        const response = await AppAxios.get(APIURLs.getShops, {
+          params: {
+            city,
+            area,
+            district
+          }
+        });
+
+        // dispatch an action with the fetched shops
+        dispatch(getShopsSuccess(response.data.shops));
+      } catch (error) {
+        const message = _get(error.response, 'data.message', 'Something went wrong');
+        Toast.show(message, {
+            position: Toast.positions.BOTTOM,
+            duration: Toast.durations.SHORT,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+        });
+        dispatch(getShopsFailed(error));
+      }
     };
 };
 

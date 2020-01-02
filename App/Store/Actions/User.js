@@ -25,8 +25,12 @@ const ADDRESS_API_ACTIONS = {
   change: 'CHANGE_ADDRESS'
 };
 
+/**
+ * @param  {object} user
+ */
 export function getUserInfo(user) {
   return async (dispatch, getState) => {
+    // dispatch an action indicating that the user info fetching started
     dispatch(getUserInfoStarted());
 
     try {
@@ -38,6 +42,7 @@ export function getUserInfo(user) {
       const { user: userData = {} } = response.data;
       const { addresses, ...userInfo } = userData;
 
+      // dispatch an action indicating that the user info was fetched and addresses were fetched
       dispatch(getUserInfoSuccess(userInfo, addresses));
 
       // Reset Selected Address if the address no longer available
@@ -61,12 +66,19 @@ export function getUserInfo(user) {
   };
 }
 
+/**
+ * @param  {object} user
+ * @param  {object} address
+ */
 export function addAddress(user, address) {
   return async dispatch => {
+    // dispatch an action indicating that adding a user address started
     dispatch(addUserAddressStarted());
 
     try {
       const response = await updateUserAddress(ADDRESS_API_ACTIONS.add, [address], user);
+
+      // dispatch an action indicating that adding a user address successed
       dispatch(addUserAddressSuccess(response.data.addresses));
     } catch (error) {
       const message = _get(error.response, 'data.message', 'Something went wrong');
@@ -82,13 +94,19 @@ export function addAddress(user, address) {
   };
 }
 
+/**
+ * @param  {object} user
+ * @param  {object} addressId
+ */
 export function removeAddress(user, addressId) {
   return async (dispatch, getState) => {
+    // dispatch an action indicating that removing a user address started
     dispatch(removeUserAddressStarted());
 
     try {
       const response = await updateUserAddress(ADDRESS_API_ACTIONS.remove, [{ addressId }], user);
 
+      // dispatch an action indicating that removing a user address successed
       dispatch(removeUserAddressSuccess(response.data.addresses));
 
       const { user: userReducer } = getState();
@@ -111,13 +129,19 @@ export function removeAddress(user, addressId) {
   };
 }
 
+/**
+ * @param  {object} user
+ * @param  {object} address
+ */
 export function changeAddress(user, address) {
   return async dispatch => {
+    // dispatch an action indicating that changing a user address started
     dispatch(changeUserAddressStarted());
 
     try {
       const response = await updateUserAddress(ADDRESS_API_ACTIONS.change, [address], user);
 
+      // dispatch an action indicating that changing a user address successed
       dispatch(changeUserAddressSuccess(response.data.addresses));
     } catch (error) {
       const message = _get(error.response, 'data.message', 'Something went wrong');
@@ -133,13 +157,22 @@ export function changeAddress(user, address) {
   };
 }
 
+/**
+ * @param  {string} addressId
+ */
 export function selectShippingAddress(addressId) {
+  // select an address
   return { type: SELECT_SHIPPING_ADDRESS, addressId };
 }
 
+/**
+ * @param  {string} token the firebase token
+ * @param  {object} user
+ */
 export function registerUserNotificationToken(token, user) {
   return async dispatch => {
     try {
+      // register the firebase token
       const response = await AppAxios.post(APIURLs.addDeviceId, {
         deviceId: token
       }, {
@@ -147,9 +180,9 @@ export function registerUserNotificationToken(token, user) {
           'Authorization': `bearer ${user.token}`
         }
       });
-      console.tron.warn(response.data);
+      // console.tron.warn(response.data);
     } catch (error) {
-      console.tron.error(error);
+      // console.tron.error(error);
       const message = _get(error.response, 'data.message', 'Something went wrong');
       Toast.show(message, {
           position: Toast.positions.BOTTOM,

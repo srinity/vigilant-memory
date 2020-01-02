@@ -15,6 +15,7 @@ export default class App extends Component {
   constructor(props) {
     super(props);
 
+    // add the refresh token interceptor
     refreshTokenInterceptor(store.dispatch);
   }
 

@@ -146,7 +146,7 @@ class Account extends Component {
   render() {
     const { isLoggedIn } = this.props;
 
-    console.tron.error(this.props);
+    // console.tron.error(this.props);
     return (
       <View style={styles.containerStyle}>
         {this.renderContent(isLoggedIn)}
