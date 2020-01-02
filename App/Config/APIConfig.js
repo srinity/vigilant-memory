@@ -4,7 +4,7 @@ import { get as _get } from 'lodash';
 import { removeToken, setRefreshToken } from '../Store/Actions/Account';
 
 export const APIURLs = {
-  baseURL: 'https://c09f9d19.ngrok.io',
+  baseURL: 'http://elcartonabackend-env.dm3b5cw3y4.eu-west-1.elasticbeanstalk.com',
   login: '/api/auth/login',
   register: '/api/auth/signup',
   sendCode: '/api/auth/generateVerificationCode',
