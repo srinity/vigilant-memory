@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- NETPERFORM COMPONENT SPECIFIC -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">elcartonabackend-env.dm3b5cw3y4.eu-west-1.elasticbeanstalk.com</domain>
+    </domain-config>
+</network-security-config>
