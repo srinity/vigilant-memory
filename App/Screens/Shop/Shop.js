@@ -77,6 +77,10 @@ class Shop extends Component {
         Actions.products({ category, categories, _id, shopName, shopImage });
     }
 
+    onMomentumScrollBegin = () => {
+        this.onEndReachedCalledDuringMomentum = false;
+    }
+
     fetchProducts = () => {
         const {
             _id: shopId,
@@ -88,8 +92,12 @@ class Shop extends Component {
             areExtraProductsLoading
         } = this.props;
 
-        if (!noMoreProducts && !areExtraProductsLoading) {
-            getProducts(shopId, products, currentLimit, currentOffset, allProductsCount);
+        if (!this.onEndReachedCalledDuringMomentum) {
+            if (!noMoreProducts && !areExtraProductsLoading) {
+                getProducts(shopId, products, currentLimit, currentOffset, allProductsCount);
+            }
+
+            this.onEndReachedCalledDuringMomentum = true;
         }
     }
 
@@ -164,6 +172,7 @@ class Shop extends Component {
                     onEndReached={this.fetchProducts}
                     onEndReachedThreshold={0.5}
                     style={{ width: this.props.width }}
+                    onMomentumScrollBegin={this.onMomentumScrollBegin}
                     // extraData={this.props.cart}
                 />
             </View>
