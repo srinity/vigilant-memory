@@ -10,17 +10,32 @@ export default StyleSheet.create({
     inputsContainerStyle: {
         flex: 1,
         paddingHorizontal: 15,
-        paddingVertical: 7
+        paddingVertical: 7,
     },
     nameInputsContainerStyle: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        marginBottom: 10
     },
-    nameInputStyle: {
-        flex: 1
+    fistNameInputStyle: {
+        flex: 1,
+        marginRight: I18nManager.isRTL ? 0 : 10,
+        marginLeft: I18nManager.isRTL ? 10 : 0,
+        paddingVertical: Platform.OS === 'ios' ? 15 : 0,
     },
-    genderDropDownStyle: {
-        marginHorizontal: 10,
-        marginVertical: 5 
+    lastNameInputStyle: {
+        flex: 1,
+        paddingVertical: Platform.OS === 'ios' ? 15 : 0,
+    },
+    inputContainerStyle: {
+        paddingVertical: Platform.OS === 'ios' ? 15 : 0,
+        marginBottom: 10
+    },
+    passwordInputContainerStyle: {
+        marginBottom: 10
+    },
+    genderContainerStyle: {
+        marginHorizontal: 50,
+        marginTop: 10
     },
     actionsCardSectionStyle: {
         flex: 0,
@@ -28,7 +43,6 @@ export default StyleSheet.create({
         flexDirection: 'row'
     },
     inactiveActionTextStyle: {
-        color: Colors.brandColorHexCode,
         marginRight: 5
     },
     actionsTextStyle: {
@@ -56,38 +70,26 @@ export default StyleSheet.create({
         color: Colors.whiteColorHexCode
     },
     footerContainerStyle: {
-        marginVertical: 20
+        marginVertical: 10
     },
     datePickerStyle: {
-        width: '95%',
-        marginTop: 15,
-        marginBottom: 10,
-        marginHorizontal: 10,
-        borderBottomColor: Colors.brandColorHexCode,
-        borderBottomWidth: 1
+        marginTop: 10,
+        paddingHorizontal: 15,
+        height: Platform.OS === 'ios' ? 45 : 40,
+        paddingVertical: Platform.OS === 'ios' ? 0 : 25,
+        alignItems: 'flex-start',
+        borderRadius: 30,
+        borderColor: Colors.brandColorHexCode,
+        backgroundColor: Colors.whiteColorHexCode,
+    },
+    datePickerContainerStyle: {
+        width: '100%',
+        marginBottom: Platform.OS === 'ios' ? 10 : 15,
+        height: Platform.OS === 'ios' ? 45 : 40,
     },
     datePickerInvalidStyle: {
-        borderBottomColor: Colors.dangerColorHexCode,
-        borderBottomWidth: 2
-    },
-    datePickerIconStyle: {
-        position: 'absolute',
-        left: 0,
-        width: 40,
-        paddingTop: 7,
-        paddingBottom: 5,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    datePickerDateInputStyle: {
-        borderWidth: 0,
-        borderRadius: 30,
-        alignItems: 'flex-start',
-        paddingLeft: 50
-    },
-    datePickerTextStyle: {
-        color: Colors.brandColorHexCode,
-        fontSize: 18
+        borderColor: Colors.dangerColorHexCode,
+        borderWidth: 2
     },
     errorContainerStyle: {
         flexDirection: 'row',

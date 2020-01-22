@@ -54,6 +54,7 @@ export const getShops = (city, area, district) => {
 
         // dispatch an action with the fetched shops
         dispatch(getShopsSuccess(response.data.shops));
+        // console.tron.error(response.data)
       } catch (error) {
         const message = _get(error.response, 'data.message', 'Something went wrong');
         Toast.show(message, {

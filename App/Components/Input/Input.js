@@ -21,6 +21,12 @@ const Input = ({
     leftIconColor,
     leftIconStyle,
     leftIconContainerStyle,
+    rightIconName,
+    rightIconType,
+    rightIconColor,
+    rightIconSize,
+    rightIconStyle,
+    rightIconContainerStyle,
     onChangeText, 
     placeholder, 
     placeholderTextColor, 
@@ -62,6 +68,22 @@ const Input = ({
             value={value}
             {...props}
         />
+
+        {
+            rightIconName 
+            ?
+            <View style={rightIconContainerStyle}>
+                <Icon
+                    type={rightIconType}
+                    color={rightIconColor}
+                    size={rightIconSize}
+                    name={rightIconName}
+                    style={[styles.rightIconStyle, rightIconStyle]}
+                />
+            </View>
+            :
+            null
+        }
     </View>
 );
 
@@ -74,6 +96,11 @@ Input.defaultProps = {
     leftIconColor: '#000000',
     leftIconStyle: {},
     leftIconContainerStyle: {},
+    rightIconType: IconTypes.material,
+    rightIconSize: 25,
+    rightIconColor: '#000000',
+    rightIconStyle: {},
+    rightIconContainerStyle: {},
     placeholderTextColor: 'rgba(0,0,0,0.6)',
     returnKeyType: 'next',
     underlineColorAndroid: 'transparent'
@@ -104,6 +131,12 @@ Input.propTypes = {
     leftIconColor: colorPropType,
     leftIconStyle: ViewPropTypes.style,
     leftIconContainerStyle: ViewPropTypes.style,
+    rightIconType: PropTypes.oneOf(iconTypesValues),
+    rightIconName: PropTypes.string,
+    rightIconSize: PropTypes.number,
+    rightIconColor: colorPropType,
+    rightIconStyle: ViewPropTypes.style,
+    rightIconContainerStyle: ViewPropTypes.style,
     returnKeyType: PropTypes.oneOf([
         'done',
         'go',

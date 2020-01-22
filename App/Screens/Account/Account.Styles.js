@@ -36,17 +36,30 @@ export default StyleSheet.create({
     borderColor: Colors.notAvailableColorHexCode
   },
   userNameContainerStyle: {
-    margin: 10
+    marginVertical: 20,
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   userNameTextStyle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: Colors.brandColorHexCode
+    color: Colors.brandColorHexCode,
+    marginTop: 5
+  },
+  userImageContainerStyle: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    borderWidth: 1,
+    borderColor: Colors.getBlackColorRGBAValue(0.6),
+    backgroundColor: Colors.whiteColorHexCode,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   accountOptionsContainerStyle: {
     marginVertical: 10,
-    paddingHorizontal: 10,
-    backgroundColor: Colors.whiteColorHexCode
+    // paddingHorizontal: 10,
+    // backgroundColor: Colors.whiteColorHexCode
   },
   accountOptionButtonStyle: {
     flexDirection: 'row',
@@ -65,5 +78,9 @@ export default StyleSheet.create({
     marginLeft: 5,
     fontSize: 16,
     color: Colors.blackColorHexCode
+  },
+  cardsContainerStyle: {
+    flexDirection: 'row',
+    justifyContent: 'center'
   }
 });

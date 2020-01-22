@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import I18n from 'react-native-i18n';
 
 import { Button, PasswordInput } from './../../Components';
 
 import { isValidPassword, isValidConfirmPassword } from './../../Utils/Validators';
-
-import { Colors } from '../../Theme';
 
 import styles from './ChangePassword.Styles';
 
@@ -63,39 +62,30 @@ class ChangePassword extends Component {
     return (
       <View style={styles.containerStyle}>
         <PasswordInput
-          label='change_password_screen_old_password_label'
-          hint='change_password_screen_old_password_hint'
-          leftIconName={undefined}
-          leftIconColor={Colors.brandColorHexCode}
-          rightIconColor={Colors.brandColorHexCode}
+          placeholder={I18n.t('change_password_screen_old_password_hint')}
           onChangeText={this.onOldPasswordChange}
           value={oldPassword}
           isValid={oldPasswordIsValid}
           errorMessage='change_password_screen_old_password_error_message'
+          containerStyle={styles.inputsStyle}
         />
 
         <PasswordInput
-          label='change_password_screen_new_password_label'
-          hint='change_password_screen_new_password_hint'
-          leftIconName={undefined}
-          leftIconColor={Colors.brandColorHexCode}
-          rightIconColor={Colors.brandColorHexCode}
+          placeholder={I18n.t('change_password_screen_new_password_hint')}
           onChangeText={this.onPasswordChange}
           value={password}
           isValid={passwordIsValid}
           errorMessage='change_password_screen_new_password_error_message'
+          containerStyle={styles.inputsStyle}
         />
 
         <PasswordInput
-          label='change_password_screen_confirm_new_password_label'
-          hint='change_password_screen_confirm_new_password_hint'
-          leftIconName={undefined}
-          leftIconColor={Colors.brandColorHexCode}
-          rightIconColor={Colors.brandColorHexCode}
+          placeholder={I18n.t('change_password_screen_confirm_new_password_hint')}
           onChangeText={this.onConfirmPasswordChange}
           value={confirmPassword}
           isValid={confirmPasswordIsValid}
           errorMessage='change_password_screen_confirm_new_password_error_message'
+          containerStyle={styles.inputsStyle}
         />
 
         <Button

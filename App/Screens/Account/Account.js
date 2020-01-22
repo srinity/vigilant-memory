@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 
-import { Icon, IconTypes, ScreenTypes, LocalizedText } from './../../Components';
+import { Icon, IconTypes, ScreenTypes, LocalizedText, AccountCard } from './../../Components';
 
 import { Colors } from '../../Theme';
 
@@ -35,8 +35,8 @@ class Account extends Component {
     Actions.orders();
   }
 
-  onChangePasswordPress = () => {
-    Actions.changePassword();
+  onUserInfoPress = () => {
+    Actions.userInfo();
   }
 
   onLogoutPress = () => {
@@ -54,35 +54,47 @@ class Account extends Component {
   }
 
   renderAccountActions = () => {
+    const { width } = this.props;
+
+    const cardSize = (width - 80) / 2;
+
     return (
       <View style={styles.accountOptionsContainerStyle}>
-        <TouchableComponent onPress={this.onShippingAddressesPress}>
-          <View style={styles.accountOptionButtonStyle}>
-            <Icon name='location-pin' type={IconTypes.entypo} color={Colors.brandColorHexCode} />
-            <LocalizedText style={styles.accountOptionButtonTextStyle}>account_screen_shipping_addresses_action</LocalizedText>
-          </View>
-        </TouchableComponent>
+        <View style={styles.cardsContainerStyle}>
+          <AccountCard
+            title='account_screen_user_info_action'
+            iconName='account'
+            iconType={IconTypes.materialCommunity}
+            size={cardSize}
+            onPress={this.onUserInfoPress}
+          />
 
-        <TouchableComponent onPress={this.onChangePasswordPress}>
-          <View style={styles.accountOptionButtonStyle}>
-            <Icon name='key-variant' type={IconTypes.materialCommunity} color={Colors.brandColorHexCode} />
-            <LocalizedText style={styles.accountOptionButtonTextStyle}>account_screen_change_password_action</LocalizedText>
-          </View>
-        </TouchableComponent>
+          <AccountCard
+            title='account_screen_orders_action'
+            iconName='shopping-cart'
+            iconType={IconTypes.entypo}
+            size={cardSize}
+            onPress={this.onOrdersPress}
+          />
+        </View>
 
-        <TouchableComponent onPress={this.onOrdersPress}>
-          <View style={styles.accountOptionButtonStyle}>
-            <Icon name='clipboard-text' type={IconTypes.materialCommunity} color={Colors.brandColorHexCode} />
-            <LocalizedText style={styles.accountOptionButtonTextStyle}>account_screen_orders_action</LocalizedText>
-          </View>
-        </TouchableComponent>
+        <View style={styles.cardsContainerStyle}>
+          <AccountCard
+            title='account_screen_shipping_addresses_action'
+            iconName='location-pin'
+            iconType={IconTypes.entypo}
+            size={cardSize}
+            onPress={this.onShippingAddressesPress}
+          />
 
-        <TouchableComponent onPress={this.onLogoutPress}>
-          <View style={styles.lastAccountOptionButtonStyle}>
-            <Icon name='logout' type={IconTypes.materialCommunity} color={Colors.brandColorHexCode} />
-            <LocalizedText style={styles.accountOptionButtonTextStyle}>account_screen_logout_action</LocalizedText>
-          </View>
-        </TouchableComponent>
+          <AccountCard
+            title='account_screen_logout_action'
+            iconName='power-off'
+            iconType={IconTypes.fontAwesome}
+            size={cardSize}
+            onPress={this.onLogoutPress}
+          />
+        </View>
       </View>  
     );
   }
@@ -117,6 +129,9 @@ class Account extends Component {
     return (
       <View style={styles.containerStyle}>
         <View style={styles.userNameContainerStyle}>
+          <View style={styles.userImageContainerStyle}>
+            <Icon type={IconTypes.material} name='person-outline' color={Colors.getBlackColorRGBAValue(0.6)} size={35} />
+          </View>
           <Text style={styles.userNameTextStyle}>{`${fullName.firstName} ${fullName.lastName}`}</Text>
         </View>
 

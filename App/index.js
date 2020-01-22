@@ -10,6 +10,7 @@ import { AuthSwitch, DeviceDimensions, ScreenTypes, IconTypes, BottomBar, Icon }
 import {
   AccountScreen,
   AddressBookScreen,
+  AppIntroScreen,
   CartScreen,
   ChangePasswordScreen,
   CheckOutScreen,
@@ -19,15 +20,18 @@ import {
   LoginScreen,
   OrderScreen,
   OrdersScreen,
+  OrderSuccessScreen,
   ProductsScreen,
   RegisterScreen,
   SetForgetenPasswordScreen,
   ShopScreen,
+  UserInfoScreen,
   VerificationCodeScreen
 } from './Screens';
 
 import {
   DeviceDimensionsActions,
+  AppIntroActions,
   AccountActions,
   ShopActions,
   ProductsActions,
@@ -76,7 +80,7 @@ class AppRouter extends Component {
 
     this.connectedComponents = {
       AuthSwitch: connect(
-        ({ auth, cart }) => ({ ...auth, ...cart }),
+        ({ auth, cart, appIntro }) => ({ ...auth, ...cart, appIntro }),
         dispatch => ({
           uploadUserCart: (cart, user) => dispatch(CartActions.uploadUserCart(cart, user)),
           getSearchAreas: () => dispatch(ShopsActions.getSearchAreas()),
@@ -90,6 +94,13 @@ class AppRouter extends Component {
         onDimensionsChanged: deviceDimensions =>
           dispatch(DeviceDimensionsActions.deviceDimensionsChanged(deviceDimensions))
       }))(DeviceDimensions),
+      AppIntro: connect(
+        ({ deviceDimensions }) => ({ ...deviceDimensions }),
+        dispatch => ({
+          skip: () => dispatch(AppIntroActions.markIntroAsSkipped()),
+          complete: () => dispatch(AppIntroActions.markIntroAsCompleted())
+        })
+      )(AppIntroScreen),
       Login: connect(
         ({ deviceDimensions, auth }) => ({ ...deviceDimensions, ...auth }),
         dispatch => ({
@@ -168,11 +179,11 @@ class AppRouter extends Component {
           ...cart
         }),
         dispatch => ({
-          getCategoryProducts: (shopId, category, products, currentLimit, currentOffset, productsCount, shouldCleanData) =>
-            dispatch(ProductsActions.getCategoryProducts(shopId, category, products, currentLimit, currentOffset, productsCount, shouldCleanData)),
+          getCategoryProducts: (shopId, category, products, currentLimit, currentOffset, productsCount, shouldCleanData, shouldFetchCategories) =>
+            dispatch(ProductsActions.getCategoryProducts(shopId, category, products, currentLimit, currentOffset, productsCount, shouldCleanData, shouldFetchCategories)),
           cleanCategoryProductsData: () => dispatch(ProductsActions.cleanCategoryProductsData()),
-          addToCart: (shopId, shopName, product, cart, user) =>
-            dispatch(CartActions.addToCart(shopId, shopName, product, cart, user)),
+          addToCart: (shopId, shopName, product, cart, user, shopImage, address) =>
+            dispatch(CartActions.addToCart(shopId, shopName, product, cart, user, shopImage, address)),
           removeFromCart: (shopId, shopName, product, cart, user) =>
             dispatch(CartActions.removeFromCart(shopId, shopName, product, cart, user)),
           changeCartProductQuantity: (shopId, shopName, product, cart, user) =>
@@ -180,11 +191,12 @@ class AppRouter extends Component {
         })
       )(ProductsScreen),
       Cart: connect(
-        ({ deviceDimensions, auth, cart }) => ({
+        ({ deviceDimensions, auth, cart, user }) => ({
           ...deviceDimensions,
           user: auth.user,
           isLoggedIn: auth.isLoggedIn,
-          ...cart
+          ...cart,
+          ...user
         }),
         dispatch => ({
           removeFromCart: (shopId, shopName, product, cart, user) =>
@@ -192,6 +204,9 @@ class AppRouter extends Component {
           changeCartProductQuantity: (shopId, shopName, product, cart, user) =>
             dispatch(CartActions.changeCartProductQuantity(shopId, shopName, product, cart, user)),
           getUserCart: (user) => dispatch(CartActions.getUserCart(user)),
+          buyShopProducts: (user, shopId, products, userAddress, cart, onBuy) => 
+            dispatch(CartActions.buyShopProducts(user, shopId, products, userAddress, cart, onBuy)),
+          setActiveTab: (tabName) => this.setActiveTab(tabName),
         })
       )(CartScreen),
       CheckOut: connect(
@@ -212,6 +227,10 @@ class AppRouter extends Component {
           setActiveTab: (tabName) => this.setActiveTab(tabName),
         })
       )(CheckOutScreen),
+      OrderSuccess: connect(
+        ({ deviceDimensions }) => ({ ...deviceDimensions }),
+        dispatch => ({ setActiveTab: (tabName) => this.setActiveTab(tabName), })
+      )(OrderSuccessScreen),
       Account: connect(
         ({ deviceDimensions, auth, user }) => ({
           ...deviceDimensions,
@@ -224,6 +243,14 @@ class AppRouter extends Component {
           logout: () => dispatch(AccountActions.logout()),
         })
       )(AccountScreen),
+      UserInfo: connect(
+        ({ deviceDimensions, auth, user }) => ({
+          ...deviceDimensions,
+          user: auth.user,
+          ...user
+        }),
+        dispatch => ({})
+      )(UserInfoScreen),
       AddressBook: connect(
         ({ deviceDimensions, auth, user, shops }) => ({
           ...deviceDimensions,
@@ -323,6 +350,14 @@ class AppRouter extends Component {
           navBarButtonColor='#fff'
         >
           <Scene key='root' hideNavBar>
+            <Scene key={ScreenTypes.intro}>
+              <Scene
+                key='introduction'
+                initial
+                hideNavBar
+                component={ConnectedComponents.AppIntro}
+              />
+            </Scene>
             <Scene key={ScreenTypes.auth}>
               <Scene
                 key='login'
@@ -415,6 +450,14 @@ class AppRouter extends Component {
               />
 
               <Scene
+                key='orderSuccess'
+                title={''}
+                // initial
+                // hideNavBar
+                component={ConnectedComponents.OrderSuccess}
+              />
+
+              <Scene
                 key='account'
                 title={I18n.t('header_account_title')}
                 onExit={this.onTabBackClick}
@@ -422,6 +465,12 @@ class AppRouter extends Component {
                 // initial
                 // hideNavBar
                 component={ConnectedComponents.Account}
+              />
+
+              <Scene
+                key='userInfo'
+                title={I18n.t('header_user_info_title')}
+                component={ConnectedComponents.UserInfo}
               />
 
               <Scene

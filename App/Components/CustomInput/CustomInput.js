@@ -1,13 +1,9 @@
-import React, { Component } from 'react';
-import { View, Text, ViewPropTypes, TouchableOpacity, StyleSheet } from 'react-native';
-import { TextField } from 'react-native-material-textfield';
+import React from 'react';
+import { View, TextInput, ViewPropTypes, TouchableWithoutFeedback } from 'react-native';
 import PropTypes from 'prop-types';
-import memoize from 'memoize-one';
-import { has as _has, isFunction as _isFunction, get as _get, isNil as _isNil } from 'lodash';
-import I18n from 'react-native-i18n';
 
-import { Icon, IconTypes, iconTypesValues } from './../Icon';
-import LocalizedText from '../LocalizedText/LocalizedText';
+import { Icon, iconTypesValues, IconTypes } from './../Icon';
+import LocalizedText from './../LocalizedText/LocalizedText';
 
 import { colorPropType } from './../../Utils/PropTypesValidators';
 
@@ -15,285 +11,117 @@ import { Colors } from './../../Theme';
 
 import styles from './CustomInput.Styles';
 
-class CustomInput extends Component {
-  constructor(props) {
-    super(props);
+const CustomInput = ({
+  editable,
+  keyboardType,
+  onChangeText,
+  value,
+  placeholder,
+  placeholderTextColor,
+  secureTextEntry,
+  onEndEditing,
+  onBlur,
+  onFocus,
+  onSubmitEditing,
+  returnKeyType,
+  showIcon,
+  iconName,
+  iconType,
+  iconSize,
+  iconColor,
+  onIconPress,
+  iconStyle,
+  isValid,
+  errorMessage,
+  errorIconName,
+  errorIconType,
+  errorIconSize,
+  errorIconColor,
+  errorIconStyle,
+  style,
+  containerStyle,
+  ...props
+}) => {
+  return (
+    <View style={[styles.containerStyle, containerStyle]}>
+      <TextInput
+        underlineColorAndroid={Colors.getBlackColorRGBAValue(0)}
+        editable={editable}
+        keyboardType={keyboardType}
+        value={value}
+        onChangeText={onChangeText}
+        secureTextEntry={secureTextEntry}
+        onEndEditing={onEndEditing}
+        onBlur={onBlur}
+        onFocus={onFocus}
+        onSubmitEditing={onSubmitEditing}
+        placeholder={placeholder}
+        placeholderTextColor={placeholderTextColor}
+        returnKeyType={returnKeyType}
+        style={[styles.inputStyle, style]}
+        {...props}
+      />
 
-    const isActive = (_has(props, 'value') && props.value !== '' && !_isNil(props.value));
-
-    this.state = {
-      isActive,
-      label: isActive ? props.label : _get(props, 'hint', props.label)
-    };
-  }
-
-  componentDidUpdate(prevProps) {
-    const { value, hint, label } = this.props;
-    const { isActive } = this.state;
-
-    if (prevProps.value !== value && !value && !_get(this.input, 'state.focused')) {
-      this.setState({ isActive: false, label: hint || label });
-    } else if (prevProps.value !== value && value && !isActive) {
-      this.setState({ isActive: true, label });
-    }
-  }
-
-  onFocus = (...args) => {
-    const { onFocus, label } = this.props;
-
-    if (!this.state.isActive) {
-      this.setState({ isActive: true, label });
-    }
-
-    if (_isFunction(onFocus)) {
-      onFocus(...args);
-    }
-  }
-
-  onBlur = (...args) => {
-    const { onBlur, hint, label } = this.props;
-
-    if (this.state.isActive && (this.input && !this.input.state.text)) {
-      this.setState({ isActive: false, label: hint || label });
-    }
-
-    if (_isFunction(onBlur)) {
-      onBlur(...args);
-    }
-  }
-
-  getInputContainerStyle = (
-    isValid,
-    inputContainerStyle,
-    errorColor,
-    errorBorderWidth,
-    isHighlighted,
-    highlightedColor,
-    highlightedBorderWidth
-  ) => {
-    const stylesArr = [styles.inputContainerStyle, inputContainerStyle];
-
-    if (!isValid) {
-      stylesArr.push({ borderColor: errorColor, borderBottomWidth: errorBorderWidth });
-    } else if (isHighlighted) {
-      stylesArr.push({ borderColor: highlightedColor, borderBottomWidth: highlightedBorderWidth });
-    }
-
-    return StyleSheet.flatten(stylesArr);
-  }
-
-  getInputContainerStyleMemoized = memoize(this.getInputContainerStyle);
-
-  setUpRef = (component) => {
-    this.input = component;
-  }
-
-  render() {
-    const {
-      leftIconName,
-      leftIconType,
-      leftIconColor,
-      leftIconSize,
-      leftIconStyle,
-      rightIconName,
-      rightIconType,
-      rightIconColor,
-      rightIconSize,
-      rightIconStyle,
-      rightIconPress,
-      errorIconName,
-      errorIconType,
-      errorIconColor,
-      errorIconSize,
-      errorIconStyle,
-      alwaysShowRightIcon,
-      value,
-      onChangeText,
-      isValid,
-      isHighlighted,
-      highlightedColor,
-      highlightedBorderWidth,
-      errorMessage,
-      errorColor,
-      errorBorderWidth,
-      tintColor,
-      baseColor,
-      labelFontSize,
-      fontSize,
-      textColor,
-      labelTextStyle,
-      containerStyle,
-      inputContainerStyle,
-      containerAccessibilityLabel,
-      leftIconAccessibilityLabel,
-      rightIconAccessibilityLabel,
-      inputAccessibilityLabel,
-      ...props
-    } = this.props;
-    const { isActive, label } = this.state;
-
-    const inputContainerStyles = this.getInputContainerStyleMemoized(
-      isValid,
-      inputContainerStyle,
-      errorColor,
-      errorBorderWidth,
-      isHighlighted,
-      highlightedColor,
-      highlightedBorderWidth
-    );
-
-    return (
-      <View
-        style={[styles.containerStyle, containerStyle]}
-        accessibilityLabel={containerAccessibilityLabel}
-      >
-        <View style={inputContainerStyles}>
-          {
-            isActive && leftIconName
-              ? <View style={styles.leftIconContainerStyle}>
-                <Icon
-                  name={leftIconName}
-                  type={leftIconType}
-                  color={leftIconColor}
-                  size={leftIconSize}
-                  style={leftIconStyle}
-                  accessibilityLabel={leftIconAccessibilityLabel}
-                />
-              </View>
-              : null
-          }
-
-          <TextField
-            {...props}
-            ref={this.setUpRef}
-            label={I18n.t(label)}
-            tintColor={tintColor}
-            baseColor={baseColor}
-            activeLineWidth={0}
-            disabledLineWidth={0}
-            lineWidth={0}
-            labelFontSize={labelFontSize}
-            fontSize={fontSize}
-            textColor={textColor}
-            labelTextStyle={labelTextStyle}
-            value={value}
-            onChangeText={onChangeText}
-            containerStyle={styles.textInputStyle}
-            onFocus={this.onFocus}
-            onBlur={this.onBlur}
-            accessibilityLabel={inputAccessibilityLabel}
-          />
-          {
-            (rightIconName && (alwaysShowRightIcon || isActive))
-              ? <TouchableOpacity style={styles.rightIconContainerStyle} onPress={rightIconPress}>
-                <Icon
-                  name={rightIconName}
-                  type={rightIconType}
-                  color={rightIconColor}
-                  size={rightIconSize}
-                  style={rightIconStyle}
-                  accessibilityLabel={rightIconAccessibilityLabel}
-                />
-              </TouchableOpacity>
-              : null
-          }
-        </View>
-
-        {
-          !isValid
-            ? <View style={styles.errorContainerStyle}>
-              <Icon
-                accessibilityLabel='warningIcon'
-                name={errorIconName}
-                type={errorIconType}
-                color={errorIconColor}
-                size={errorIconSize}
-                style={errorIconStyle}
-              />
-              <LocalizedText
-                style={styles.errorTextStyle}
-                accessibilityLabel='warnningMsg'
-                numberOfLines={1}
-              >
-                {errorMessage}
-              </LocalizedText>
-            </View>
-            : null
-        }
-      </View>
-    );
-  }
-}
+      {
+        showIcon && isValid ? (
+          <TouchableWithoutFeedback onPress={onIconPress}>
+            <Icon name={iconName} type={iconType} size={iconSize} color={iconColor} style={[styles.iconStyle, iconStyle]} />
+          </TouchableWithoutFeedback>
+        ) : null
+      }
+      {
+        isValid ? null : (
+          <View style={styles.errorContainerStyle}>
+            {errorMessage && <LocalizedText numberOfLines={1} style={styles.errorTextStyle}>{errorMessage}</LocalizedText>}
+            <Icon name={errorIconName} type={errorIconType} size={errorIconSize} color={errorIconColor} style={errorIconStyle} />
+          </View>
+        )
+      }
+    </View>
+  );
+};
 
 CustomInput.defaultProps = {
-  leftIconType: IconTypes.material,
-  leftIconSize: 24,
-  rightIconType: IconTypes.material,
-  rightIconSize: 24,
-  errorIconType: IconTypes.fontAwesome,
-  errorIconName: 'warning',
-  errorIconSize: 24,
-  alwaysShowRightIcon: false,
-  rightIconPress: () => { },
-  labelFontSize: 14.6,
-  fontSize: 18.7,
-  isValid: true,
-  errorColor: Colors.dangerColorHexCode,
+  errorIconName: 'exclamationcircle',
+  errorIconType: IconTypes.ant,
+  errorIconSize: 15,
   errorIconColor: Colors.dangerColorHexCode,
-  errorBorderWidth: 2,
-  isHighlighted: false,
-  highlightedColor: Colors.dangerColorHexCode,
-  highlightedBorderWidth: 2,
-  tintColor: Colors.brandColorHexCode,
-  baseColor: Colors.brandColorHexCode,
-  textColor: Colors.blackColorHexCode,
-  labelTextStyle: { color: Colors.brandColorHexCode },
-  onChangeText: () => { }
+  showIcon: false,
+  iconColor: Colors.brandColorHexCode,
+  iconSize: 15,
+  onIconPress: () => {},
+  isValid: true
 };
 
 CustomInput.propTypes = {
-  leftIconName: PropTypes.string.isRequired,
-  leftIconType: PropTypes.oneOf(iconTypesValues),
-  leftIconColor: colorPropType,
-  leftIconSize: PropTypes.number,
-  leftIconStyle: ViewPropTypes.style,
-  rightIconName: PropTypes.string.isRequired,
-  rightIconType: PropTypes.oneOf(iconTypesValues),
-  rightIconColor: colorPropType,
-  rightIconSize: PropTypes.number,
-  rightIconStyle: ViewPropTypes.style,
-  rightIconPress: PropTypes.func,
-  errorIconName: PropTypes.string.isRequired,
-  errorIconType: PropTypes.oneOf(iconTypesValues),
-  errorIconColor: colorPropType,
-  errorIconSize: PropTypes.number,
-  errorIconStyle: ViewPropTypes.style,
-  alwaysShowRightIcon: PropTypes.bool,
-  label: PropTypes.string.isRequired,
-  hint: PropTypes.string,
-  value: PropTypes.string,
+  returnKeyType: PropTypes.oneOf(['done', 'go', 'next', 'search', 'send', 'none', 'previous', 'default', 'emergency-call', 'google', 'join', 'route', 'yahoo']),
+  editable: PropTypes.bool,
+  keyboardType: PropTypes.oneOf(['default', 'email-address', 'numeric', 'phone-pad', 'ascii-capable', 'numbers-and-punctuation', 'url', 'number-pad', 'name-phone-pad', 'decimal-pad', 'twitter', 'web-search', 'visible-password']),
+  onChangeText: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
+  placeholder: PropTypes.string,
+  placeholderTextColor: colorPropType,
+  secureTextEntry: PropTypes.bool,
+  onEndEditing: PropTypes.func,
   onBlur: PropTypes.func,
   onFocus: PropTypes.func,
-  onChangeText: PropTypes.func,
+  onSubmitEditing: PropTypes.func,
   isValid: PropTypes.bool,
-  isHighlighted: PropTypes.bool,
-  highlightedBorderWidth: PropTypes.number,
   errorMessage: PropTypes.string,
-  errorBorderWidth: PropTypes.number,
-  labelFontSize: PropTypes.number,
-  fontSize: PropTypes.number,
-  errorColor: colorPropType,
-  highlightedColor: colorPropType,
-  tintColor: colorPropType,
-  baseColor: colorPropType,
-  textColor: colorPropType,
-  labelTextStyle: Text.propTypes.style,
+  errorIconName: PropTypes.string,
+  errorIconType: PropTypes.oneOf(iconTypesValues),
+  errorIconSize: PropTypes.number,
+  errorIconColor: colorPropType,
+  showIcon: PropTypes.bool,
+  iconName: PropTypes.string,
+  iconType: PropTypes.oneOf(iconTypesValues),
+  iconSize: PropTypes.number,
+  iconColor: colorPropType,
+  onIconPress: PropTypes.func,
+  iconStyle: ViewPropTypes.style,
+  style: ViewPropTypes.style,
   containerStyle: ViewPropTypes.style,
-  inputContainerStyle: ViewPropTypes.style,
-  containerAccessibilityLabel: PropTypes.string,
-  leftIconAccessibilityLabel: PropTypes.string,
-  rightIconAccessibilityLabel: PropTypes.string,
-  inputAccessibilityLabel: PropTypes.string
+  errorIconStyle: ViewPropTypes.style
 };
 
 export default CustomInput;

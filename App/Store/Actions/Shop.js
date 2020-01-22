@@ -56,6 +56,8 @@ export const getProducts = (shopId, products, currentLimit, currentOffset, produ
                 const response = await AppAxios.get(APIURLs.getProductsOfShopGroupedByCategory, {
                     params
                 });
+
+                // console.tron.error(response.data)
     
                 const { shopProducts, count, offset, limit } = response.data;
     

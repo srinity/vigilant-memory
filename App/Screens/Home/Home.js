@@ -1,17 +1,32 @@
 import React, { Component } from 'react';
-import { SafeAreaView, FlatList, View, Text, TouchableWithoutFeedback, BackHandler } from 'react-native';
+import {
+  SafeAreaView,
+  FlatList,
+  View,
+  Text,
+  TouchableWithoutFeedback,
+  BackHandler,
+  TextInput,
+  Platform,
+  TouchableOpacity,
+  TouchableNativeFeedback,
+  StyleSheet,
+  I18nManager
+} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { Dropdown } from 'react-native-material-dropdown';
-import { find as _find } from 'lodash';
+import { find as _find, map as _map, isNil as _isNil, isObject as _isObject } from 'lodash';
 import I18n from 'react-native-i18n';
 
-import { ShopCard, Icon, IconTypes, Logo, Button } from './../../Components';
+import { ShopCard, Icon, IconTypes, Logo, Button, LocalizedText } from './../../Components';
 
 import { ImageHostUrl } from '../../Config/APIConfig';
 
 import { Colors } from './../../Theme';
 
 import styles from './Home.Styles';
+
+const TouchableComponent = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
 
 class Home extends Component {
   static getDerivedStateFromProps(props, state) {
@@ -40,6 +55,19 @@ class Home extends Component {
     const selectedArea = _find(areas, areaData => areaData.area === currentSearchArea);
     const districts = selectedArea ? selectedArea.districts : null;
 
+    this.viewModes = [
+      {
+          mode: 'grid',
+          type: IconTypes.entypo,
+          name: 'grid'
+      },
+      {
+          mode: 'list',
+          type: IconTypes.entypo,
+          name: 'list'
+      }
+    ];
+
     this.state = {
       isLoading: false,
       showSearch: !(currentSearchCity && currentSearchArea && currentSearchDistrict),
@@ -50,7 +78,8 @@ class Home extends Component {
       selectedDistrict: currentSearchDistrict,
       searchBarCity: currentSearchCity,
       searchBarArea: currentSearchArea,
-      searchBarDistrict: currentSearchDistrict
+      searchBarDistrict: currentSearchDistrict,
+      viewMode: this.viewModes[0].mode
     };
   }
 
@@ -73,7 +102,7 @@ class Home extends Component {
   }
 
   onShopPress = (shopInfo) => {
-    Actions.shop({ title: shopInfo.shopName, ...shopInfo });
+    Actions.products({ title: shopInfo.shopName, ...shopInfo });
   }
 
   onCityValueChange = (selectedCity) => {
@@ -119,15 +148,57 @@ class Home extends Component {
     }
   }
 
-  renderItem = ({ item }) => {
+  onViewModeChange = (newViewMode) => {
+    this.setState({ viewMode: newViewMode });
+  }
+
+  renderDropDownBase = (defaultValue, propName, { value }) => {
+    const dropDownText = value ? _isObject(value) && propName ? value[propName] : value : I18n.t(defaultValue);
+
+    return (
+      <Text style={styles.dropDownTextStyle}>{dropDownText}</Text>
+    );
+  }
+
+  renderViewingOption = (viewOption = {}, viewMode) => {
+    const isDisabled = viewMode === viewOption.mode;
+    const color = isDisabled ? Colors.whiteColorHexCode : Colors.blackColorHexCode;
+    const style = isDisabled ? 
+        StyleSheet.flatten([styles.viewingOptionStyle, styles.activeViewingOptionStyle])
+        : styles.viewingOptionStyle;
+
+    return (
+        <TouchableComponent
+            onPress={() => this.onViewModeChange(viewOption.mode)}
+            disabled={isDisabled}
+        >
+            <View style={style}>
+                <Icon type={viewOption.type} name={viewOption.name} size={30} color={color} />
+            </View>
+        </TouchableComponent>
+    );
+  }
+
+  renderItem = ({ item, index }) => {
+    const { viewMode } = this.state;
+    const deliveryCharge = _isNil(item.deliveryCharge) ? 0 : item.deliveryCharge;
+    const isHorizontal = viewMode !== 'grid';
+    const height = isHorizontal ? (this.props.height / 4.5) : (this.props.height / 3);
+    const width = isHorizontal ? (this.props.width - 20) : ((this.props.width - 30) / 2);
+    const additionalStyle = (!isHorizontal && index % 2 === 0) ? { marginRight: I18nManager.isRTL ? 0 : 10, marginLeft: I18nManager.isRTL ? 10 : 0 } : undefined;
+
     return (
       <ShopCard
         key={item._id}
         name={item.shopName}
-        address={`${item.address.district}, ${item.address.area}, ${item.address.city}`}
+        address={`${item.address.city}-${item.address.area}-${item.address.district}`}
+        deliveryCharge={deliveryCharge}
         image={`${ImageHostUrl}${item.shopImage}`}
-        height={this.props.height / 2.5}
+        height={height}
+        width={width}
         onPress={() => this.onShopPress(item)}
+        horizontal={isHorizontal}
+        containerStyle={additionalStyle}
       />
     );
   }
@@ -140,7 +211,8 @@ class Home extends Component {
       selectedDistrict,
       searchBarArea,
       searchBarCity,
-      searchBarDistrict
+      searchBarDistrict,
+      viewMode
     } = this.state;
     const { isLoading } = this.props;
 
@@ -164,7 +236,6 @@ class Home extends Component {
 
           <View style={styles.searchSelectionContainerStyle}>
             <Dropdown
-              label={I18n.t('home_screen_city_drop_down')}
               value={selectedCity}
               data={this.props.cities || []}
               onChangeText={this.onCityValueChange}
@@ -173,10 +244,11 @@ class Home extends Component {
               baseColor={Colors.brandColorHexCode}
               dropdownPosition={2}
               onFocus={this.onCityDropDownFocus}
+              containerStyle={styles.dropDownContainerStyle}
+              renderBase={(dataObject) => this.renderDropDownBase('home_screen_city_drop_down', 'city', dataObject)}
             />
 
             <Dropdown
-              label={I18n.t('home_screen_area_drop_down')}
               value={selectedArea}
               data={this.state.areas || []}
               onChangeText={this.onAreaValueChange}
@@ -185,10 +257,11 @@ class Home extends Component {
               disabled={!this.state.areas}
               baseColor={Colors.brandColorHexCode}
               dropdownPosition={2}
+              containerStyle={styles.dropDownContainerStyle}
+              renderBase={(dataObject) => this.renderDropDownBase('home_screen_area_drop_down', 'area', dataObject)}
             />
 
             <Dropdown
-              label={I18n.t('home_screen_district_drop_down')}
               value={selectedDistrict}
               data={this.state.districts || []}
               onChangeText={this.onDistrictValueChange}
@@ -196,6 +269,8 @@ class Home extends Component {
               valueExtractor={item => item}
               baseColor={Colors.brandColorHexCode}
               dropdownPosition={2}
+              containerStyle={styles.dropDownContainerStyle}
+              renderBase={(dataObject) => this.renderDropDownBase('home_screen_district_drop_down', undefined, dataObject)}
             />
 
             <Button
@@ -214,19 +289,39 @@ class Home extends Component {
       (
         <View style={styles.containerStyle}>
           <View style={styles.headerContainerStyle}>
-            <TouchableWithoutFeedback onPress={this.onSearchToolBarPress}>
-              <View style={styles.searchBoxContainerStyle}>
+            <View style={styles.searchInfoContainerStyle}>
+              <Icon type={IconTypes.fontAwesome} name='map-marker' color={Colors.whiteColorHexCode} size={18} />
+              <Text style={styles.searchTextStyle} numberOfLines={1}>{`${searchBarCity}-${searchBarArea}-${searchBarDistrict}`}</Text>
+              <TouchableWithoutFeedback onPress={this.onSearchToolBarPress}>
+                <LocalizedText style={styles.editSearchTextStyle}>home_screen_edit_search_button_title</LocalizedText>
+              </TouchableWithoutFeedback>
+            </View>
+
+            <View style={styles.searchInResultContainerStyle}>
+              <TextInput
+                placeholder={I18n.t('home_screen_search_in_result_placeholder')}
+                placeholderTextColor={Colors.notAvailableColorHexCode}
+                style={styles.searchInResultInputStyle}
+              />
+
+              <TouchableWithoutFeedback onPress={this.onSearchToolBarPress}>
                 <Icon type={IconTypes.oct} name='search' size={15} />
-                <Text style={styles.searchTextStyle} numberOfLines={1}>{`${searchBarDistrict || I18n.t('home_screen_district_drop_down')}, ${searchBarArea || I18n.t('home_screen_area_drop_down')}, ${searchBarCity || I18n.t('home_screen_city_drop_down')}`}</Text>
-              </View>
-            </TouchableWithoutFeedback>
+              </TouchableWithoutFeedback>
+            </View>
           </View>
 
-          <SafeAreaView style={styles.containerStyle}>
+          <SafeAreaView style={styles.shopsContainerStyle}>
+            <View style={styles.viewingOptionsContainerStyle}>
+              {_map(this.viewModes, (value) => this.renderViewingOption(value, this.state.viewMode))}
+            </View>
+
             <FlatList
+              key={viewMode}
               data={this.props.shops}
               renderItem={this.renderItem}
-              style={{ flex: 1 }}
+              style={{ flex: 1, marginBottom: 5 }}
+              extraData={this.state.viewMode}
+              numColumns={viewMode === 'grid' ? 2 : 1}
             />
           </SafeAreaView>
         </View>

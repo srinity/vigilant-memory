@@ -4,6 +4,7 @@ const INITIAL_STATE = {
     areCategoryProductsLoading: false,
     areExtraCategoryProductsLoading: false,
     categoryProducts: null,
+    categories: [],
     noMoreCategoryProducts: false,
     allCategoryProductsCount: -1,
     currentOffset: -1,
@@ -30,6 +31,7 @@ export default function (state = INITIAL_STATE, action) {
                 areCategoryProductsLoading: false,
                 areExtraCategoryProductsLoading: false,
                 categoryProducts: action.products,
+                categories: action.categories || state.categories,
                 allCategoryProductsCount: action.count,
                 currentLimit: action.limit,
                 currentOffset: action.offset

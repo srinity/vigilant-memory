@@ -29,10 +29,10 @@ function constructImageSource(image) {
 
 function constructCartProductStyle(width, height) {
     if (height > width) {
-        return { height: height / 7 };
+        return { height: height / 9 };
     }
 
-    return { height: width / 7 };
+    return { height: width / 9 };
 }
 
 const constructImageSourceMemoized = memoize(constructImageSource);
@@ -54,13 +54,13 @@ const CartProduct = ({
 }) => {
     const source = constructImageSourceMemoized(image);
     const style = constructCartProductStyleMemoized(width, height);
+    const imageSize = (style.height - 20)
+    const imageStyle = { height: imageSize, width: imageSize, borderRadius: imageSize / 2 };
     const TouchableComponent = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
 
     return (
         <View style={[styles.containerStyle, style, containerStyle]}>
-            <View style={styles.imageContainerStyle}>
-                <Image source={source} style={styles.imageStyle} />
-            </View>
+            <Image source={source} style={[styles.imageStyle, imageStyle]} />
 
             <View style={styles.infoContainerStyle}>
                 <View style={styles.nameContainerStyle}>
@@ -78,8 +78,10 @@ const CartProduct = ({
                         numberContainerStyle={styles.numericUpDownNumbersContainerStyle}
                         numbersStyle={styles.numericUpDownNumbersStyle}
                         onChange={onQuantityChange}
-                        buttonsColor={Colors.brandColorHexCode}
-                        disabledButtonsColor={Colors.getBrandColorRGBAValue(0.7)}
+                        buttonsColor={Colors.whiteColorHexCode}
+                        disabledButtonsColor={Colors.whiteColorHexCode}
+                        disabledStyle={{ borderColor: Colors.getBlackColorRGBAValue(0.5) }}
+                        iconsColor={Colors.getBlackColorRGBAValue(0.8)}
                         minValue={1}
                         maxValue={100}
                         value={quantity}

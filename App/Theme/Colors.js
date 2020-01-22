@@ -1,7 +1,7 @@
-export const brandColorHexCode = '#007fac';
+export const brandColorHexCode = '#cc3a2d';
 
 export const getBrandColorRGBAValue = (alphaValue = 1) => {
-    return `rgba(0, 127, 172, ${alphaValue})`;
+    return `rgba(204, 58, 45, ${alphaValue})`;
 };
 
 export const authBrandColorBorderHexCode = '#ffd7e3';

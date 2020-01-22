@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { View, TouchableNativeFeedback, TouchableOpacity, Platform, Text, SafeAreaView, StyleSheet } from 'react-native';
+import { View, TouchableNativeFeedback, TouchableOpacity, Platform, SafeAreaView, StyleSheet } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import memoize from 'memoize-one';
-import { capitalize as _capitalize, get as _get, isNil as _isNil } from 'lodash';
+import { get as _get, isNil as _isNil, reduce as _reduce } from 'lodash';
 import moment from 'moment';
+import I18n from 'react-native-i18n';
 
-import { CustomFlatList, LocalizedText } from './../../Components';
+import { CustomFlatList, LocalizedText, OrderCard } from './../../Components';
 
-import OrderStatusEnum from './../../Utils/OrderStatus';
+import { ImageHostUrl } from './../../Config/APIConfig';
 
 import { Colors } from '../../Theme';
 
@@ -31,47 +31,56 @@ class Orders extends Component {
     getOrders(shouldClean, shouldClean ? 20 : ordersCurrentLimit, ordersCurrentOffset, ordersCount, orders, user);
   }
 
-  getOrderStatusStyle = (status) => {
-    const stylesArr = [styles.orderStatusTextStyle];
-
-    if (status === OrderStatusEnum.PENDING) {
-      stylesArr.push({ color: Colors.warningColorHexCode });
-    } else if (status === OrderStatusEnum.DELIVERED || status === OrderStatusEnum.ACCEPTED) {
-      stylesArr.push({ color: Colors.successColorHexCode });
-    } else {
-      stylesArr.push({ color: Colors.dangerColorHexCode });
-    }
-
-    return StyleSheet.flatten(stylesArr);
-  }
-
-  getOrderStatusStyleMemoized = memoize(this.getOrderStatusStyle)
-
   onOrderPress = (order) => {
     Actions.order({ order });
   }
 
-  renderOrderItem = ({ item }) => {
+  renderOrderItem = ({ item, index }) => {
     const shopName = _get(item, 'shop.shopName', 'UNKNOWN');
+    const shopImage = _get(item, 'shop.shopImage', undefined);
     const status = _get(item, 'status', 'UNKNOWN');
+    const subTotal = _reduce(item.productOrders, (sum, { quantity, product }) => sum + (quantity * product.price), 0);
+    let time = '';
+
+    if (!_isNil(item.createdAt)) {
+      const orderTime = moment(item.createdAt);
+      
+      if (orderTime.isSame(moment(), 'day')) {
+        const secondsDifference = moment().diff(orderTime, 'seconds');
+        const minutesDifference = secondsDifference / 60;
+        const hoursDifference = minutesDifference / 60;
+
+        let localizeString = 'orders_screen_order_time_hours_text';
+        let localizeVariable = Math.floor(hoursDifference);
+
+        if (hoursDifference < 1 && minutesDifference < 2) {
+          localizeString = 'orders_screen_order_time_minute_text';
+          localizeVariable = Math.floor(minutesDifference);
+        } else if (hoursDifference < 1 && minutesDifference >= 2) {
+          localizeString = 'orders_screen_order_time_minutes_text';
+          localizeVariable = Math.floor(minutesDifference);
+        } else if (hoursDifference < 2) {
+          localizeString = 'orders_screen_order_time_hour_text';
+        }
+
+        time = I18n.t(localizeString, { time: localizeVariable });
+      } else {
+        time = orderTime.format('HH:mm, DD/MM/YYYY');
+      }
+    }
 
     return (
-      <TouchableComponent key={item._id} onPress={() => this.onOrderPress(item)}>
-        <View style={styles.orderContainerStyle}>
-          <View style={styles.orderStoreContainerStyle}>
-            <Text style={styles.orderStoreTextStyle}>{shopName}</Text>
-            <Text style={this.getOrderStatusStyleMemoized(status)}>{_capitalize(status)}</Text>
-          </View>
-
-          {
-            _isNil(item.createdAt) ?
-            null : (
-              <Text style={styles.orderTimeTextStyle}>{moment(item.createdAt).format('MMMM Do YYYY, HH:mm')}</Text>
-            )
-          }
-        </View>
-      </TouchableComponent>
-    )
+      <OrderCard
+        key={item._id}
+        onPress={() => this.onOrderPress(item)}
+        time={time}
+        title={shopName}
+        containerStyle={index === 0 ? styles.firstOrderContainerStyle : undefined}
+        cost={subTotal}
+        image={`${ImageHostUrl}${shopImage}`}
+        status={status}
+      />
+    );
   }
 
   render() {

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { View, Platform, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
-import { Dropdown } from 'react-native-material-dropdown';
+import { View, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import { Actions } from 'react-native-router-flux';
 import I18n from 'react-native-i18n';
@@ -8,17 +7,14 @@ import I18n from 'react-native-i18n';
 import {
   Button,
   CardSection,
-  Icon,
-  IconTypes,
   Logo,
   CustomInput,
   PasswordInput,
-  LocalizedText
+  LocalizedText,
+  GenderSelection
 } from './../../Components';
 
 import * as Validators from './../../Utils/Validators';
-
-import { Colors } from './../../Theme';
 
 import styles from './Register.Styles';
 
@@ -129,120 +125,82 @@ class Register extends Component {
 
     return (
       <SafeAreaView style={styles.containerStyle}>
-        <ScrollView style={styles.containerStyle} keyboardShouldPersistTaps='handled'>
+        <ScrollView style={styles.containerStyle} contentContainerStyle={{ minHeight: '100%' }} keyboardShouldPersistTaps='handled'>
           <Logo name='logo' />
 
           <View style={styles.inputsContainerStyle}>
             <View style={styles.nameInputsContainerStyle}>
               <CustomInput
-                label='register_screen_first_name_label'
-                leftIconName='person'
-                leftIconType={IconTypes.oct}
-                leftIconColor={Colors.brandColorHexCode}
+                placeholder={I18n.t('register_screen_first_name_label')}
                 value={firstName}
                 onChangeText={this.onFirstNameChange}
                 isValid={firstNameIsValid}
                 errorMessage='register_screen_first_name_error_message'
-                containerStyle={styles.nameInputStyle}
+                containerStyle={styles.fistNameInputStyle}
               />
 
               <CustomInput
-                label='register_screen_last_name_label'
-                leftIconName='person'
-                leftIconType={IconTypes.oct}
-                leftIconColor={Colors.brandColorHexCode}
+                placeholder={I18n.t('register_screen_last_name_label')}
                 value={lastName}
                 onChangeText={this.onLastNameChange}
                 isValid={lastNameIsValid}
                 errorMessage='register_screen_last_name_error_message'
-                containerStyle={styles.nameInputStyle}
+                containerStyle={styles.lastNameInputStyle}
               />
             </View>
 
             <CustomInput
-                label='register_screen_phone_number_label'
-                hint='register_screen_phone_number_hint'
-                leftIconName={Platform.OS === 'ios' ? 'cellphone-iphone' : 'cellphone'}
-                leftIconType={IconTypes.materialCommunity}
-                leftIconColor={Colors.brandColorHexCode}
+                placeholder={I18n.t('register_screen_phone_number_label')}
                 value={phone}
                 onChangeText={this.onPhoneChange}
                 isValid={phoneIsValid}
                 errorMessage='register_screen_phone_number_error_message'
                 keyboardType='phone-pad'
+                containerStyle={styles.inputContainerStyle}
             />
 
             <PasswordInput
-              label='register_screen_password_label'
-              hint='register_screen_password_hint'
-              leftIconColor={Colors.brandColorHexCode}
-              rightIconColor={Colors.brandColorHexCode}
+              placeholder={I18n.t('register_screen_password_label')}
               onChangeText={this.onPasswordChange}
               value={password}
               isValid={passwordIsValid}
               errorMessage='register_screen_password_error_message'
+              containerStyle={styles.passwordInputContainerStyle}
             />
 
             <PasswordInput
-              label='register_screen_confirm_password_label'
-              leftIconColor={Colors.brandColorHexCode}
-              rightIconColor={Colors.brandColorHexCode}
+              placeholder={I18n.t('register_screen_confirm_password_label')}
               onChangeText={this.onConfirmPasswordChange}
               value={confirmPassword}
               isValid={confirmPasswordIsValid}
               errorMessage='register_screen_confirm_password_error_message'
+              containerStyle={styles.passwordInputContainerStyle}
             />
 
-            <Dropdown
-              label={I18n.t('register_screen_gender_drop_down')}
-              value={gender}
-              data={this.dropDownData}
-              onChangeText={this.onGenderChange}
-              baseColor={Colors.brandColorHexCode}
-              dropdownPosition={0}
-              containerStyle={styles.genderDropDownStyle}
-              lineWidth={1}
-              labelFontSize={14.6}
-              fontSize={18.7}
-            />
+          <DatePicker
+            style={styles.datePickerContainerStyle}
+            showIcon={false}
+            date={dateOfBirth}
+            mode='date'
+            placeholder={I18n.t('register_screen_birthday_text')}
+            format='DD-MM-YYYY'
+            minDate='01-01-1950'
+            maxDate={`${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`}
+            confirmBtnText={I18n.t('register_screen_birthday_confirm_text')}
+            cancelBtnText={I18n.t('register_screen_birthday_cancel_text')}
+            onDateChange={this.onDateOfBirthChange}
+            customStyles={{
+                dateInput: [styles.datePickerStyle, dateOfBirthIsValid ? undefined : styles.datePickerInvalidStyle],
+            }}
+          />
 
-            <DatePicker
-              style={[styles.datePickerStyle, dateOfBirthIsValid ? undefined : styles.datePickerInvalidStyle]}
-              date={dateOfBirth}
-              mode='date'
-              placeholder={I18n.t('register_screen_birthday_text')}
-              format='DD-MM-YYYY'
-              minDate='01-01-1950'
-              maxDate={`${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`}
-              confirmBtnText={I18n.t('register_screen_birthday_confirm_text')}
-              cancelBtnText={I18n.t('register_screen_birthday_cancel_text')}
-              showIcon
-              iconComponent={(
-                  <View style={styles.datePickerIconStyle}>
-                      <Icon type={IconTypes.ion} name='ios-calendar' color={Colors.brandColorHexCode} />
-                  </View>
-              )}
-              onDateChange={this.onDateOfBirthChange}
-              customStyles={{
-                  dateInput: styles.datePickerDateInputStyle,
-                  placeholderText: styles.datePickerTextStyle,
-                  dateText: styles.datePickerTextStyle
-              }}
+            <GenderSelection
+              containerStyle={styles.genderContainerStyle}
+              maleText='register_screen_male_text'
+              femaleText='register_screen_female_text'
+              initialValue={gender}
+              onChange={this.onGenderChange}
             />
-            {
-              !dateOfBirthIsValid
-                ? <View style={styles.errorContainerStyle}>
-                  <Icon
-                    accessibilityLabel='warningIcon'
-                    name='warning'
-                    type={IconTypes.fontAwesome}
-                    color={Colors.dangerColorHexCode}
-                    size={24}
-                  />
-                  <LocalizedText style={styles.errorTextStyle}>register_screen_birthday_error_text</LocalizedText>
-                </View>
-                : null
-            }
 
             <CardSection style={styles.buttonCardSectionStyle}>
               <Button

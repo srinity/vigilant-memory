@@ -8,16 +8,18 @@ export default StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         paddingVertical: 7,
-        borderTopColor: Colors.notAvailableColorHexCode,
-        borderTopWidth: 1
+        borderBottomColor: Colors.notAvailableColorHexCode,
+        borderBottomWidth: 1,
+        paddingHorizontal: 15
     },
     imageContainerStyle: {
         flex: 1
     },
     imageStyle: {
-        flex: 1,
-        height: undefined,
-        width: undefined
+        marginVertical: 10,
+        alignSelf: 'center',
+        borderWidth: 1,
+        borderColor: Colors.notAvailableColorHexCode
     },
     infoContainerStyle: {
         flex: 2,
@@ -34,7 +36,7 @@ export default StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginVertical: 5
+        // marginVertical: 5
     },
     textStyle: {
         color: Colors.blackColorHexCode,
@@ -46,8 +48,8 @@ export default StyleSheet.create({
     },
     numericUpDownNumbersStyle: {
         fontSize: 16,
-        color: Colors.blackColorHexCode,
-        fontWeight: 'normal'
+        color: Colors.brandColorHexCode,
+        fontWeight: 'bold'
     },
     numericUpDownNumbersContainerStyle: {
         flex: 0,
@@ -57,6 +59,8 @@ export default StyleSheet.create({
         flex: 0,
         height: 20,
         width: 20,
-        padding: 0
+        padding: 0,
+        borderWidth: 1,
+        borderColor: Colors.getBlackColorRGBAValue(0.8)
     }
 });

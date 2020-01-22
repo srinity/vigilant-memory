@@ -18,25 +18,18 @@ export default StyleSheet.create({
     borderWidth: 2,
     borderColor: Colors.notAvailableColorHexCode
   },
-  orderContainerStyle: {
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    marginBottom: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.notAvailableColorHexCode,
+  firstOrderContainerStyle: {
+    marginTop: 15,
   },
   orderStoreContainerStyle: {
-    flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    // flex: 1
   },
   orderStoreTextStyle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    flex: 1,
-    marginRight: I18nManager.isRTL ? 0 : 5,
-    marginLeft: I18nManager.isRTL ? 5 : 0,
-    textAlign: I18nManager.isRTL ? 'auto' : 'left'
+    fontSize: 16,
+    color: Colors.brandColorHexCode,
+    textAlign: I18nManager.isRTL ? 'auto' : 'left',
+    // marginBottom: 10
   },
   orderStatusTextStyle: {
     alignSelf: 'flex-end',

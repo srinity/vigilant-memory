@@ -1,4 +1,5 @@
 import DeviceDimensions from './DeviceDimensions';
+import AppIntro from './AppIntro';
 import Account from './Account';
 import Shop from './Shop';
 import Products from './Products';
@@ -8,6 +9,7 @@ import User from './User';
 
 export {
     DeviceDimensions,
+    AppIntro,
     Account,
     Shop,
     Products,

@@ -8,14 +8,23 @@ import { handleNotificationsPermissions, getNotificationsToken, onNotificationsT
 
 export const ScreenTypes = {
     auth: 'authScenes',
-    app: 'appScenes'
+    app: 'appScenes',
+    intro: 'introScreens'
 };
 
 class AuthSwitch extends Component {
   componentDidMount() {
-    const { user, isLoggedIn, lastLoginTime } = this.props;
+    const { user, isLoggedIn, lastLoginTime, appIntro } = this.props;
     const currentTime = moment(new Date());
     const secondsSinceLastRefresh = moment.duration(currentTime.diff(lastLoginTime)).asSeconds();
+
+    if (!appIntro.skipped && !appIntro.completed) {
+      setTimeout(() => {
+        this.navigateToProperScreen(ScreenTypes.intro);
+        SplashScreen.hide();
+      }, 0);
+      return;
+    }
 
     // check if the user token expired or about to be expired if so start refreshing the token
     if (isLoggedIn && user && (!lastLoginTime || secondsSinceLastRefresh >= (user.expiresIn || 36000) - 1000)) {
@@ -62,6 +71,14 @@ class AuthSwitch extends Component {
         // Actions.cart();
         this.props.setActiveTab('home');
       }
+    } else if (
+      (!prevProps.appIntro.skipped && this.props.appIntro.skipped) ||
+      (!prevProps.appIntro.completed && this.props.appIntro.completed)
+    ) {
+      // navigate the app stack then set the bottom bar tab to home
+      this.navigateToProperScreen(ScreenTypes.app);
+      // Actions.cart();
+      this.props.setActiveTab('home');
     } else if (!prevProps.isLoggedIn && this.props.isLoggedIn && this.props.user && !this.props.user.inActive) {
       // if the user just logged in then update the backend cart then get the user data and handle notifications
       this.props.uploadUserCart(this.props.cart, this.props.user);

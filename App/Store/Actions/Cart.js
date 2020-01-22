@@ -66,7 +66,7 @@ export function getUserCart(user) {
                     products: _map(shopCart.products,
                         product => ({ ...product, ...product.meta, _id: product.productId })) };
             });
-
+            // console.tron.error(response.data)
             // dispatch a success action with the new cart
             dispatch(getUserCartSuccess(cart));
         } catch (error) {
@@ -93,7 +93,7 @@ export function getUserCart(user) {
  * @param  {object} cart
  * @param  {object} user
  */
-export function addToCart(shopId, shopName, product, cart, user) {
+export function addToCart(shopId, shopName, product, cart, user, shopImage, shopAddress) {
     return async dispatch => {
         const { _id: productId, quantity } = product;
 
@@ -102,6 +102,14 @@ export function addToCart(shopId, shopName, product, cart, user) {
 
         // modify the product
         let shopCartItems = { shopId, shopName, products: [] };
+
+        if (shopImage) {
+            shopCartItems['shopImage'] = shopImage;
+        }
+
+        if (shopAddress) {
+            shopCartItems['shopAddress'] = shopAddress;
+        }
 
         const newCart = _cloneDeep(cart);
     
@@ -317,13 +325,15 @@ export function buyShopProducts(user, shopId, products, userAddress, cart, onBuy
                 onBuy();
             }
 
-            Toast.show(response.data.message, {
-                position: Toast.positions.BOTTOM,
-                duration: Toast.durations.SHORT,
-                shadow: true,
-                animation: true,
-                hideOnPress: true,
-            });
+            dispatch(buyingProductSuccess(cart));
+
+            // Toast.show(response.data.message, {
+            //     position: Toast.positions.BOTTOM,
+            //     duration: Toast.durations.SHORT,
+            //     shadow: true,
+            //     animation: true,
+            //     hideOnPress: true,
+            // });
         } catch (error) {
             const message = _get(error.response, 'data.message', 'Something went wrong');
             Toast.show(message, {

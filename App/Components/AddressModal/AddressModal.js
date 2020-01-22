@@ -1,10 +1,8 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import {
   View,
-  Animated,
-  StyleSheet,
-  TouchableWithoutFeedback,
   Keyboard,
+  Text,
   Platform
 } from 'react-native';
 import PropTypes from 'prop-types';
@@ -13,7 +11,8 @@ import {
   find as _find,
   isNumber as _isNumber,
   toNumber as _toNumber,
-  isNaN as _isNaN
+  isNaN as _isNaN,
+  isObject as _isObject
 } from 'lodash';
 import I18n from 'react-native-i18n';
 import Toast from 'react-native-root-toast';
@@ -21,8 +20,9 @@ import Toast from 'react-native-root-toast';
 import CustomInput from './../CustomInput';
 import Button from './../Button/Button';
 
-import styles from './AddressModal.Styles';
 import { Colors } from '../../Theme';
+
+import styles from './AddressModal.Styles';
 
 class AddressModal extends Component {
   static getDerivedStateFromProps(props, prevState) {
@@ -83,37 +83,14 @@ class AddressModal extends Component {
       floorNumberIsValid: true,
       buildingNumberIsValid: true,
       streetIsValid: true,
-      isKeyboardOpen: false,
     };
-
-    this.animation = new Animated.Value(isVisible ? 1 : 0);
-  }
-
-  componentDidMount() {
-    this.runAnimation(this.props.isVisible);
-
-    if (Platform.OS === 'ios') {
-      this.keyboardIsShownListener = Keyboard.addListener('keyboardDidShow', this.handleKeyboardDidShow);
-      this.keyboardIsHiddenListener = Keyboard.addListener('keyboardDidHide', this.handleKeyboardDidHide);
-    }
   }
 
   componentDidUpdate(prevProps) {
-    const { isVisible, isLoading, error, onClose } = this.props;
-
-    if (prevProps.isVisible !== isVisible) {
-      this.runAnimation(isVisible);
-    }
+    const { isLoading, error, onClose } = this.props;
 
     if (!isLoading && isLoading !== prevProps.isLoading && !error) {
       onClose();
-    }
-  }
-
-  componentWillUnmount() {
-    if (Platform.OS === 'ios') {
-      this.keyboardIsShownListener.remove();
-      this.keyboardIsHiddenListener.remove();
     }
   }
 
@@ -208,7 +185,7 @@ class AddressModal extends Component {
             buildingNumber,
           },
         };
-        
+
         onPress(address);
       } else {
         Toast.show('Please enter valid values', {
@@ -226,52 +203,17 @@ class AddressModal extends Component {
     Keyboard.dismiss();
   }
 
-  onCloseRequest = () => {
-    if (this.state.isKeyboardOpen) {
-      Keyboard.dismiss();
-    } else {
-      this.props.onClose();
-    }
-  }
-
-  getContainerStyle = (isKeyboardOpen) => {
-    if (isKeyboardOpen) {
-      return StyleSheet.flatten([styles.contentContainerStyle, {
-        height: styles.contentContainerStyle.height + (this.keyboardHeight / 2)
-      }]);
-    }
-
-    return styles.contentContainerStyle;
-  }
-
   isValidNumericValue = (value = '') => {
     const numericValue = _toNumber(value);
     return (!_isNaN(numericValue) && _isNumber(numericValue));
   }
 
-  handleKeyboardDidShow = ({ endCoordinates }) => {
-    if (this.state.isKeyboardOpen !== true) {
-      this.keyboardHeight = endCoordinates.height;
-      this.setState({ isKeyboardOpen: true });
-    }
-  }
+  renderDropDownBase = (defaultValue, propName, { value }) => {
+    const dropDownText = value ? _isObject(value) && propName ? value[propName] : value : I18n.t(defaultValue);
 
-  handleKeyboardDidHide = () => {
-    if (this.state.isKeyboardOpen !== false) {
-      this.setState({ isKeyboardOpen: false });
-    }
-  }
-
-  runAnimation = (isVisible) => {
-    Animated.timing(this.animation, {
-      toValue: isVisible ? 1 : 0,
-      duration: 350,
-      useNativeDriver: true
-    }).start(({ finished }) => {
-      if (finished && !isVisible) {
-        this.setState({ isVisible: false });
-      }
-    });
+    return (
+      <Text style={styles.dropDownTextStyle}>{dropDownText}</Text>
+    );
   }
 
   render() {
@@ -294,159 +236,125 @@ class AddressModal extends Component {
       floorNumberIsValid,
       buildingNumberIsValid,
       streetIsValid,
-      isKeyboardOpen
     } = this.state;
-
-    const animatedOverlayStyle = {
-      opacity: this.animation.interpolate({
-        inputRange: [0, 1],
-        outputRange: [0, 0.7]
-      })
-    };
-
-    const animatedContentStyle = {
-      transform: [
-        {
-          translateY: this.animation.interpolate({
-            inputRange: [0, 1],
-            outputRange: [styles.contentContainerStyle.height, 0]
-          })
-        }
-      ]
-    };
 
     return (
       isVisible
         ?
         (
-          <Fragment>
-            <Animated.View style={[this.getContainerStyle(isKeyboardOpen), animatedContentStyle]}>
-              <CustomInput
-                label='address_modal_street_label'
-                hint='address_modal_street_hint'
-                onChangeText={this.onStreetChange}
-                value={street}
-                isValid={streetIsValid}
-                errorMessage='address_modal_street_error_message'
-                inputContainerStyle={styles.inputContainerStyle}
-                containerStyle={styles.streetInputStyle}
-                labelFontSize={12}
-                fontSize={16}
-              />
+          <View style={styles.contentContainerStyle}>
+            <Dropdown
+              value={city}
+              data={cities || []}
+              onChangeText={this.onCityValueChange}
+              valueExtractor={item => item}
+              labelExtractor={item => item.city}
+              baseColor={Colors.brandColorHexCode}
+              dropdownPosition={1}
+              absoluteRTLLayout
+              onFocus={this.onDropDownFocus}
+              containerStyle={styles.dropDownContainerStyle}
+              renderBase={(dataObject) => this.renderDropDownBase('home_screen_city_drop_down', 'city', dataObject)}
+            />
 
-              <View style={styles.rowStyle}>
-                <CustomInput
-                  label='address_modal_building_number_label'
-                  hint='address_modal_building_number_hint'
-                  onChangeText={this.onBuildingNumberChange}
-                  value={buildingNumber}
-                  isValid={buildingNumberIsValid}
-                  errorMessage='address_modal_building_number_error_message'
-                  keyboardType='number-pad'
-                  containerStyle={styles.rowInputStyle}
-                  inputContainerStyle={styles.inputContainerStyle}
-                  labelFontSize={12}
-                  fontSize={16}
-                />
-
-                <CustomInput
-                  label='address_modal_floor_number_label'
-                  hint='address_modal_floor_number_hint'
-                  onChangeText={this.onFloorChange}
-                  value={floorNumber}
-                  isValid={floorNumberIsValid}
-                  errorMessage='address_modal_floor_number_error_message'
-                  keyboardType='number-pad'
-                  containerStyle={styles.rowInputStyle}
-                  inputContainerStyle={styles.inputContainerStyle}
-                  labelFontSize={12}
-                  fontSize={16}
-                />
-
-                <CustomInput
-                  label='address_modal_apartment_number_label'
-                  hint='address_modal_apartment_number_hint'
-                  onChangeText={this.onApartmentNumberChange}
-                  value={apartmentNumber}
-                  isValid={apartmentNumberIsValid}
-                  errorMessage='address_modal_apartment_number_error_message'
-                  keyboardType='number-pad'
-                  containerStyle={styles.lastRowInputStyle}
-                  inputContainerStyle={styles.inputContainerStyle}
-                  labelFontSize={12}
-                  fontSize={16}
-                />
-              </View>
-
+            <View style={styles.rowStyle}>
               <Dropdown
-                label={I18n.t('address_modal_city_drop_down')}
-                value={city}
-                data={cities || []}
-                onChangeText={this.onCityValueChange}
+                value={area}
+                data={areas || []}
+                onChangeText={this.onAreaValueChange}
                 valueExtractor={item => item}
-                labelExtractor={item => item.city}
+                labelExtractor={item => item.area}
+                disabled={!areas}
                 baseColor={Colors.brandColorHexCode}
-                dropdownPosition={2}
+                dropdownPosition={1}
+                containerStyle={styles.areaDropDownStyle}
                 absoluteRTLLayout
                 onFocus={this.onDropDownFocus}
+                containerStyle={styles.firstHorizontalDropDownContainerStyle}
+                renderBase={(dataObject) => this.renderDropDownBase('home_screen_area_drop_down', 'area', dataObject)}
               />
 
-              <View style={styles.rowStyle}>
+              <Dropdown
+                value={district}
+                data={districts || []}
+                onChangeText={this.onDistrictValueChange}
+                disabled={!districts}
+                valueExtractor={item => item}
+                baseColor={Colors.brandColorHexCode}
+                dropdownPosition={1}
+                containerStyle={styles.districtDropDown}
+                absoluteRTLLayout
+                onFocus={this.onDropDownFocus}
+                containerStyle={styles.horizontalDropDownContainerStyle}
+                renderBase={(dataObject) => this.renderDropDownBase('home_screen_district_drop_down', undefined, dataObject)}
+              />
+            </View>
 
-                <Dropdown
-                  label={I18n.t('address_modal_area_drop_down')}
-                  value={area}
-                  data={areas || []}
-                  onChangeText={this.onAreaValueChange}
-                  valueExtractor={item => item}
-                  labelExtractor={item => item.area}
-                  disabled={!areas}
-                  baseColor={Colors.brandColorHexCode}
-                  dropdownPosition={2}
-                  containerStyle={styles.areaDropDownStyle}
-                  absoluteRTLLayout
-                  onFocus={this.onDropDownFocus}
-                />
+            <CustomInput
+              placeholder={I18n.t('address_modal_street_label')}
+              placeholderTextColor={Platform.OS === 'ios' ? Colors.blackColorHexCode : undefined}
+              onChangeText={this.onStreetChange}
+              value={street}
+              isValid={streetIsValid}
+              errorMessage='address_modal_street_error_message'
+              containerStyle={styles.streetInputStyle}
+            />
 
-                <Dropdown
-                  label={I18n.t('address_modal_district_drop_down')}
-                  value={district}
-                  data={districts || []}
-                  onChangeText={this.onDistrictValueChange}
-                  disabled={!districts}
-                  valueExtractor={item => item}
-                  baseColor={Colors.brandColorHexCode}
-                  dropdownPosition={2}
-                  containerStyle={styles.districtDropDown}
-                  absoluteRTLLayout
-                  onFocus={this.onDropDownFocus}
-                />
-              </View>
+            <View style={styles.rowStyle}>
+              <CustomInput
+                placeholder={I18n.t('address_modal_building_number_label')}
+                placeholderTextColor={Platform.OS === 'ios' ? Colors.blackColorHexCode : undefined}
+                onChangeText={this.onBuildingNumberChange}
+                value={buildingNumber}
+                isValid={buildingNumberIsValid}
+                errorMessage='address_modal_building_number_error_message'
+                keyboardType='number-pad'
+                containerStyle={styles.rowInputStyle}
+              />
 
-              <View style={styles.buttonsContainerStyle}>
-                <Button
-                  title='address_modal_cancel_button_text'
-                  style={styles.cancelButtonStyle}
-                  disabledStyle={styles.disabledCancelButtonStyle}
-                  disabled={isLoading}
-                  onPress={onClose}
-                  indicatorSize='small'
-                />
-                <Button
-                  title={buttonText}
-                  style={styles.addButtonStyle}
-                  disabledStyle={styles.disabledAddButtonStyle}
-                  isLoading={isLoading}
-                  onPress={this.onAddAddressPress}
-                  indicatorSize='small'
-                />
-              </View>
-            </Animated.View>
+              <CustomInput
+                placeholder={I18n.t('address_modal_floor_number_label')}
+                placeholderTextColor={Platform.OS === 'ios' ? Colors.blackColorHexCode : undefined}
+                onChangeText={this.onFloorChange}
+                value={floorNumber}
+                isValid={floorNumberIsValid}
+                errorMessage='address_modal_floor_number_error_message'
+                keyboardType='number-pad'
+                containerStyle={styles.rowInputStyle}
+              />
 
-            <TouchableWithoutFeedback onPress={this.onCloseRequest}>
-              <Animated.View style={[styles.overlayStyle, animatedOverlayStyle]} />
-            </TouchableWithoutFeedback>
-          </Fragment>
+              <CustomInput
+                placeholder={I18n.t('address_modal_apartment_number_label')}
+                placeholderTextColor={Platform.OS === 'ios' ? Colors.blackColorHexCode : undefined}
+                onChangeText={this.onApartmentNumberChange}
+                value={apartmentNumber}
+                isValid={apartmentNumberIsValid}
+                errorMessage='address_modal_apartment_number_error_message'
+                keyboardType='number-pad'
+                containerStyle={styles.lastRowInputStyle}
+              />
+            </View>
+
+            <View style={styles.buttonsContainerStyle}>
+              <Button
+                title='address_modal_cancel_button_text'
+                style={styles.cancelButtonStyle}
+                textStyle={styles.cancelButtonTextStyle}
+                disabledStyle={styles.disabledCancelButtonStyle}
+                disabled={isLoading}
+                onPress={onClose}
+                indicatorSize='small'
+              />
+              <Button
+                title={buttonText}
+                style={styles.addButtonStyle}
+                disabledStyle={styles.disabledAddButtonStyle}
+                isLoading={isLoading}
+                onPress={this.onAddAddressPress}
+                indicatorSize='small'
+              />
+            </View>
+          </View>
         )
         :
         null

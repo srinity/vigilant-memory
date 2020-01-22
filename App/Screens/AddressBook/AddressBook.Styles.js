@@ -7,7 +7,7 @@ export default StyleSheet.create({
     flex: 1
   },
   addressContainerStyle: {
-    paddingHorizontal: 10,
+    paddingTop: 10,
     backgroundColor: Colors.whiteColorHexCode
   },
   addressHeaderContainerStyle: {
@@ -34,41 +34,62 @@ export default StyleSheet.create({
     marginHorizontal: 10,
   },
   addressItemContainerStyle: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
     borderBottomWidth: 1,
     borderBottomColor: Colors.notAvailableColorHexCode
   },
   addressDetailTextStyle: {
     marginBottom: 5
   },
+  addressTextStyle: {
+    flex: 1
+  },
   editAddressContainerStyle: {
+    justifyContent: 'center',
     alignItems: 'center',
-    padding: 5
+    padding: 5,
+    marginHorizontal: 10
   },
   editAddressTextStyle: {
+    fontSize: 10,
     color: Colors.brandColorHexCode,
   },
   removeAddressContainerStyle: {
+    justifyContent: 'center',
     alignItems: 'center',
-    padding: 5,
-    marginBottom: 7
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 15,
+    backgroundColor: Colors.brandColorHexCode
   },
   removeAddressTextStyle: {
-    color: Colors.dangerColorHexCode,
+    fontSize: 10,
+    color: Colors.whiteColorHexCode,
+    fontWeight: 'bold'
   },
   addressInfoContainerStyle: {
     flexDirection: 'row',
     alignItems: 'center'
   },
   addressInfoStyle: {
+    flex: 1,
     marginLeft: I18nManager.isRTL ? 0 : 10,
     marginRight: I18nManager.isRTL ? 10 : 0
   },
   addressActionsContainerStyle: {
-    justifyContent: 'space-between',
-    alignItems: 'flex-end'
+    marginTop: 5,
+    alignSelf: 'flex-end',
+    alignItems: 'center',
+    flexDirection: 'row'
+  },
+  addButtonStyle: {
+    flex: 0,
+    marginTop: 40,
+    marginBottom: 10,
+    backgroundColor: Colors.brandColorHexCode,
+    borderRadius: 25,
+    marginHorizontal: 30,
+    minHeight: 40,
   }
 });

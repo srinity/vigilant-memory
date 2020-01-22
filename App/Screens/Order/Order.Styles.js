@@ -8,42 +8,104 @@ export default StyleSheet.create({
   },
   rawStyle: {
     flexDirection: 'row',
-    marginBottom: 3
+    justifyContent: 'space-between',
+    padding: 10,
+    borderTopColor: Colors.notAvailableColorHexCode,
+    borderTopWidth: 1
+  },
+  deliveryAddressContainerStyle: {
+    padding: 10,
+    borderTopColor: Colors.notAvailableColorHexCode,
+    borderTopWidth: 1
   },
   orderInfoCardStyle: {
     backgroundColor: Colors.whiteColorHexCode,
-    paddingVertical: 20,
-    paddingHorizontal: 10,
+    paddingVertical: 10,
+    // paddingHorizontal: 10,
     marginBottom: 5,
   },
   orderInfoPropertyTextStyle: {
-    color: Colors.getBlackColorRGBAValue(0.4)
+    fontSize: 13,
+    // color: Colors.getBlackColorRGBAValue(0.4)
   },
   orderInfoTextStyle: {
     marginHorizontal: 3,
-    flex: 1,
-    textAlign: I18nManager.isRTL ? 'auto' : 'left'
+    fontSize: 13,
+    color: Colors.brandColorHexCode,
   },
   orderItemsTitleTextStyle: {
-    fontWeight: 'bold',
-    marginBottom: 10
+    paddingHorizontal: 10,
+    marginBottom: 5
   },
   orderItemContainerStyle: {
     flexDirection: 'row',
-    marginBottom: 5,
-    borderBottomColor: Colors.notAvailableColorHexCode,
-    borderBottomWidth: 1
+    borderTopColor: Colors.notAvailableColorHexCode,
+    borderTopWidth: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 15
   },
   orderTotalContainerStyle: {
     flexDirection: 'row',
     marginTop: 5
   },
+  orderItemImageStyle: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+  },
+  orderItemInfoContainerStyle: {
+    marginHorizontal: 10
+  },
   orderItemNameTextStyle: {
-    marginBottom: 3,
-    flex: 1,
+    marginBottom: 5,
+    color: Colors.brandColorHexCode,
+    fontSize: 14,
+    fontWeight: 'bold',
+    // flex: 1,
     textAlign: I18nManager.isRTL ? 'auto' : 'left'
   },
   orderItemPriceTextStyle: {
-    color: Colors.getBlackColorRGBAValue(0.5)
+    fontSize: 10,
+    marginBottom: 5
+  },
+  tagStyle: {
+    paddingVertical: 2,
+    paddingHorizontal: 12
+  },
+  textStyle: {
+    fontSize: 13,
+    fontWeight: 'bold'
+  },
+  orderDetailsCardStyle: {
+    backgroundColor: Colors.whiteColorHexCode,
+    paddingTop: 15,
+    paddingBottom: 10,
+    marginBottom: 5,
+  },
+  orderCostDetailsContainerStyle: {
+    paddingVertical: 5,
+    paddingHorizontal: 20,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderTopColor: Colors.notAvailableColorHexCode,
+    borderBottomColor: Colors.notAvailableColorHexCode
+  },
+  orderPriceDetailsRowStyle: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  orderPriceDetailsTitleTextStyle: {
+    fontSize: 13
+  },
+  orderPriceDetailsValueTextStyle: {
+    fontSize: 13,
+    color: Colors.brandColorHexCode
+  },
+  orderItemsCostContainerStyle: {
+    marginBottom: 5
+  },
+  orderTotalCostContainerStyle: {
+    paddingTop: 5,
+    paddingHorizontal: 20
   }
 });

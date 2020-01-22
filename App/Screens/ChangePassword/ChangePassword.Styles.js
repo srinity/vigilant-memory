@@ -5,14 +5,20 @@ import { Colors } from '../../Theme';
 export default StyleSheet.create({
   containerStyle: {
     flex: 1,
-     paddingHorizontal: 15
+     paddingHorizontal: 15,
+     paddingTop: 40
+  },
+  inputsStyle: {
+    marginBottom: 10
   },
   buttonStyle: {
-    // borderRadius: 50,
-    backgroundColor: Colors.brandColorHexCode,
-    minHeight: 40,
     flex: 0,
-    marginVertical: 10 
+    marginTop: 40,
+    marginBottom: 10,
+    backgroundColor: Colors.brandColorHexCode,
+    borderRadius: 25,
+    marginHorizontal: 30,
+    minHeight: 40,
   },
   buttonTextStyle: {
     color: Colors.whiteColorHexCode

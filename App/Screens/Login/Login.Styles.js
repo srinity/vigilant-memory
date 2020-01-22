@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 
 import { Colors } from './../../Theme';
 
@@ -24,9 +24,12 @@ export default StyleSheet.create({
     width: '100%'
   },
   buttonStyle: {
+    width: '100%',
+    alignSelf: 'center',
     borderRadius: 50,
     backgroundColor: Colors.brandColorHexCode,
-    minHeight: 40
+    minHeight: 40,
+    marginHorizontal: 0,
   },
   buttonTextStyle: {
     color: Colors.whiteColorHexCode
@@ -39,7 +42,7 @@ export default StyleSheet.create({
   },
   actionsContainerStyle: {
     flexDirection: 'row',
-    marginTop: 30,
+    marginTop: 20,
   },
   actionsTextStyle: {
     color: Colors.brandColorHexCode,
@@ -51,5 +54,13 @@ export default StyleSheet.create({
   },
   footerContainerStyle: {
     marginBottom: 20
+  },
+  phoneInputContainerStyle: {
+    paddingVertical: Platform.OS === 'ios' ? 15 : 0,
+    marginBottom: 15
+  },
+  passwordInputContainerStyle: {
+    padding: 5,
+    marginBottom: 15
   }
 });

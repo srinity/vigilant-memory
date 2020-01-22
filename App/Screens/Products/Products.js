@@ -1,18 +1,21 @@
 import React, { Component } from 'react';
 import {
-    View,
-    SafeAreaView,
-    TouchableOpacity,
-    TouchableNativeFeedback,
-    StyleSheet,
-    Platform,
-    ActivityIndicator
+  View,
+  SafeAreaView,
+  TouchableOpacity,
+  TouchableNativeFeedback,
+  StyleSheet,
+  Platform,
+  ActivityIndicator,
+  FlatList,
+  I18nManager
 } from 'react-native';
-import { map as _map } from 'lodash';
+import { map as _map, get as _get, reduce as _reduce } from 'lodash';
 import memoize from 'memoize-one';
-import { Dropdown } from 'react-native-material-dropdown';
+import I18n from 'react-native-i18n';
+import { Actions } from 'react-native-router-flux';
 
-import { ProductCard, Icon, IconTypes, CustomFlatList } from './../../Components';
+import { ProductCard, Icon, IconTypes, CustomFlatList, ShopHeader, Tag } from './../../Components';
 
 import { CartActions } from '../../Store/Actions';
 
@@ -24,217 +27,270 @@ import styles from './Products.Styles';
 
 
 class Products extends Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.viewModes = [
-            {
-                mode: 'grid',
-                type: IconTypes.entypo,
-                name: 'grid'
-            },
-            {
-                mode: 'list',
-                type: IconTypes.entypo,
-                name: 'list'
-            }
-        ];
+    this.viewModes = [
+      {
+        mode: 'grid',
+        type: IconTypes.entypo,
+        name: 'grid'
+      },
+      {
+        mode: 'list',
+        type: IconTypes.entypo,
+        name: 'list'
+      }
+    ];
 
-        this.state = {
-            viewMode: this.viewModes[0].mode,
-            activeCategory: props.category
-        };
+    this.state = {
+      viewMode: this.viewModes[0].mode,
+      activeCategory: 'all'
+    };
+  }
+
+  componentDidMount() {
+    this.fetchCategoryProducts(false, true);
+  }
+
+  componentWillUnmount() {
+    this.props.cleanCategoryProductsData();
+  }
+
+  onViewModeChange = (newViewMode) => {
+    this.setState({ viewMode: newViewMode });
+  }
+
+  onProductQuantityChange = (productInfo, quantity) => {
+    const { cart, _id: shopId } = this.props;
+    const isInCart = CartActions.checkIfIProductsInCart(productInfo, shopId, cart);
+
+    if (!isInCart) {
+      this.onAddToCartPress(productInfo, quantity);
+    } else if (isInCart && quantity === 0) {
+      this.onRemoveFromCartPress(productInfo);
+    } else if (isInCart) {
+      // quantity added to cart changed changed
+      this.onCartProductQuantityChange(productInfo, quantity);
+    }
+  }
+
+  onAddToCartPress = (productInfo, quantity) => {
+    const { _id: shopId, shopName, shopImage, address, addToCart, cart, user } = this.props;
+    const product = { ...productInfo, quantity };
+    addToCart(shopId, shopName, product, cart, user, shopImage, address);
+  }
+
+  onRemoveFromCartPress = (productInfo) => {
+    const { _id: shopId, shopName, removeFromCart, cart, user } = this.props;
+    removeFromCart(shopId, shopName, productInfo, cart, user);
+  }
+
+  onCartProductQuantityChange = (productInfo, quantity) => {
+    const { _id: shopId, shopName, changeCartProductQuantity, cart, user } = this.props;
+    const product = { ...productInfo, quantity };
+    changeCartProductQuantity(shopId, shopName, product, cart, user);
+  }
+
+  onCategoryValueChange = (value) => {
+    if (value !== this.state.activeCategory) {
+      this.setState({ activeCategory: value }, () => {
+        this.fetchCategoryProducts(true);
+      });
+    }
+  }
+
+  fetchCategoryProducts = (shouldCleanData = false, shouldFetchCategories = false) => {
+    const {
+      getCategoryProducts,
+      _id: shopId,
+      categoryProducts,
+      allCategoryProductsCount,
+      currentOffset,
+      currentLimit
+    } = this.props;
+
+    getCategoryProducts(
+      shopId,
+      this.state.activeCategory === 'all' ? undefined : this.state.activeCategory,
+      categoryProducts,
+      currentLimit,
+      currentOffset,
+      allCategoryProductsCount,
+      shouldCleanData,
+      shouldFetchCategories
+    );
+  }
+
+  fetchNextProducts = () => {
+    this.fetchCategoryProducts(false);
+  }
+
+  constructProductCardStyle = (width, height, horizontal) => {
+    if (horizontal) {
+      if (height > width) {
+        return { flex: 0, height: height / 9, width: width - 20 };
+      }
+
+      return { flex: 0, height: width / 9, width: height - 20 };
     }
 
-    componentDidMount() {
-        this.fetchCategoryProducts();
+    if (height > width) {
+      return { flex: 0, height: height / 4.5, width: ((width - 30) / 2) };
     }
 
-    componentWillUnmount() {
-        this.props.cleanCategoryProductsData();
-    }
+    return { flex: 0, height: width / 4.5, width: ((height - 30) / 2) };
+  }
 
-    onViewModeChange = (newViewMode) => {
-        this.setState({ viewMode: newViewMode });
-    }
+  constructProductCardStyleMemoized = memoize(this.constructProductCardStyle)
 
-    onProductQuantityChange = (productInfo, quantity) => {
-        const { cart, _id: shopId } = this.props;
-        const isInCart = CartActions.checkIfIProductsInCart(productInfo, shopId, cart);
+  onCartInfoPress = () => {
+    Actions.cart();
+  }
 
-        if (!isInCart) {
-            this.onAddToCartPress(productInfo, quantity);
-        } else if (isInCart && quantity === 0) {
-            this.onRemoveFromCartPress(productInfo);
-        } else if (isInCart) {
-            // quantity added to cart changed changed
-            this.onCartProductQuantityChange(productInfo, quantity);
-        }
-    }
+  renderViewingOption = (viewOption = {}, viewMode) => {
+    const TouchableComponent = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
+    const isDisabled = viewMode === viewOption.mode;
+    const color = isDisabled ? Colors.whiteColorHexCode : Colors.blackColorHexCode;
+    const style = isDisabled ?
+      StyleSheet.flatten([styles.viewingOptionStyle, styles.activeViewingOptionStyle])
+      : styles.viewingOptionStyle;
 
-    onAddToCartPress = (productInfo, quantity) => {
-        const { _id: shopId, shopName, addToCart, cart, user } = this.props;
-        const product = { ...productInfo, quantity };
-        addToCart(shopId, shopName, product, cart, user);
-    }
+    return (
+      <TouchableComponent
+        onPress={() => this.onViewModeChange(viewOption.mode)}
+        disabled={isDisabled}
+      >
+        <View style={style}>
+          <Icon type={viewOption.type} name={viewOption.name} size={25} color={color} />
+        </View>
+      </TouchableComponent>
+    );
+  }
 
-    onRemoveFromCartPress = (productInfo) => {
-        const { _id: shopId, shopName, removeFromCart, cart, user } = this.props;
-        removeFromCart(shopId, shopName, productInfo, cart, user);
-    }
+  renderCategories = ({ item }) => {
+    const { activeCategory } = this.state;
 
-    onCartProductQuantityChange = (productInfo, quantity) => {
-        const { _id: shopId, shopName, changeCartProductQuantity, cart, user } = this.props;
-        const product = { ...productInfo, quantity };
-        changeCartProductQuantity(shopId, shopName, product, cart, user);
-    }
+    return (
+      <Tag
+        isActive={activeCategory === item.value}
+        onPress={() => this.onCategoryValueChange(item.value)}
+        title={item.label}
+      />
+    );
+  }
 
-    onDropDownValueChange = (value) => {
-        if (value !== this.state.activeCategory) {
-            this.setState({ activeCategory: value }, () => {
-                this.fetchCategoryProducts(true);
-            });
-        }
-    }
+  renderProductsFooter = () => {
+    const { areExtraCategoryProductsLoading, noMoreCategoryProducts } = this.props;
 
-    fetchCategoryProducts = (shouldCleanData = false) => {
-        const {
-            getCategoryProducts,
-            _id: shopId,
-            categoryProducts,
-            allCategoryProductsCount,
-            currentOffset,
-            currentLimit
-        } = this.props;
+    return (
+      areExtraCategoryProductsLoading && !noMoreCategoryProducts
+        ? (
+          <View style={styles.activityIndicatorContainerStyle}>
+            <ActivityIndicator color={Colors.brandColorHexCode} size='large' />
+          </View>
+        ) :
+        null
+    );
+  }
 
-        getCategoryProducts(
-            shopId,
-            this.state.activeCategory,
-            categoryProducts,
-            currentLimit,
-            currentOffset,
-            allCategoryProductsCount,
-            shouldCleanData
-        );
-    }
+  renderProduct = ({ item, index }) => {
+    const { viewMode } = this.state;
+    const { cart, _id: shopId, width, height } = this.props;
 
-    fetchNextProducts = () => {
-        this.fetchCategoryProducts(false);
-    }
+    const horizontal = viewMode === 'list';
+    const isInCart = CartActions.checkIfIProductsInCart(item, shopId, cart);
 
-    constructProductCardStyle = (width, height, horizontal) => {
-        if (horizontal) {
-            if (height > width) {
-                return { flex: 0, height: height / 6, width: width - 20 };
-            }
+    const additionalStyle = (!horizontal && index % 2 === 0) ? { marginRight: I18nManager.isRTL ? 0 : 10, marginLeft: I18nManager.isRTL ? 10 : 0 } : undefined;
     
-            return { flex: 0, height: width / 6, width: height - 20 };
-        }
+    const iconSize = horizontal ? 30 : 25;
 
-        if (height > width) {
-            return { flex: 0, height: height / 3, width: (width / 2) - 10 };
-        }
+    const iconName = isInCart ? 'cart-off' : 'cart-plus';
+    const iconColor = isInCart ? Colors.blackColorHexCode : Colors.brandColorHexCode;
+    const onPress = isInCart ? () => this.onProductQuantityChange(item, 0) : () => this.onProductQuantityChange(item, 1);
 
-        return { flex: 0, height: width / 3, width: (height / 2) - 10 };
-    }
+    return (
+      <ProductCard
+        horizontal={horizontal}
+        image={`${ImageHostUrl}${item.imgUrl}`}
+        name={item.productName}
+        price={item.price}
+        containerStyle={StyleSheet.flatten([this.constructProductCardStyleMemoized(width, height, horizontal), additionalStyle])}
+        onPress={onPress}
+        iconName={iconName}
+        iconColor={iconColor}
+        iconSize={iconSize}
+      />
+    );
+  }
 
-    constructProductCardStyleMemoized = memoize(this.constructProductCardStyle)
+  render() {
+    const { viewMode, activeCategory } = this.state;
+    const { categories, categoryProducts, areCategoryProductsLoading, shopImage, shopName, address, cart, _id: shopId } = this.props;
 
-    renderViewingOption = (viewOption = {}, viewMode) => {
-        const TouchableComponent = Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
-        const isDisabled = viewMode === viewOption.mode;
-        const color = isDisabled ? Colors.whiteColorHexCode : Colors.blackColorHexCode;
-        const style = isDisabled ? 
-            StyleSheet.flatten([styles.viewingOptionStyle, styles.activeViewingOptionStyle])
-            : styles.viewingOptionStyle;
+    const shopCart = _get(cart, shopId, {});
+    const shopCartNumber = _get(shopCart, 'products.length', 0);
+    const shopCartTotalPrice = _reduce(shopCart.products, (sum, product) => {
+      return sum + ((product.quantity || 1) * product.price);
+    }, 0);
 
-        return (
-            <TouchableComponent
-                onPress={() => this.onViewModeChange(viewOption.mode)}
-                disabled={isDisabled}
-            >
-                <View style={style}>
-                    <Icon type={viewOption.type} name={viewOption.name} size={25} color={color} />
-                </View>
-            </TouchableComponent>
-        );
-    }
+    return (
+      <SafeAreaView style={styles.containerStyle}>
+        <ShopHeader
+          image={`${ImageHostUrl}${shopImage}`}
+          name={shopName}
+          address={address ? `${address.city}-${address.area}-${address.district}` : ''}
+          icon='location-pin'
+        />
 
-    renderProductsFooter = () => {
-        const { areExtraCategoryProductsLoading, noMoreCategoryProducts } = this.props;
-
-        return (
-            areExtraCategoryProductsLoading && !noMoreCategoryProducts
-            ? (
-                <View style={styles.activityIndicatorContainerStyle}>
-                    <ActivityIndicator color={Colors.brandColorHexCode} size='large' />
-                </View>
-            ) :
-            null
-        );
-    }
-
-    renderProduct = ({ item }) => {
-        const { viewMode } = this.state;
-        const horizontal = viewMode === 'list';
-        const { cart, _id: shopId, width, height, cartItemsIsLoadingObject } = this.props;
-        const initialQuantity = CartActions.getProductQuantityInCart(item, shopId, cart);
-
-        return (
-            <ProductCard
-                horizontal={horizontal}
-                image={`${ImageHostUrl}${item.imgUrl}`}
-                name={item.productName}
-                price={item.price}
-                containerStyle={this.constructProductCardStyleMemoized(width, height, horizontal)}
-                onQuantityChange={(quantity) => this.onProductQuantityChange(item, quantity)}
-                initialQuantity={initialQuantity}
-                quantity={CartActions.getProductQuantityInCart(item, shopId, cart)}
-                isLoading={cartItemsIsLoadingObject[item._id]}
+        <View style={styles.headerOptionsContainerStyle}>
+          <View style={styles.containerStyle}>
+            <FlatList
+              data={categories}
+              renderItem={this.renderCategories}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              extraData={activeCategory}
             />
-        );
-    }
+          </View>
+          <View style={styles.containerStyle} />
 
-    render() {
-        const { viewMode, activeCategory } = this.state;
-        const { categories, categoryProducts, areCategoryProductsLoading } = this.props;
+          <View style={styles.viewingOptionsContainerStyle}>
+            {_map(this.viewModes, (value) => this.renderViewingOption(value, this.state.viewMode))}
+          </View>
+        </View>
 
-        return (
-            <SafeAreaView style={styles.containerStyle}>
-                <View style={styles.headerOptionsContainerStyle}>
-                    <View style={styles.containerStyle}>
-                        <Dropdown
-                            value={activeCategory}
-                            data={categories}
-                            onChangeText={this.onDropDownValueChange}
-                            baseColor={Colors.brandColorHexCode}
-                            dropdownPosition={0}
-                        />
-                    </View>
-                    <View style={styles.containerStyle} />
-
-                    <View style={styles.viewingOptionsContainerStyle}>
-                        {_map(this.viewModes, (value) => this.renderViewingOption(value, this.state.viewMode))}
-                    </View>
-                </View>
-
-                <CustomFlatList
-                    indicatorSize='large'
-                    indicatorColor={Colors.brandColorHexCode}
-                    isLoading={areCategoryProductsLoading}
-                    emptyText='products_screen_no_products_text'
-                    key={viewMode}
-                    data={categoryProducts}
-                    renderItem={this.renderProduct}
-                    numColumns={viewMode === 'grid' ? 2 : 1}
-                    keyExtractor={product => product._id}
-                    ListFooterComponent={this.renderProductsFooter()}
-                    onEndReached={this.fetchNextProducts}
-                    onEndReachedThreshold={0.5}
-                />
-            </SafeAreaView>
-        );
-    }
+        <CustomFlatList
+          indicatorSize='large'
+          indicatorColor={Colors.brandColorHexCode}
+          isLoading={areCategoryProductsLoading}
+          emptyText='products_screen_no_products_text'
+          key={viewMode}
+          data={categoryProducts}
+          renderItem={this.renderProduct}
+          numColumns={viewMode === 'grid' ? 2 : 1}
+          keyExtractor={product => product._id}
+          ListFooterComponent={this.renderProductsFooter()}
+          onEndReached={this.fetchNextProducts}
+          onEndReachedThreshold={0.5}
+          style={{ marginHorizontal: 10 }}
+          extraData={cart}
+        />
+        
+        {
+          shopCartNumber > 0 ? (
+            <Tag
+             title={`${I18n.t('products_screen_price_name_text')} ${shopCartNumber} ${I18n.t('products_screen_price_element_text')} ${shopCartTotalPrice} ${I18n.t('products_screen_price_currency_text')}`}
+            //  isActive
+             onPress={this.onCartInfoPress}
+             style={styles.summaryContainerStyle}
+             textStyle={styles.summaryTextStyle}
+            />
+          ) : null
+        }
+      </SafeAreaView>
+    );
+  }
 }
 
 export default Products;

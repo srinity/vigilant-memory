@@ -1,20 +1,18 @@
 import React, { Component } from 'react';
 import { View, TouchableOpacity, ScrollView, Platform } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import I18n from 'react-native-i18n';
 
 import {
     Button,
     CardSection,
     CustomInput,
-    IconTypes,
     Logo,
     PasswordInput,
     LocalizedText
 } from './../../Components';
 
 import { isEgyptPhone, isValidPassword } from './../../Utils/Validators';
-
-import { Colors } from '../../Theme';
 
 import styles from './Login.Styles';
 
@@ -67,28 +65,23 @@ class Login extends Component {
                 >
                     <Logo name='logo' />
 
-                    <View style={{ flex: 1, paddingHorizontal: 15 }}>
+                    <View style={{ flex: 1, paddingHorizontal: 25 }}>
                         <CustomInput
-                            leftIconName={Platform.OS === 'ios' ? 'cellphone-iphone' : 'cellphone'}
-                            leftIconType={IconTypes.materialCommunity}
-                            leftIconColor={Colors.brandColorHexCode}
-                            label='login_screen_phone_label'
-                            hint='login_screen_phone_hint'
+                            placeholder={I18n.t('login_screen_phone_label')}
                             onChangeText={this.onPhoneChange}
                             value={phone}
                             isValid={phoneIsValid}
                             errorMessage='login_screen_phone_error_message'
                             keyboardType='phone-pad'
+                            containerStyle={styles.phoneInputContainerStyle}
                         />
 
                         <PasswordInput
-                            label='login_screen_password_label'
-                            hint='login_screen_password_hint'
-                            leftIconColor={Colors.brandColorHexCode}
-                            rightIconColor={Colors.brandColorHexCode}
+                            placeholder={I18n.t('login_screen_password_label')}
                             onChangeText={this.onPasswordChange}
                             value={password}
                             isValid={passwordIsValid}
+                            containerStyle={styles.passwordInputContainerStyle}
                         />
 
                         <CardSection style={styles.buttonCardSectionStyle}>
@@ -105,16 +98,15 @@ class Login extends Component {
                         </CardSection>
 
                         <CardSection style={[styles.cardSectionStyle, styles.actionsContainerStyle]}>
-                            <LocalizedText style={styles.inactiveActionTextStyle}>login_screen_do_not_have_an_account</LocalizedText>
-                            <TouchableOpacity onPress={this.onNewUserPress}>
-                                <LocalizedText style={styles.actionsTextStyle}>login_screen_register_now</LocalizedText>
+                            <TouchableOpacity onPress={this.onForgotPasswordPress}>
+                                    <LocalizedText style={styles.actionsTextStyle}>login_screen_forgot_password</LocalizedText>
                             </TouchableOpacity>
                         </CardSection>
                     </View>
 
                     <CardSection style={[styles.cardSectionStyle, styles.footerContainerStyle]}>
-                        <TouchableOpacity onPress={this.onForgotPasswordPress}>
-                                <LocalizedText style={styles.actionsTextStyle}>login_screen_forgot_password</LocalizedText>
+                        <TouchableOpacity onPress={this.onNewUserPress}>
+                            <LocalizedText style={styles.actionsTextStyle}>login_screen_register_now</LocalizedText>
                         </TouchableOpacity>
                     </CardSection>
                 </ScrollView>

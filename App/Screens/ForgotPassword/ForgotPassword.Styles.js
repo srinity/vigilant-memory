@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 
 import { Colors } from './../../Theme';
 
@@ -40,5 +40,8 @@ export default StyleSheet.create({
   },
   indicatorColor: {
     color: Colors.brandColorHexCode
+  },
+  inputContainerStyle: {
+    paddingVertical: Platform.OS === 'ios' ? 15 : 0,
   }
 });

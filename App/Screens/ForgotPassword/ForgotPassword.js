@@ -1,17 +1,15 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Platform } from 'react-native';
+import { View, ScrollView } from 'react-native';
+import I18n from 'react-native-i18n';
 
 import {
     Button,
     CardSection,
     CustomInput,
-    IconTypes,
     Logo,
 } from './../../Components';
 
 import { isEgyptPhone } from './../../Utils/Validators';
-
-import { Colors } from '../../Theme';
 
 import styles from './ForgotPassword.Styles';
 
@@ -52,16 +50,13 @@ class ForgotPassword extends Component {
 
                     <View style={styles.controlsContainerStyle}>
                         <CustomInput
-                            leftIconName={Platform.OS === 'ios' ? 'cellphone-iphone' : 'cellphone'}
-                            leftIconType={IconTypes.materialCommunity}
-                            leftIconColor={Colors.brandColorHexCode}
-                            label='forget_password_screen_phone_label'
-                            hint='forget_password_screen_phone_hint'
+                            placeholder={I18n.t('forget_password_screen_phone_label')}
                             onChangeText={this.onPhoneChange}
                             value={phone}
                             isValid={phoneIsValid}
                             errorMessage='forget_password_screen_phone_error_message'
                             keyboardType='phone-pad'
+                            containerStyle={styles.inputContainerStyle}
                         />
 
                         <CardSection style={styles.buttonCardSectionStyle}>

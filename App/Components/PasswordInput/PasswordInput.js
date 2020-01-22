@@ -12,7 +12,7 @@ import styles from './PasswordInput.Styles';
 const passwordShowHideIconsName = Object.freeze({
   showPassword: 'eye',
   hidePassword: 'eye-with-line'
-})
+});
 
 class PasswordInput extends Component {
   constructor(props) {
@@ -40,17 +40,17 @@ class PasswordInput extends Component {
     this.setState({ shouldHidePassword: !shouldHidePassword, rightIcon: newRightIcon });
   }
 
-  render () {
+  render() {
     const { rightIcon, shouldHidePassword } = this.state;
 
     return (
       <CustomInput
-        leftIconType={IconTypes.material}
-        leftIconName='lock'
         secureTextEntry={shouldHidePassword}
-        rightIconName={rightIcon}
-        rightIconType={IconTypes.entypo}
-        rightIconPress={this.onRightIconPress}
+        showIcon
+        iconName={rightIcon}
+        iconType={IconTypes.entypo}
+        onIconPress={this.onRightIconPress}
+        errorIconStyle={styles.errorIconStyle}
         {...this.props}
       />
     );
@@ -72,4 +72,4 @@ PasswordInput.propTypes = {
   textColor: PropTypes.string
 };
 
-export default PasswordInput
+export default PasswordInput;

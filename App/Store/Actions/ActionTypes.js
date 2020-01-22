@@ -1,6 +1,10 @@
 // Device Dimensions Action Types
 export const DEVICE_DIMENSIONS_CHANGED = 'DEVICE_DIMENSIONS_CHANGED';
 
+// App Intro Action Types
+export const APP_INTRO_COMPLETED = 'APP_INTRO_COMPLETED';
+export const APP_INTRO_SKIPPED = 'APP_INTRO_SKIPPED';
+
 // Login Action Types
 export const LOGIN_REQUEST_STARTED = 'login_request_started';
 export const LOGIN_REQUEST_SUCCESS = 'login_request_success';

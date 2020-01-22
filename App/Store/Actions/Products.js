@@ -1,8 +1,10 @@
 import {
     isNil as _isNil,
     get as _get,
+    map as _map
 } from 'lodash';
 import Toast from 'react-native-root-toast';
+import I18n from 'react-native-i18n'
 
 import { APIURLs, AppAxios } from './../../Config/APIConfig';
 
@@ -23,6 +25,7 @@ import {
  * @param  {number} currentOffset
  * @param  {number} productsCount
  * @param  {boolean} shouldCleanData
+ * @param  {boolean} shouldFetchCategories
  */
 export const getCategoryProducts = (
     shopId,
@@ -31,7 +34,8 @@ export const getCategoryProducts = (
     currentLimit,
     currentOffset,
     productsCount,
-    shouldCleanData
+    shouldCleanData,
+    shouldFetchCategories
 ) => {
     return async (dispatch) => {
         if (shouldCleanData) {
@@ -68,6 +72,26 @@ export const getCategoryProducts = (
                 const response = await AppAxios.get(APIURLs.getProductsOfShopBasedOnFilter, {
                     params
                 });
+
+                let categories;
+
+                if (shouldFetchCategories) {
+                    const categoriesResponse = await AppAxios.get(APIURLs.getProductsOfShopGroupedByCategory, {
+                        params: {
+                            shop: shopId
+                        }
+                    });
+    
+                    const { shopProducts: categoriesProducts } = categoriesResponse.data;
+    
+                    categories = _map(categoriesProducts, categoryProducts => ({
+                        label: categoryProducts.category,
+                        value: categoryProducts.category
+                    }));
+    
+                    categories.splice(0, 0, { label: I18n.t('products_screen_all_text'), value: 'all' });
+                }
+
     
                 const { shopProducts, count, offset, limit } = response.data;
     
@@ -78,7 +102,7 @@ export const getCategoryProducts = (
                 }
     
                 // dispatch an action with the products
-                dispatch(getCategoryProductsSuccess(allProducts, count, offset, limit));
+                dispatch(getCategoryProductsSuccess(allProducts, categories, count, offset, limit));
             }
         } catch (error) {
             const message = _get(error.response, 'data.message', 'Something went wrong');
@@ -110,8 +134,8 @@ function noMoreCategoryProductsToFetch() {
     return { type: NO_MORE_SHOP_CATEGORY_PRODUCTS_TO_FETCH };
 }
 
-function getCategoryProductsSuccess(products, count, offset, limit) {
-    return { type: GET_SHOP_CATEGORY_PRODUCTS_SUCCESS, products, count, offset, limit };
+function getCategoryProductsSuccess(products, categories, count, offset, limit) {
+    return { type: GET_SHOP_CATEGORY_PRODUCTS_SUCCESS, products, categories, count, offset, limit };
 }
 
 function getCategoryProductsFailed(error) {

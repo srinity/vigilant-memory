@@ -3,6 +3,7 @@ module.exports.ActionTypes = require('./ActionTypes');
 
 // Export The Actions.
 module.exports.DeviceDimensionsActions = require('./DeviceDimensions');
+module.exports.AppIntroActions = require('./AppIntro');
 module.exports.AccountActions = require('./Account');
 module.exports.ShopActions = require('./Shop');
 module.exports.ProductsActions = require('./Products');
